@@ -1,10 +1,6 @@
 """
 Modal deployment for Voice RAG — Extractive QA (no generative LLM).
-Uses deepset/xlm-roberta-base-squad2 for multilingual extractive answer extraction.
-This keeps ALL latency percentiles (P50/P70/P100) under 200ms.
-
-Deploy: python -m modal deploy modal_app.py
-Dev:    python -m modal serve modal_app.py
+Version: 3.0.0 (Reindexed with query+answer chunks, 58k vectors)
 """
 import modal
 
@@ -88,30 +84,46 @@ class VoiceRAG:
         print(f"✅ FAISS index ready ({len(self.metadata):,} vectors)")
 
         # ── Extractive QA model ──
-        # Runs a single forward pass over (question, context) and extracts
-        # the best answer span -- no generation, no sampling, deterministic,
-        # ~15-30ms on T4. Multilingual via XLM-RoBERTa backbone.
         print("Loading extractive QA model...")
-        self.qa_tokenizer = AutoTokenizer.from_pretrained("/models/qa-model")
-        self.qa_model = AutoModelForQuestionAnswering.from_pretrained(
-            "/models/qa-model"
-        )
+        qa_path = "/index/qa-model-finetuned" if os.path.exists("/index/qa-model-finetuned/model.safetensors") else "/models/qa-model"
+        print(f"Loading QA model from {qa_path}...")
+        self.qa_tokenizer = AutoTokenizer.from_pretrained(qa_path)
+        self.qa_model = AutoModelForQuestionAnswering.from_pretrained(qa_path)
         if device == 0:
             self.qa_model = self.qa_model.cuda()
         self.qa_model.eval()
         self.qa_device = device
-        # Warmup pass to absorb JIT cost
-        self._extract_answer("warmup question", "warmup context for the model")
+        # Warmup pass to absorb JIT cost and cuda memory allocation
+        self._extract_best_answer("warmup question", [{"text": "warmup context for the model"}])
         print("✅ Extractive QA model ready")
 
         # Config from Modal secrets
-        self.OFF_TOPIC_THRESHOLD      = float(os.getenv("OFF_TOPIC_THRESHOLD", "0.25"))
-        self.MIN_RETRIEVAL_SCORE      = float(os.getenv("MIN_RETRIEVAL_SCORE", "0.20"))
-        self.MIN_QA_SCORE             = float(os.getenv("MIN_QA_SCORE", "0.15"))
-        self.TOP_K                    = int(os.getenv("TOP_K", "8"))
-        self.RERANK_TOP_N             = int(os.getenv("RERANK_TOP_N", "20"))
+        self.OFF_TOPIC_THRESHOLD      = float(os.getenv("OFF_TOPIC_THRESHOLD", "0.70"))
+        self.MIN_RETRIEVAL_SCORE      = float(os.getenv("MIN_RETRIEVAL_SCORE", "0.65"))
+        self.MIN_QA_SCORE             = float(os.getenv("MIN_QA_SCORE", "0.10"))
+        self.MIN_ANSWER_RELEVANCE     = float(os.getenv("MIN_ANSWER_RELEVANCE", "0.20"))
+        self.TOP_K                    = int(os.getenv("TOP_K", "10"))
+        self.RERANK_TOP_N             = int(os.getenv("RERANK_TOP_N", "50"))
         self.SARVAM_KEY               = os.getenv("SARVAM_API_KEY", "")
         self.SARVAM_URL               = os.getenv("SARVAM_STT_URL", "https://api.sarvam.ai/speech-to-text")
+
+        # Indic + English stopwords for BM25 filtering
+        self.STOPWORDS = set(
+            # Hindi
+            "का के की है में को और से हैं पर यह था थी थे "
+            "इस कि एक भी ने जो वह हो तो कर इसके लिए अपने "
+            "होता करने उनके साथ अगर अन्य कुछ तक जब "
+            # English
+            "the a an is are was were be been being have has had "
+            "do does did will would shall should may might can could "
+            "i me my we our you your he him his she her it its they them their "
+            "what which who whom this that these those am "
+            "in on at to for with from by of and or not no nor "
+            "if but so than too very as how when where why all each every "
+            # Common Urdu/Hindi
+            "کا کی کے ہے میں "
+            .split()
+        )
 
     # ── Extractive QA ─────────────────────────────────────────────────────────
 
@@ -206,24 +218,69 @@ class VoiceRAG:
 
     def _extract_best_answer(self, question: str, chunks: list) -> dict:
         """
-        Run extractive QA over each retrieved chunk independently,
+        Run extractive QA over retrieved chunks in a parallel batch forward pass,
         pick the highest-scoring span across all chunks, then post-process.
         """
-        best = {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": ""}
-        for i, chunk in enumerate(chunks[:5]):  # top-5 chunks only for speed
-            result = self._extract_answer(question, chunk["text"])
-            if result["score"] > best["score"] and result["answer"]:
+        import torch
+        import torch.nn.functional as F
+        
+        if not chunks:
+            return {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": ""}
+            
+        active_chunks = chunks[:5]
+        questions = [question] * len(active_chunks)
+        contexts = [c["text"] for c in active_chunks]
+        
+        inputs = self.qa_tokenizer(
+            questions, contexts,
+            return_tensors="pt",
+            truncation=True,
+            max_length=128,
+            padding=True,
+        )
+        if self.qa_device == 0:
+            inputs = {k: v.cuda() for k, v in inputs.items()}
+            
+        with torch.no_grad():
+            outputs = self.qa_model(**inputs)
+            
+        start_logits = outputs.start_logits
+        end_logits = outputs.end_logits
+        
+        best = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": ""}
+        
+        for i in range(len(active_chunks)):
+            s_logits = start_logits[i]
+            e_logits = end_logits[i]
+            
+            start_idx = int(torch.argmax(s_logits))
+            end_idx = int(torch.argmax(e_logits))
+            
+            if end_idx < start_idx:
+                end_idx = start_idx
+                
+            tokens = inputs["input_ids"][i][start_idx:end_idx + 1]
+            answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
+            
+            start_prob = float(F.softmax(s_logits, dim=0)[start_idx])
+            end_prob = float(F.softmax(e_logits, dim=0)[end_idx])
+            score = round(start_prob * end_prob, 4)
+            
+            if score > best["score"] and answer:
                 best = {
-                    "answer": result["answer"],
-                    "score": result["score"],
+                    "answer": answer,
+                    "score": score,
                     "chunk_idx": i,
-                    "source_text": chunk["text"],
+                    "source_text": active_chunks[i]["text"],
                 }
-        # Apply post-processing to the best answer
-        if best["answer"]:
+                
+        if best["score"] >= 0 and best["answer"]:
             best["answer"] = self._postprocess(
                 best["answer"], question, best["source_text"]
             )
+        else:
+            best = {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": ""}
+            
         return best
 
     # ── Retrieval ─────────────────────────────────────────────────────────────
@@ -252,18 +309,24 @@ class VoiceRAG:
             results.append((self.metadata[idx], float(score)))
         return results
 
+    def _filter_stopwords(self, tokens: list) -> list:
+        """Remove stopwords from token list for cleaner BM25 matching."""
+        return [t for t in tokens if t.lower() not in self.STOPWORDS and len(t) > 1]
+
     def _hybrid_rerank(self, query: str, candidates: list):
         from rank_bm25 import BM25Okapi
         if not candidates: return []
-        corpus = [c[0]["text"].split() for c in candidates]
+        # Filter stopwords from both corpus and query for BM25
+        corpus = [self._filter_stopwords(c[0]["text"].split()) for c in candidates]
+        query_tokens = self._filter_stopwords(query.split())
         bm25 = BM25Okapi(corpus)
-        bm25_scores = bm25.get_scores(query.split())
+        bm25_scores = bm25.get_scores(query_tokens) if query_tokens else [0.0] * len(candidates)
         max_b = max(bm25_scores) if max(bm25_scores) > 0 else 1.0
         combined = []
         for (meta, dense), bm25_s in zip(candidates, bm25_scores):
             combined.append({
                 "text": meta["text"],
-                "score": round(0.7 * dense + 0.3 * bm25_s / max_b, 4),
+                "score": round(0.9 * dense + 0.1 * bm25_s / max_b, 4),
                 "lang": meta["lang"],
                 "strategy": meta["strategy"],
                 "chunk_id": meta["chunk_id"],
@@ -335,6 +398,7 @@ class VoiceRAG:
             "low_retrieval_confidence": "I don't have enough grounded information.",
             "no_retrieval_results":   "Couldn't find anything relevant.",
             "low_qa_confidence":      "Couldn't extract a confident answer from the retrieved context.",
+            "low_answer_relevance":   "The retrieved context doesn't appear relevant to your question.",
             "stt_failed":             "Couldn't transcribe audio -- please retry.",
         }
         return {
@@ -381,6 +445,16 @@ class VoiceRAG:
         if best["score"] < self.MIN_QA_SCORE or not best["answer"]:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "low_qa_confidence", timings)
+
+        # Guardrail 5 — Query-answer semantic relevance
+        # Catch cases where QA confidently extracts from an irrelevant passage
+        import numpy as np
+        answer_vec = self.embed_model.encode([best["answer"]], normalize_embeddings=True)[0]
+        query_vec = self.embed_model.encode([query], normalize_embeddings=True)[0]
+        relevance = float(np.dot(query_vec.astype(np.float32), answer_vec.astype(np.float32)))
+        if relevance < self.MIN_ANSWER_RELEVANCE:
+            timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+            return self._decline(query, "low_answer_relevance", timings)
 
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 
