@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+.env
+data/processed/
+data/index/
+benchmarks/results.md
+.DS_Store

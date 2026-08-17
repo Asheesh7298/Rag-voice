@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Voice RAG</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
+  #log { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .msg { padding: 12px 16px; border-radius: 10px; }
+  .user { background: #eef; align-self: flex-end; }
+  .bot { background: #f4f4f4; }
+  .decline { background: #fff0f0; border: 1px solid #f0c0c0; }
+  .meta { font-size: 12px; color: #888; margin-top: 6px; }
+  button { padding: 10px 16px; border-radius: 8px; border: none; background: #333; color: white; cursor: pointer; }
+  button:disabled { opacity: 0.5; }
+  #recBtn.recording { background: #c33; }
+  input[type=text] { width: 70%; padding: 10px; }
+</style>
+</head>
+<body>
+  <h2>Voice RAG — Indic MSMARCO</h2>
+  <div id="log"></div>
+
+  <div style="display:flex; gap:8px; margin-bottom:10px;">
+    <input id="textInput" type="text" placeholder="Type a question..." />
+    <button onclick="sendText()">Ask</button>
+  </div>
+  <button id="recBtn" onclick="toggleRecording()">🎤 Hold to Record</button>
+
+  <script>
+  const API = "https://prkhr-g--voice-rag-voicerag-fastapi-app.modal.run";
+  const log = document.getElementById("log");
+
+  function addMessage(role, text, extra) {
+    const div = document.createElement("div");
+    div.className = "msg " + role;
+    div.innerHTML = `<div>${text}</div>` + (extra ? `<div class="meta">${extra}</div>` : "");
+    log.appendChild(div);
+    div.scrollIntoView();
+  }
+
+  function renderResponse(data) {
+    if (data.transcript) addMessage("user", data.transcript, "(transcribed)");
+    const cls = data.guardrail_triggered ? "decline" : "bot";
+    const meta = data.guardrail_triggered
+      ? `guardrail: ${data.guardrail_triggered} | total ${data.timings_ms.total_ms}ms`
+      : `confidence ${data.confidence.toFixed(2)} | sources ${data.sources.length} | total ${data.timings_ms.total_ms}ms`;
+    addMessage(cls, data.answer, meta);
+  }
+
+  async function sendText() {
+    const input = document.getElementById("textInput");
+    const q = input.value.trim();
+    if (!q) return;
+    addMessage("user", q);
+    input.value = "";
+    const form = new FormData();
+    form.append("query", q);
+    const res = await fetch(`${API}/query`, { method: "POST", body: form });
+    renderResponse(await res.json());
+  }
+
+  let mediaRecorder, chunks = [];
+  async function toggleRecording() {
+    const btn = document.getElementById("recBtn");
+    if (!mediaRecorder || mediaRecorder.state === "inactive") {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      chunks = [];
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: "audio/wav" });
+        const form = new FormData();
+        form.append("file", blob, "audio.wav");
+        const res = await fetch(`${API}/voice-query`, { method: "POST", body: form });
+        renderResponse(await res.json());
+      };
+      mediaRecorder.start();
+      btn.classList.add("recording");
+      btn.textContent = "⏹ Stop";
+    } else {
+      mediaRecorder.stop();
+      btn.classList.remove("recording");
+      btn.textContent = "🎤 Hold to Record";
+    }
+  }
+  </script>
+</body>
+</html>
