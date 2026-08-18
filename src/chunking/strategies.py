@@ -64,6 +64,10 @@ def _simple_tokenize(text: str) -> list[str]:
 
 
 def chunk_fixed_overlap(passage_row: dict, size: int = 60, overlap: int = 15) -> list[Chunk]:
+    if size <= 0:
+        raise ValueError("size must be greater than zero")
+    if overlap < 0 or overlap >= size:
+        raise ValueError("overlap must be non-negative and smaller than size")
     tokens = _simple_tokenize(passage_row["text"])
     if not tokens:
         return []
@@ -112,6 +116,11 @@ def chunk_semantic(
     Greedily grows a chunk while consecutive sentences stay semantically close;
     starts a new chunk on a breakpoint (cosine sim below threshold) or size cap.
     """
+    if max_sentences <= 0:
+        raise ValueError("max_sentences must be greater than zero")
+    if not 0.0 <= similarity_threshold <= 1.0:
+        raise ValueError("similarity_threshold must be between 0 and 1")
+
     sentences = _split_sentences(passage_row["text"])
     if len(sentences) <= 1:
         # Too short to semantically split -- still tag as semantic_window (not

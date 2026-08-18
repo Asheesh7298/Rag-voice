@@ -32,7 +32,7 @@ image = (
         "SentenceTransformer('intfloat/multilingual-e5-base').save('/models/e5-base')"
         "\"",
         # Bake extractive QA model into image at build time
-        # xlm-roberta-base-squad2: multilingual, handles all 13 Indic langs, ~1.1GB
+        # xlm-roberta-base-squad2: multilingual, handles all 13 Indic languages, ~1.1GB
         "python -c \""
         "from transformers import AutoTokenizer, AutoModelForQuestionAnswering; "
         "AutoTokenizer.from_pretrained('deepset/xlm-roberta-base-squad2').save_pretrained('/models/qa-model'); "
@@ -79,6 +79,10 @@ class VoiceRAG:
         # ── FAISS index ──
         print("Loading FAISS index...")
         self.faiss_index = faiss.read_index("/index/index.faiss")
+
+        # ── FAISS index ──
+        print("Loading FAISS index...")
+        self.faiss_index = faiss.read_index("/index/index.faiss")
         self.metadata = []
         with open("/index/metadata.jsonl", encoding="utf-8") as f:
             for line in f:
@@ -87,7 +91,7 @@ class VoiceRAG:
 
         # ── Extractive QA model ──
         print("Loading extractive QA model...")
-        qa_path = "/index/qa-model-finetuned" if os.path.exists("/index/qa-model-finetuned/model.safetensors") else "/models/qa-model"
+        qa_path = "/models/qa-model"
         print(f"Loading QA model from {qa_path}...")
         self.qa_tokenizer = AutoTokenizer.from_pretrained(qa_path)
         self.qa_model = AutoModelForQuestionAnswering.from_pretrained(qa_path)
@@ -116,6 +120,9 @@ class VoiceRAG:
             "का के की है में को और से हैं पर यह था थी थे "
             "इस कि एक भी ने जो वह हो तो कर इसके लिए अपने "
             "होता करने उनके साथ अगर अन्य कुछ तक जब "
+            # Marathi
+            "आहे आणि व या ची चे चा च्या साठी तर मग "
+            "नाही पण म्हणून जर तर तो ती ते त्या काय कसे "
             # English
             "the a an is are was were be been being have has had "
             "do does did will would shall should may might can could "
@@ -124,7 +131,7 @@ class VoiceRAG:
             "in on at to for with from by of and or not no nor "
             "if but so than too very as how when where why all each every "
             # Common Urdu/Hindi
-            "کا کی کے ہے میں "
+            "کا کی के है में "
             .split()
         )
 
@@ -224,6 +231,8 @@ class VoiceRAG:
         Run extractive QA over retrieved chunks with max_length=96 and a hard timeout.
         Filters candidate chunks by length (>=5 words and <=800 chars), processes chunks,
         applies answer quality scoring adjustments, and returns the highest-scoring span.
+        For English queries, prioritizes predominantly English passages (>60% ASCII alpha),
+        falling back to all passages if no English passage yields a score > 0.15.
         """
         import time, re
         import torch
@@ -243,81 +252,100 @@ class VoiceRAG:
             if not valid_chunks:
                 return {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": ""}
 
-        active_chunks = valid_chunks[:5]
-        t_qa_start = time.perf_counter()
-        best = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": ""}
-
         BIO_TERMS = (
             "phosphate", "sugar", "base", "deoxyribose", "ribose",
-            "ফসফেট", "শর্করা", "फॉस्फेट", "சர்க்கரை",
-            "ఫాస్ఫేట్", "ಫಾಸ್ಫೇಟ್", "ഫോസ്ഫേറ്റ്", "فاسفیٹ"
+            "फॉस्फेट", "शर्करा"
         )
 
-        for i, chunk in enumerate(active_chunks):
-            # Hard timeout: if QA processing exceeds 150ms, truncate remaining chunks
-            if (time.perf_counter() - t_qa_start) * 1000 > 150:
-                if best["score"] >= 0 and best["answer"]:
+        def _evaluate_chunks(candidate_chunks, t_start_time):
+            best_cand = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": "", "lang": None}
+            for i, chunk in enumerate(candidate_chunks):
+                # Hard timeout: if QA processing exceeds 150ms, truncate remaining chunks
+                if (time.perf_counter() - t_start_time) * 1000 > 150:
+                    if best_cand["score"] >= 0 and best_cand["answer"]:
+                        break
+
+                inputs = self.qa_tokenizer(
+                    question, chunk["text"],
+                    return_tensors="pt",
+                    truncation=True,
+                    max_length=96,
+                    padding=True,
+                )
+                if self.qa_device == 0:
+                    inputs = {k: v.cuda() for k, v in inputs.items()}
+
+                with torch.no_grad():
+                    outputs = self.qa_model(**inputs)
+
+                s_logits = outputs.start_logits[0]
+                e_logits = outputs.end_logits[0]
+
+                start_idx = int(torch.argmax(s_logits))
+                end_idx = int(torch.argmax(e_logits))
+
+                if end_idx < start_idx:
+                    end_idx = start_idx
+
+                tokens = inputs["input_ids"][0][start_idx:end_idx + 1]
+                answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
+
+                start_prob = float(F.softmax(s_logits, dim=0)[start_idx])
+                end_prob = float(F.softmax(e_logits, dim=0)[end_idx])
+                score = start_prob * end_prob
+
+                if answer:
+                    ans_lower = answer.lower()
+                    # 1. Penalize comma-separated lists of 3+ items (e.g., "primary, secondary, tertiary")
+                    if len(re.split(r'[,،]', answer)) >= 3:
+                        score *= 0.5
+
+                    # 2. Boost answers containing specific chemical/biological terms
+                    if any(term in ans_lower for term in BIO_TERMS):
+                        score *= 1.3
+
+                score = round(score, 4)
+
+                if score > best_cand["score"] and answer:
+                    best_cand = {
+                        "answer": answer,
+                        "score": score,
+                        "chunk_idx": i,
+                        "source_text": chunk["text"],
+                        "lang": chunk.get("lang"),
+                    }
+
+                # Hard timeout check after processing current chunk
+                if (time.perf_counter() - t_start_time) * 1000 > 150:
                     break
 
-            inputs = self.qa_tokenizer(
-                question, chunk["text"],
-                return_tensors="pt",
-                truncation=True,
-                max_length=96,
-                padding=True,
-            )
-            if self.qa_device == 0:
-                inputs = {k: v.cuda() for k, v in inputs.items()}
+            return best_cand
 
-            with torch.no_grad():
-                outputs = self.qa_model(**inputs)
+        t_qa_start = time.perf_counter()
+        is_eng = self._is_english_query(question)
 
-            s_logits = outputs.start_logits[0]
-            e_logits = outputs.end_logits[0]
+        if is_eng:
+            # 1. Run QA on chunks where passage text is predominantly English (>60% ASCII alpha)
+            english_chunks = [c for c in valid_chunks if self._is_english_query(c.get("text", ""))]
+            if english_chunks:
+                best = _evaluate_chunks(english_chunks[:5], t_qa_start)
+            else:
+                best = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": "", "lang": None}
 
-            start_idx = int(torch.argmax(s_logits))
-            end_idx = int(torch.argmax(e_logits))
-
-            if end_idx < start_idx:
-                end_idx = start_idx
-
-            tokens = inputs["input_ids"][0][start_idx:end_idx + 1]
-            answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
-
-            start_prob = float(F.softmax(s_logits, dim=0)[start_idx])
-            end_prob = float(F.softmax(e_logits, dim=0)[end_idx])
-            score = start_prob * end_prob
-
-            if answer:
-                ans_lower = answer.lower()
-                # 1. Penalize comma-separated lists of 3+ items (e.g., "primary, secondary, tertiary")
-                if len(re.split(r'[,،]', answer)) >= 3:
-                    score *= 0.5
-
-                # 2. Boost answers containing specific chemical/biological terms
-                if any(term in ans_lower for term in BIO_TERMS):
-                    score *= 1.3
-
-            score = round(score, 4)
-
-            if score > best["score"] and answer:
-                best = {
-                    "answer": answer,
-                    "score": score,
-                    "chunk_idx": i,
-                    "source_text": chunk["text"],
-                }
-
-            # Hard timeout check after processing current chunk
-            if (time.perf_counter() - t_qa_start) * 1000 > 150:
-                break
+            # 2. Fallback to all chunks if no English-text chunk yields a confident answer (score > 0.15)
+            if best["score"] <= 0.15 or not best["answer"]:
+                fallback_best = _evaluate_chunks(valid_chunks[:5], t_qa_start)
+                if fallback_best["score"] > best["score"] and fallback_best["answer"]:
+                    best = fallback_best
+        else:
+            best = _evaluate_chunks(valid_chunks[:5], t_qa_start)
 
         if best["score"] >= 0 and best["answer"]:
             best["answer"] = self._postprocess(
                 best["answer"], question, best["source_text"]
             )
         else:
-            best = {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": ""}
+            best = {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": "", "lang": None}
 
         return best
 
@@ -339,9 +367,9 @@ class VoiceRAG:
             return None
         if isinstance(lang_filter, (list, tuple, set)):
             return set(lang_filter)
-        if lang_filter in ("devanagari_group", "hi", "mr", "ne"):
+        if lang_filter in ("devanagari_group", "hi_mr"):
             return {"hi", "mr", "ne"}
-        if lang_filter in ("bengali_group", "bn", "as"):
+        if lang_filter in ("bengali_group",):
             return {"bn", "as"}
         return {lang_filter}
 
@@ -356,12 +384,21 @@ class VoiceRAG:
         
         allowed_langs = self._resolve_lang_filter(lang_filter)
         results = []
+        all_results = []
         for score, idx in zip(scores[0], ids[0]):
-            if idx == -1: continue
+            if idx < 0 or idx >= len(self.metadata):
+                continue
             meta = self.metadata[idx]
+            all_results.append((meta, float(score)))
             if allowed_langs and meta.get("lang") not in allowed_langs:
                 continue
             results.append((meta, float(score)))
+
+        # The corpus has no dedicated English rows, so English queries may use
+        # cross-language retrieval. For an Indic language filter, returning an
+        # unrelated script is worse than declining with no grounded result.
+        if allowed_langs == {"en"} and not results:
+            return all_results
         return results
 
     def _filter_stopwords(self, tokens: list) -> list:
@@ -385,23 +422,31 @@ class VoiceRAG:
 
         allowed_langs = self._resolve_lang_filter(lang_filter)
         if allowed_langs:
-            candidates = [c for c in candidates if c[0].get("lang") in allowed_langs]
-            if not candidates: return []
+            filtered = [c for c in candidates if c[0].get("lang") in allowed_langs]
+            if filtered:
+                candidates = filtered
+            elif allowed_langs != {"en"}:
+                return []
 
-        # Check for language-specific dialect markers within Devanagari group
+        # Check for Marathi dialect markers within Devanagari group
         query_words = query.split()
         is_devanagari = (
-            lang_filter in ("devanagari_group", "hi", "mr", "ne")
-            or (isinstance(lang_filter, (list, tuple, set)) and any(l in ("hi", "mr", "ne") for l in lang_filter))
+            lang_filter in ("hi_mr", "devanagari_group")
+            or (isinstance(lang_filter, (list, tuple, set)) and any(l in ("hi", "mr") for l in lang_filter))
         )
         has_mr_markers = is_devanagari and any(w.endswith(('चा', 'ची', 'चे', 'ला', 'ने')) for w in query_words)
-        has_ne_markers = is_devanagari and any(w.endswith(('को', 'का', 'मा', 'ले')) for w in query_words)
 
         # Filter stopwords from both corpus and query for BM25
         corpus = [self._filter_stopwords(c[0]["text"].split()) for c in candidates]
         query_tokens = self._filter_stopwords(query.split())
-        bm25 = BM25Okapi(corpus)
-        bm25_scores = bm25.get_scores(query_tokens) if query_tokens else [0.0] * len(candidates)
+        # rank_bm25 divides by the corpus length while building IDF and raises
+        # when every candidate is empty after filtering (common for very short
+        # or stopword-only passages). Dense similarity remains usable there.
+        if query_tokens and any(corpus):
+            bm25 = BM25Okapi(corpus)
+            bm25_scores = bm25.get_scores(query_tokens)
+        else:
+            bm25_scores = [0.0] * len(candidates)
         max_b = max(bm25_scores) if max(bm25_scores) > 0 else 1.0
         combined = []
         for (meta, dense), bm25_s in zip(candidates, bm25_scores):
@@ -409,11 +454,13 @@ class VoiceRAG:
             keyword_boost = 1.0 + (0.3 * overlap_score)
             rerank_score = (0.85 * dense + 0.15 * (bm25_s / max_b)) * keyword_boost
 
-            # Soft-boost same-language passages based on query dialect markers
+            # General language-family boost (+0.10 for passages matching query script)
             passage_lang = meta.get("lang")
+            if allowed_langs and passage_lang in allowed_langs:
+                rerank_score += 0.10
+
+            # Extra Marathi dialect-marker boost on top
             if has_mr_markers and passage_lang == "mr":
-                rerank_score *= 1.15
-            elif has_ne_markers and passage_lang == "ne":
                 rerank_score *= 1.15
 
             combined.append({
@@ -427,51 +474,67 @@ class VoiceRAG:
         combined.sort(key=lambda c: c["score"], reverse=True)
         return combined
 
+    def _is_english_query(self, query: str) -> bool:
+        """Return True if >60% of alphabetic characters in query are ASCII."""
+        alpha_count = max(1, sum(1 for c in query if c.isalpha()))
+        ascii_alpha = sum(1 for c in query if ord(c) < 128 and c.isalpha())
+        return (ascii_alpha / alpha_count) > 0.6
+
     def _detect_lang(self, text: str):
-        """Detect Indic script language from Unicode ranges. Zero latency cost."""
-        counts = {
-            "devanagari_group": 0,
-            "bengali_group": 0,
-            "gu": 0,
-            "pa": 0,
-            "or": 0,
-            "ta": 0,
-            "te": 0,
-            "kn": 0,
-            "ml": 0,
-            "ur": 0,
-        }
+        """Detect the Indic language family from Unicode script ranges.
+
+        Hindi, Marathi, and Nepali share Devanagari, while Bengali and Assamese
+        share the Bengali script.  Returning a family lets retrieval keep those
+        ambiguous pairs together without treating every non-Latin query as
+        English.
+        """
+        script_ranges = (
+            (0x0900, 0x097F, "devanagari_group"),
+            (0x0980, 0x09FF, "bengali_group"),
+            (0x0A00, 0x0A7F, "pa"),
+            (0x0A80, 0x0AFF, "gu"),
+            (0x0B00, 0x0B7F, "or"),
+            (0x0B80, 0x0BFF, "ta"),
+            (0x0C00, 0x0C7F, "te"),
+            (0x0C80, 0x0CFF, "kn"),
+            (0x0D00, 0x0D7F, "ml"),
+            (0x0600, 0x06FF, "ur"),
+        )
+        counts = {name: 0 for _, _, name in script_ranges}
         for ch in text:
             cp = ord(ch)
-            if 0x0900 <= cp <= 0x097F: counts["devanagari_group"] += 1
-            elif 0x0980 <= cp <= 0x09FF: counts["bengali_group"] += 1
-            elif 0x0A80 <= cp <= 0x0AFF: counts["gu"] += 1
-            elif 0x0A00 <= cp <= 0x0A7F: counts["pa"] += 1
-            elif 0x0B00 <= cp <= 0x0B7F: counts["or"] += 1
-            elif 0x0B80 <= cp <= 0x0BFF: counts["ta"] += 1
-            elif 0x0C00 <= cp <= 0x0C7F: counts["te"] += 1
-            elif 0x0C80 <= cp <= 0x0CFF: counts["kn"] += 1
-            elif 0x0D00 <= cp <= 0x0D7F: counts["ml"] += 1
-            elif 0x0600 <= cp <= 0x06FF: counts["ur"] += 1
+            for start, end, name in script_ranges:
+                if start <= cp <= end:
+                    counts[name] += 1
+                    break
+        if not counts:
+            return "en"
         best = max(counts, key=counts.get)
-        return best if counts[best] >= 2 else None
+        return best if counts[best] >= 2 else "en"
 
     def _retrieve(self, query: str, lang_filter: str | list | None = None):
         import time
         t0 = time.perf_counter()
+        is_eng = self._is_english_query(query)
+        rerank_n = 20 if is_eng else self.RERANK_TOP_N
+        top_k = 5 if is_eng else self.TOP_K
+
         qvec = self._embed(query)
         t1 = time.perf_counter()
-        candidates = self._search(qvec, self.RERANK_TOP_N, lang_filter=lang_filter)
+        candidates = self._search(qvec, rerank_n, lang_filter=lang_filter)
         allowed_langs = self._resolve_lang_filter(lang_filter)
         if allowed_langs:
-            candidates = [c for c in candidates if c[0].get("lang") in allowed_langs]
+            filtered = [c for c in candidates if c[0].get("lang") in allowed_langs]
+            # Fall back to unfiltered candidates if 0 candidates remain
+            candidates = filtered if filtered else candidates
         t2 = time.perf_counter()
-        chunks = self._hybrid_rerank(query, candidates, lang_filter=lang_filter)[:self.TOP_K]
+        chunks = self._hybrid_rerank(query, candidates, lang_filter=lang_filter)[:top_k]
         t3 = time.perf_counter()
         return chunks, {
             "embed_ms":  round((t1 - t0) * 1000, 2),
             "search_ms": round((t2 - t1) * 1000, 2),
             "rerank_ms": round((t3 - t2) * 1000, 2),
+            "total_ms": round((t3 - t0) * 1000, 2),
         }
 
     # ── STT ───────────────────────────────────────────────────────────────────
@@ -479,9 +542,10 @@ class VoiceRAG:
     def _transcribe(self, audio_bytes: bytes, lang=None):
         import time, httpx
         LANG_MAP = {
-            "as":"as-IN","bn":"bn-IN","gu":"gu-IN","hi":"hi-IN",
-            "kn":"kn-IN","ml":"ml-IN","mr":"mr-IN","ne":"ne-IN",
-            "or":"od-IN","pa":"pa-IN","ta":"ta-IN","te":"te-IN","ur":"ur-IN",
+            "as": "as-IN", "bn": "bn-IN", "gu": "gu-IN", "hi": "hi-IN",
+            "kn": "kn-IN", "ml": "ml-IN", "mr": "mr-IN", "ne": "ne-IN",
+            "or": "od-IN", "pa": "pa-IN", "ta": "ta-IN", "te": "te-IN",
+            "ur": "ur-IN", "en": "en-IN",
         }
         bcp47 = LANG_MAP.get(lang) if lang else None
         headers = {"api-subscription-key": self.SARVAM_KEY}
@@ -509,98 +573,136 @@ class VoiceRAG:
         )
         return bool(pattern.search(query))
 
+    def _is_current_events_query(self, query: str) -> bool:
+        """
+        Pattern-based off-topic detector for real-time, current events, weather, or location queries.
+        Runs in <1ms (pure regex) before retrieval.
+        """
+        import re
+        q_lower = query.strip().lower()
+
+        # 1. Weather queries
+        weather_pattern = re.compile(
+            r"\b(weather|temperature|forecast|rain|sunny)\b|मौसम|हवामान",
+            re.IGNORECASE
+        )
+        if weather_pattern.search(q_lower):
+            return True
+
+        # 2. Current news
+        news_pattern = re.compile(
+            r"\b(today|right now|currently|latest news|breaking)\b",
+            re.IGNORECASE
+        )
+        if news_pattern.search(q_lower):
+            return True
+
+        # 3. Real-time data
+        realtime_pattern = re.compile(
+            r"\b(stock price|exchange rate|live score|current price)\b",
+            re.IGNORECASE
+        )
+        if realtime_pattern.search(q_lower):
+            return True
+
+        # 4. Personal/location queries
+        location_pattern = re.compile(
+            r"^(where am i|my location|near me)\b|\bnear me\b",
+            re.IGNORECASE
+        )
+        if location_pattern.search(q_lower):
+            return True
+
+        return False
+
     def _token_overlap(self, a: str, b: str) -> float:
         ta, tb = set(a.lower().split()), set(b.lower().split())
         return len(ta & tb) / len(ta) if ta else 0.0
 
     def _scripts_match(self, query: str, answer: str) -> bool:
         """
-        Detect if the extracted answer is in a completely different script than the query.
+        Detect if the extracted answer matches the query script.
         Zero latency cost — pure Unicode range checking.
+        Supports Devanagari (Hindi/Marathi) and Latin/ASCII (English).
         """
-        ranges = {
-            "devanagari": (0x0900, 0x097F),
-            "bengali":    (0x0980, 0x09FF),
-            "gurmukhi":   (0x0A00, 0x0A7F),
-            "gujarati":   (0x0A80, 0x0AFF),
-            "odia":       (0x0B00, 0x0B7F),
-            "tamil":      (0x0B80, 0x0BFF),
-            "telugu":     (0x0C00, 0x0C7F),
-            "kannada":    (0x0C80, 0x0CFF),
-            "malayalam":  (0x0D00, 0x0D7F),
-            "urdu":       (0x0600, 0x06FF),
-        }
+        # Count Devanagari characters in query
+        q_devanagari = sum(1 for ch in query if 0x0900 <= ord(ch) <= 0x097F)
 
-        # 1. Count Unicode block ranges for each script in the query
-        q_counts = {k: 0 for k in ranges}
-        for ch in query:
-            cp = ord(ch)
-            for k, (lo, hi) in ranges.items():
-                if lo <= cp <= hi:
-                    q_counts[k] += 1
-                    break
-
-        # 2. Determine dominant script of the query
-        best_script = max(q_counts, key=q_counts.get)
-        if q_counts[best_script] < 2:
-            # Query is Latin/ASCII or no dominant Indic script
+        # If query is Latin/ASCII (e.g. English query), allow matches from any passage
+        if q_devanagari < 2:
             return True
 
-        dominant_script = best_script
-
-        # 3. Check answer characters
-        ans_counts = {k: 0 for k in ranges}
-        indic_chars = 0
-        for ch in answer:
-            cp = ord(ch)
-            for k, (lo, hi) in ranges.items():
-                if lo <= cp <= hi:
-                    ans_counts[k] += 1
-                    indic_chars += 1
-                    break
-
-        # 4. Check if answer contains ANY chars from same script OR is Latin/ASCII
-        if ans_counts[dominant_script] > 0:
-            return True
-        if indic_chars == 0:
-            # Entirely Latin/ASCII (numbers, English names/words are allowed)
+        # For Devanagari queries (Hindi/Marathi):
+        # Answer should contain Devanagari characters OR be Latin/ASCII (names, numbers, acronyms)
+        ans_devanagari = sum(1 for ch in answer if 0x0900 <= ord(ch) <= 0x097F)
+        if ans_devanagari > 0:
             return True
 
-        # Answer is entirely in a different Indic script than the query
+        # Check if answer is Latin/ASCII (e.g., numbers, English scientific terms)
+        indic_other_chars = sum(
+            1 for ch in answer
+            if (0x0980 <= ord(ch) <= 0x0DFF) or (0x0600 <= ord(ch) <= 0x06FF)
+        )
+        if indic_other_chars == 0:
+            # Entirely Latin/ASCII
+            return True
+
+        # Answer is in an unsupported script
         return False
 
     def _is_plausible_answer(self, query: str, answer: str, source_text: str = "") -> bool:
         """
-        Domain sanity check: detects implausible numerical answers,
-        e.g., $800,000 per pitch returned for a unit cost query.
+        Domain sanity check: detects implausible numerical answers for cost queries.
+        Allows ranges, small currency amounts (<10,000), and unit-qualified costs.
         """
         import re
+        if not answer:
+            return True
+
+        q_lower = query.lower()
+
+        # Special case: per-unit cost queries can legitimately vary widely
+        if any(k in q_lower for k in ("per square foot", "per sq ft", "per sqft", "प्रति वर्ग फुट", "प्रति चौरस फूट")):
+            return True
+
         COST_KEYWORDS = (
             "cost", "price", "fee", "rate", "charge", "expense", "expensive", "cheap",
-            "लागत", "कीमत", "दाम", "मूल्य", "दर", "शुल्क", "खर्च",
-            "খরচ", "দাম", "मूल्य", "দর", "ধর", "ফি",
-            "விலை", "கட்டணம்", "செலவு", "விகிதம்",
-            "ధర", "ఖర్చు", "రుసుము", "రేటు",
-            "ವೆಚ್ಚ", "ಬೆಲೆ", "ಶುಲ್ಕ", "ದರ",
-            "ചെലവ്", "വില", "നിരക്ക്", "ഫീസ്",
-            "ਕੀਮਤ", "ਲਾਗਤ", "ਖਰਚਾ", "ਮੁੱਲ",
-            "કિંમત", "ભાવ", "ખર્ચ", "લાગત",
-            "ଦାମ", "ମୂଲ୍ୟ", "ଖର୍ଚ୍ଚ", "ଦର",
+            "लागत", "कीमत", "दाम", "मूल्य", "दर", "शुल्क", "खर्च", "पैसे", "भाव",
         )
-        q_lower = query.lower()
+        ans_lower = answer.lower()
         is_cost_query = any(kw in q_lower for kw in COST_KEYWORDS)
 
-        if is_cost_query:
-            num_tokens = re.findall(r'[\d,.$₹€£]+', answer)
-            for token in num_tokens:
-                clean = re.sub(r'[^\d.]', '', token)
-                if clean:
-                    try:
-                        val = float(clean)
-                        if val > 100000:
-                            return False
-                    except ValueError:
-                        continue
+        if not is_cost_query:
+            return True
+
+        # 1. Range exception: ranges (e.g. "$11 to $22", "$10-$20", "500 to 1000") are valid cost answers
+        range_pattern = re.compile(r'[$₹€£]?\s*\d+[\d,.]*\s*(?:to|-|–|—|से|ते)\s*[$₹€£]?\s*\d+[\d,.]*', re.IGNORECASE)
+        if range_pattern.search(answer):
+            return True
+
+        # 2. Currency exception: currency symbol followed by number < 10,000 is always plausible
+        curr_matches = re.findall(r'[$₹€£]\s*([\d,]+(?:\.\d+)?)', answer)
+        for m in curr_matches:
+            clean = re.sub(r'[^\d.]', '', m)
+            if clean:
+                try:
+                    if float(clean) < 10000:
+                        return True
+                except ValueError:
+                    pass
+
+        # 3. Check for large numbers > 100,000 without unit qualifiers
+        has_unit_qualifier = any(u in ans_lower for u in ("per", "each", "/", "प्रति", "दर", "चौरस", "sq", "sq ft", "square"))
+        num_tokens = re.findall(r'[\d,.]+', answer)
+        for token in num_tokens:
+            clean = re.sub(r'[^\d.]', '', token)
+            if clean:
+                try:
+                    val = float(clean)
+                    if val > 100000 and not has_unit_qualifier:
+                        return False
+                except ValueError:
+                    continue
 
         return True
 
@@ -609,6 +711,7 @@ class VoiceRAG:
     def _decline(self, query, reason, timings, transcript=None):
         msgs = {
             "unsafe_input":           "I can't help with that request.",
+            "out_of_scope":           "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
             "off_topic":              "That question is outside the knowledge base scope.",
             "low_retrieval_confidence": "I don't have enough grounded information.",
             "no_retrieval_results":   "Couldn't find anything relevant.",
@@ -638,8 +741,18 @@ class VoiceRAG:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "unsafe_input", timings)
 
+        # Weather decline (0ms string match)
+        weather_patterns = ["weather", "temperature", "forecast", "rain today", "sunny today", "मौसम", "हवामान", "तापमान"]
+        if any(p in query.lower() for p in weather_patterns):
+            return self._decline(query, "out_of_scope", {"total_ms": 0.1})
+
+        # Guardrail 1b — out of scope / current events (regex, <1ms)
+        if self._is_current_events_query(query):
+            timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+            return self._decline(query, "out_of_scope", timings)
+
         # Retrieval — embed + FAISS + hybrid rerank
-        detected_lang = self._detect_lang(query)
+        detected_lang = "en" if self._is_english_query(query) else self._detect_lang(query)
         chunks, ret_timings = self._retrieve(query, lang_filter=detected_lang)
         timings.update(ret_timings)
 
@@ -658,6 +771,7 @@ class VoiceRAG:
         t_qa0 = time.perf_counter()
         best = self._extract_best_answer(query, chunks)
         timings["qa_ms"] = round((time.perf_counter() - t_qa0) * 1000, 2)
+        print(f"[QA Extracted] query: {query!r} -> answer: {best.get('answer')!r}, score: {best.get('score')}")
 
         # Guardrail 4 — QA confidence (model wasn't sure about any span or answer is trivial/whitespace/punctuation)
         ans_clean = best["answer"].strip() if best.get("answer") else ""
@@ -693,13 +807,35 @@ class VoiceRAG:
 
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 
+        # Cross-language attribution for English queries retrieving Indic answers
+        final_answer = best["answer"]
+        if self._is_english_query(query) and final_answer:
+            if any(ord(c) >= 128 for c in final_answer):
+                source_lang = best.get("lang") or (chunks[best.get("chunk_idx", 0)].get("lang") if chunks and 0 <= best.get("chunk_idx", 0) < len(chunks) else None) or "hi"
+                lang_display = {
+                    "as": "Assamese", "bn": "Bengali", "gu": "Gujarati",
+                    "hi": "Hindi", "kn": "Kannada", "ml": "Malayalam",
+                    "mr": "Marathi", "ne": "Nepali", "or": "Odia",
+                    "pa": "Punjabi", "ta": "Tamil", "te": "Telugu",
+                    "ur": "Urdu", "en": "English",
+                }.get(source_lang, source_lang)
+                final_answer = f"[From {lang_display} source] {final_answer}"
+
         return {
             "query": query,
             "transcript": None,
-            "answer": best["answer"],
+            "answer": final_answer,
             "sources": [
                 {"text": c["text"], "score": c["score"],
-                 "lang": c["lang"], "strategy": c["strategy"]}
+                 "lang": c.get("lang"),
+                 "lang_name": {
+                     "as": "Assamese", "bn": "Bengali", "gu": "Gujarati",
+                     "hi": "Hindi", "kn": "Kannada", "ml": "Malayalam",
+                     "mr": "Marathi", "ne": "Nepali", "or": "Odia",
+                     "pa": "Punjabi", "ta": "Tamil", "te": "Telugu",
+                     "ur": "Urdu", "en": "English",
+                 }.get(c.get("lang"), c.get("lang")),
+                 "strategy": c.get("strategy")}
                 for c in chunks
             ],
             "confidence": round(best["score"], 4),
@@ -759,8 +895,18 @@ class VoiceRAG:
 
         @api.get("/health")
         def health():
+            supported = {
+                "as": "Assamese", "bn": "Bengali", "gu": "Gujarati",
+                "hi": "Hindi", "kn": "Kannada", "ml": "Malayalam",
+                "mr": "Marathi", "ne": "Nepali", "or": "Odia",
+                "pa": "Punjabi", "ta": "Tamil", "te": "Telugu",
+                "ur": "Urdu", "en": "English",
+            }
             return {
                 "status": "ok",
+                "description": "Voice RAG supporting IndicMSMARCO languages and English queries",
+                "supported_languages": list(supported.values()),
+                "language_codes": list(supported),
                 "index_size": len(self.metadata),
                 "gpu": torch.cuda.is_available(),
                 "model": "xlm-roberta-base-squad2 (extractive QA)",

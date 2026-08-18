@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import time
 import httpx
+from pydantic import ValidationError
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from src.config import settings
@@ -117,13 +118,19 @@ class LLMClient:
         try:
             raw = self._call(query, context_block)
             answer = self._parse(raw)
-        except json.JSONDecodeError:
-            # one corrective retry
-            raw = self._call(
-                query, context_block,
-                retry_note="\n\n(Your previous response was not valid JSON. Reply with ONLY the JSON object.)"
-            )
-            answer = self._parse(raw)
+        except (json.JSONDecodeError, ValidationError, TypeError, ValueError):
+            # One corrective retry covers both malformed JSON and valid JSON
+            # with an invalid schema (for example, confidence outside 0..1).
+            try:
+                raw = self._call(
+                    query, context_block,
+                    retry_note="\n\n(Your previous response was not valid JSON matching the schema. Reply with ONLY the JSON object.)"
+                )
+                answer = self._parse(raw)
+            except Exception as retry_error:
+                raise GenerationError(
+                    f"LLM returned an invalid structured response after retry: {retry_error}"
+                ) from retry_error
         except GenerationError:
             raise
         except Exception as e:

@@ -61,7 +61,13 @@ class Pipeline:
         retrieval = self.retriever.retrieve(query)
         timings.update(retrieval.timings_ms)
 
-        top_dense_score = retrieval.chunks[0].score if retrieval.chunks else 0.0
+        # Use the raw ANN similarity captured before hybrid reranking.  The
+        # reranked score also contains BM25 and is not comparable to the
+        # off-topic threshold.
+        top_dense_score = retrieval.timings_ms.get(
+            "top_dense_score",
+            retrieval.chunks[0].score if retrieval.chunks else 0.0,
+        )
         ok, reason = checks.check_off_topic(top_dense_score)
         if not ok:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)

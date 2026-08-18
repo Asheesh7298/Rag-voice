@@ -47,8 +47,12 @@ class Retriever:
         if not candidates:
             return []
         corpus = [c[0]["text"].split() for c in candidates]
-        bm25 = BM25Okapi(corpus)
-        bm25_scores = bm25.get_scores(query.split())
+        query_tokens = query.split()
+        if query_tokens and any(corpus):
+            bm25 = BM25Okapi(corpus)
+            bm25_scores = bm25.get_scores(query_tokens)
+        else:
+            bm25_scores = np.zeros(len(candidates), dtype=np.float32)
         # normalize bm25 scores to [0,1] to combine with cosine sim (already ~[-1,1])
         max_bm25 = max(bm25_scores) if len(bm25_scores) and max(bm25_scores) > 0 else 1.0
         bm25_norm = [s / max_bm25 for s in bm25_scores]
@@ -76,6 +80,10 @@ class Retriever:
         t1 = time.perf_counter()
 
         candidates = self.store.search(np.asarray(query_vec), k=settings.rerank_top_n)
+        # Keep the raw ANN score for the off-topic guardrail.  The reranker
+        # combines dense and lexical scores, so its top score is not a valid
+        # substitute for the nearest-neighbour similarity.
+        top_dense_score = candidates[0][1] if candidates else 0.0
         if lang_filter:
             candidates = [c for c in candidates if c[0]["lang"] == lang_filter]
         t2 = time.perf_counter()
@@ -88,5 +96,6 @@ class Retriever:
             "search_ms": round((t2 - t1) * 1000, 2),
             "rerank_ms": round((t3 - t2) * 1000, 2),
             "total_ms": round((t3 - t0) * 1000, 2),
+            "top_dense_score": float(top_dense_score),
         }
         return RetrievalResult(chunks=reranked, timings_ms=timings)

@@ -31,7 +31,7 @@ class VectorStore:
         scores, ids = self.index.search(query_vec, k)
         results = []
         for score, idx in zip(scores[0], ids[0]):
-            if idx == -1:
+            if idx < 0 or idx >= len(self.metadata):
                 continue
             results.append((self.metadata[idx], float(score)))
         return results
