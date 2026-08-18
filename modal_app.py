@@ -100,7 +100,7 @@ class VoiceRAG:
         self.qa_model.eval()
         self.qa_device = device
         # Warmup pass to absorb JIT cost and cuda memory allocation
-        self._extract_best_answer("warmup question", [{"text": "warmup context for the model"}])
+        self._extract_best_answer("warmup question", [{"text": "warmup context 1"}, {"text": "warmup context 2"}, {"text": "warmup context 3"}, {"text": "warmup context 4"}])
         print("✅ Extractive QA model ready")
 
         # Config from Modal secrets
@@ -212,12 +212,12 @@ class VoiceRAG:
         if answer and answer[0].islower():
             answer = answer[0].upper() + answer[1:]
 
-        # 5. Expand very short answers (<4 words) using source sentence
+        # 5. Expand extracted answer spans to the full informative sentence
         words = answer.split()
-        if len(words) < 4 and source_text and answer in source_text:
+        if len(words) <= 12 and source_text and answer in source_text:
             sentences = re.split(r'(?<=[।.!?])\s+', source_text)
             for sent in sentences:
-                if answer in sent and 3 <= len(sent.split()) <= 40:
+                if answer in sent and 3 <= len(sent.split()) <= 45:
                     answer = sent.strip()
                     break
 
@@ -282,28 +282,48 @@ class VoiceRAG:
             best_cand = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": "", "lang": None}
 
             for i, chunk in enumerate(candidate_chunks):
-                s_idx = int(torch.argmax(s_logits[i]))
-                e_idx = int(torch.argmax(e_logits[i]))
+                input_id_seq = inputs["input_ids"][i]
+                seq_len = input_id_seq.shape[0]
 
-                if e_idx < s_idx:
-                    e_idx = s_idx
+                # Exact 2D matrix span search over bounded lengths (1 <= start <= end <= start + 35)
+                if seq_len > 1:
+                    s_sub = s_logits[i][1:]
+                    e_sub = e_logits[i][1:]
+                    L = s_sub.size(0)
 
-                tokens = inputs["input_ids"][i][s_idx:e_idx + 1]
-                answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
+                    score_matrix = s_sub.unsqueeze(1) + e_sub.unsqueeze(0)
+                    indices = torch.arange(L, device=s_logits.device)
+                    span_lens = indices.unsqueeze(0) - indices.unsqueeze(1)
 
-                # If model selected null token <s> (index 0) or decoded answer is empty, extract best non-null span
-                if (not answer or s_idx == 0) and s_logits[i].shape[0] > 1:
-                    s_idx_nz = int(torch.argmax(s_logits[i][1:])) + 1
-                    e_idx_nz = int(torch.argmax(e_logits[i][s_idx_nz:])) + s_idx_nz
-                    tokens_nz = inputs["input_ids"][i][s_idx_nz:e_idx_nz + 1]
-                    ans_nz = self.qa_tokenizer.decode(tokens_nz, skip_special_tokens=True).strip()
-                    if ans_nz and len(ans_nz) >= 2:
-                        s_idx, e_idx = s_idx_nz, e_idx_nz
-                        answer = ans_nz
+                    valid_mask = (span_lens >= 0) & (span_lens <= 35)
+                    score_matrix = torch.where(valid_mask, score_matrix, torch.tensor(-1e9, device=s_logits.device))
 
-                start_prob = float(s_probs[i][s_idx])
-                end_prob = float(e_probs[i][e_idx])
-                score = start_prob * end_prob
+                    # Sort top candidates from score matrix and pick the best non-trivial span (length >= 4 chars)
+                    flat_sorted = torch.argsort(score_matrix.view(-1), descending=True)
+                    answer = ""
+                    best_s, best_e = 1, 1
+                    for flat_idx in flat_sorted[:10]:
+                        s_cand = int(flat_idx // L) + 1
+                        e_cand = int(flat_idx % L) + 1
+                        toks = input_id_seq[s_cand : e_cand + 1]
+                        ans_cand = self.qa_tokenizer.decode(toks, skip_special_tokens=True).strip()
+                        if len(ans_cand) >= 4:
+                            answer = ans_cand
+                            best_s, best_e = s_cand, e_cand
+                            break
+                    if not answer:
+                        best_flat_idx = int(torch.argmax(score_matrix))
+                        best_s = (best_flat_idx // L) + 1
+                        best_e = (best_flat_idx % L) + 1
+                        tokens = input_id_seq[best_s : best_e + 1]
+                        answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
+
+                    start_prob = float(s_probs[i][best_s])
+                    end_prob = float(e_probs[i][best_e])
+                    score = start_prob * end_prob
+                else:
+                    answer = ""
+                    score = 0.0
 
                 if answer:
                     ans_lower = answer.lower()
@@ -311,8 +331,18 @@ class VoiceRAG:
                         score *= 0.5
                     if any(term in ans_lower for term in BIO_TERMS):
                         score *= 1.3
+
+                    # Keyword / entity relevance bonus
+                    q_words = set(re.findall(r'\w+', question.lower()))
+                    ans_words = set(re.findall(r'\w+', ans_lower))
+                    # Avoid trivial answers that just repeat the full question
+                    if len(ans_words) > 0 and ans_words == q_words:
+                        score *= 0.1
+                    elif any(w in ans_words for w in q_words if len(w) > 3):
+                        score *= 1.25
+
                     # Rank weighting: prioritize higher ranked retrieved passages
-                    rank_decay = 1.0 / (1.0 + 0.25 * i)
+                    rank_decay = 1.0 / (1.0 + 0.15 * i)
                     score = round(score * rank_decay, 4)
 
                     if score > best_cand["score"]:
@@ -330,16 +360,16 @@ class VoiceRAG:
         if is_eng:
             english_chunks = [c for c in valid_chunks if self._is_english_query(c.get("text", ""))]
             if english_chunks:
-                best = _evaluate_batched_chunks(english_chunks[:3])
+                best = _evaluate_batched_chunks(english_chunks[:4])
             else:
                 best = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": "", "lang": None}
 
             if best["score"] <= 0.05 or not best["answer"]:
-                fallback_best = _evaluate_batched_chunks(valid_chunks[:3])
+                fallback_best = _evaluate_batched_chunks(valid_chunks[:4])
                 if fallback_best["score"] > best["score"] and fallback_best["answer"]:
                     best = fallback_best
         else:
-            best = _evaluate_batched_chunks(valid_chunks[:3])
+            best = _evaluate_batched_chunks(valid_chunks[:4])
 
         if best["score"] >= 0 and best["answer"]:
             best["answer"] = self._postprocess(
@@ -741,7 +771,7 @@ class VoiceRAG:
     # ── Main query pipeline ───────────────────────────────────────────────────
 
     def _run_query(self, query: str) -> dict:
-        import time
+        import time, re
         timings = {}
         t_start = time.perf_counter()
 

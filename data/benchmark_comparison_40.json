@@ -6,14 +6,14 @@
     "gold_answer": "लॉरेन कोस्लो",
     "previous_answer": "केट रॉबर्ट्स या भूमिकेत, जिथे ती एक वेश्या म्हणून कॉर्पोरेट कार्यकारी बनली, कोस्लो दिवसांच्या आपल्या जीवनात (Days of Our Lives) चमकली आणि ती लवकरच एक अशी स्त्री बनली ज्याला चाहते 'द्वेषपूर्ण प्रेम' देतात.",
     "previous_status": "INCORRECT",
-    "current_answer": "केट रॉबर्ट्स या भूमिकेत, जिथे ती एक वेश्या म्हणून कॉर्पोरेट कार्यकारी बनली, कोस्लो दिवसांच्या आपल्या जीवनात (Days of Our Lives) चमकली आणि ती लवकरच एक अशी स्त्री बनली ज्याला चाहते 'द्वेषपूर्ण प्रेम' देतात.",
+    "current_answer": "केट रॉबर्ट्स की भूमिका में, जो एक प्रतिशोधी कॉल गर्ल से कॉर्पोरेट कार्यकारी बन गई, कोस्लो ने 'डेज ऑफ आवर लाइव्स' में अपनी छाप छोड़ी, और जल्द ही वह एक ऐसी महिला बन गई जिसे प्रशंसक 'नफरत करने के लिए प्यार' करते हैं।",
     "current_status": "INCORRECT",
-    "current_confidence": 0.0905,
+    "current_confidence": 0.4198,
     "current_guardrail": null,
     "previous_total_ms": 99.67,
-    "current_total_ms": 111.52,
-    "current_qa_ms": 37.32,
-    "f1": 0.244
+    "current_total_ms": 104.86,
+    "current_qa_ms": 47.0,
+    "f1": 0.227
   },
   {
     "index": 2,
@@ -22,14 +22,14 @@
     "gold_answer": "ट्राइजेमिनल न्यूराल्जिया ट्राइजेमिनल तंत्रिका की सूजन है, जिससे तेज चेहरे में दर्द होता है।",
     "previous_answer": "ट्राइजेमिनल न्यूराल्जिया का सबसे आम कारण मस्तिष्क स्टेम के पास नस पर दबाव डालने वाली रक्त वाहिका है।",
     "previous_status": "CORRECT",
-    "current_answer": "मस्तिष्क स्टेम के पास नस पर दबाव डालने वाली रक्त वाहिका",
+    "current_answer": "ट्राइजेमिनल न्यूराल्जिया का सबसे आम कारण मस्तिष्क स्टेम के पास नस पर दबाव डालने वाली रक्त वाहिका है।",
     "current_status": "CORRECT",
     "current_confidence": 0.0328,
     "current_guardrail": null,
     "previous_total_ms": 119.13,
-    "current_total_ms": 104.98,
-    "current_qa_ms": 36.88,
-    "f1": 0.389
+    "current_total_ms": 110.98,
+    "current_qa_ms": 47.1,
+    "f1": 0.578
   },
   {
     "index": 3,
@@ -40,11 +40,11 @@
     "previous_status": "CORRECT",
     "current_answer": "इसे पोल हेम या पोल पॉकेट कहा जाता है।",
     "current_status": "CORRECT",
-    "current_confidence": 0.3593,
+    "current_confidence": 0.3905,
     "current_guardrail": null,
     "previous_total_ms": 95.72,
-    "current_total_ms": 107.88,
-    "current_qa_ms": 36.38,
+    "current_total_ms": 112.3,
+    "current_qa_ms": 46.88,
     "f1": 0.424
   },
   {
@@ -59,8 +59,8 @@
     "current_confidence": 0.0025,
     "current_guardrail": null,
     "previous_total_ms": 97.36,
-    "current_total_ms": 103.12,
-    "current_qa_ms": 37.34,
+    "current_total_ms": 104.71,
+    "current_qa_ms": 46.74,
     "f1": 0.238
   },
   {
@@ -75,8 +75,8 @@
     "current_confidence": 0.0153,
     "current_guardrail": null,
     "previous_total_ms": 103.21,
-    "current_total_ms": 104.2,
-    "current_qa_ms": 37.71,
+    "current_total_ms": 110.91,
+    "current_qa_ms": 46.58,
     "f1": 0.267
   },
   {
@@ -88,11 +88,11 @@
     "previous_status": "INCORRECT",
     "current_answer": "घोड़े की नाल के आकार में दांतों के निशान दिखाई देते हैं, लेकिन कोई फेंग के निशान नहीं होते हैं",
     "current_status": "CORRECT",
-    "current_confidence": 0.0358,
+    "current_confidence": 0.0389,
     "current_guardrail": null,
     "previous_total_ms": 97.25,
-    "current_total_ms": 99.94,
-    "current_qa_ms": 36.9,
+    "current_total_ms": 112.77,
+    "current_qa_ms": 46.97,
     "f1": 0.286
   },
   {
@@ -102,14 +102,14 @@
     "gold_answer": "उपयुक्त पोषक माध्यम पर निष्फल स्थितियों में काट-छांट किए गए मेरिस्टेम की संस्कृति।",
     "previous_answer": "धेरै वनस्पतिमा पाइने उतक हो जसमा अविभेदित कोशिका (मेरिस्टेमेटिक कोशिका) हुन्छन्",
     "previous_status": "CORRECT",
-    "current_answer": "धेरै वनस्पतिमा पाइने उतक हो जसमा अविभेदित कोशिका (मेरिस्टेमेटिक कोशिका) हुन्छन्",
+    "current_answer": "एक मेरिस्टेम हे बहुतेक वनस्पतींमधील असे ऊतक आहे ज्यामध्ये अविभेदित पेशी (मेरिस्टेमॅटिक पेशी) असतात, ज्या वनस्पतीच्या वाढ होऊ शकणार्‍या प्रदेशात आढळतात.",
     "current_status": "CORRECT",
-    "current_confidence": 0.0065,
+    "current_confidence": 0.0293,
     "current_guardrail": null,
     "previous_total_ms": 101.88,
-    "current_total_ms": 102.41,
-    "current_qa_ms": 37.01,
-    "f1": 0.45
+    "current_total_ms": 108.73,
+    "current_qa_ms": 46.68,
+    "f1": 0.314
   },
   {
     "index": 8,
@@ -120,11 +120,11 @@
     "previous_status": "CORRECT",
     "current_answer": "पृथ्वी की तुलना में सूर्य बहुत बड़ा है।",
     "current_status": "CORRECT",
-    "current_confidence": 0.2385,
+    "current_confidence": 0.2592,
     "current_guardrail": null,
     "previous_total_ms": 94.23,
-    "current_total_ms": 101.31,
-    "current_qa_ms": 36.69,
+    "current_total_ms": 132.79,
+    "current_qa_ms": 52.23,
     "f1": 0.435
   },
   {
@@ -134,14 +134,14 @@
     "gold_answer": "स्पिनोसॅड हे एक नैसर्गिक पदार्थ आहे जे मातीच्या जीवाणूने तयार केले जाते जे कीटकांसाठी विषारी असू शकते.",
     "previous_answer": "एक तुलनेने नवीन कीटकनाशक",
     "previous_status": "INCORRECT",
-    "current_answer": "एक तुलनेने नवीन कीटकनाशक",
-    "current_status": "INCORRECT",
+    "current_answer": "मृद्विज्ञानातील सूक्ष्मजीवांपासून नैसर्गिक कीटकनाशक - स्पिनोसॅड हे एक तुलनेने नवीन कीटकनाशक आहे जे दोन जटिल कार्बनिक संयुगे, स्पिनोसिन ए (उजवीकडे) आणि स्पिनोसिन डी यांचे बनलेले आहे.",
+    "current_status": "CORRECT",
     "current_confidence": 0.1549,
     "current_guardrail": null,
     "previous_total_ms": 104.16,
-    "current_total_ms": 108.41,
-    "current_qa_ms": 36.84,
-    "f1": 0.229
+    "current_total_ms": 110.2,
+    "current_qa_ms": 47.2,
+    "f1": 0.633
   },
   {
     "index": 10,
@@ -150,14 +150,14 @@
     "gold_answer": "पॅरोल अधिकारी होण्यासाठी, गुन्हेगारी न्याय, सामाजिक कार्य, मानसशास्त्र किंवा संबंधित क्षेत्रातील ४ वर्षांची पदवी आवश्यक आहे.",
     "previous_answer": "या आवश्यकतांमध्ये वैध ड्रायव्हरचा परवाना धारण करणे, 21 वर्षांचे असणे, शारीरिकदृष्ट्या फिट असणे आणि स्वच्छ पोलीस रेकॉर्ड असणे यांचा समावेश असू शकतो.",
     "previous_status": "CORRECT",
-    "current_answer": "या आवश्यकतांमध्ये वैध ड्रायव्हरचा परवाना धारण करणे, 21 वर्षांचे असणे, शारीरिकदृष्ट्या फिट असणे आणि स्वच्छ पोलीस रेकॉर्ड असणे यांचा समावेश असू शकतो.",
+    "current_answer": "जेलबाट मुक्ति अधिकारी",
     "current_status": "CORRECT",
-    "current_confidence": 0.0001,
+    "current_confidence": 0.0212,
     "current_guardrail": null,
     "previous_total_ms": 89.76,
-    "current_total_ms": 128.36,
-    "current_qa_ms": 53.8,
-    "f1": 0.433
+    "current_total_ms": 91.32,
+    "current_qa_ms": 37.22,
+    "f1": 0.343
   },
   {
     "index": 11,
@@ -166,14 +166,14 @@
     "gold_answer": "चीनच्या मध्य भागातील डोंगराळ प्रदेश, सिचुआन, शानक्सी आणि गान्सू प्रांतांमध्ये.",
     "previous_answer": "सुमारे 1,600 पांडे शिल्लक आहेत",
     "previous_status": "CORRECT",
-    "current_answer": "सुमारे 1,600 पांडे शिल्लक आहेत",
+    "current_answer": "वाइल्डमध्ये सुमारे 1,600 पांडे शिल्लक आहेत.",
     "current_status": "CORRECT",
     "current_confidence": 0.0172,
     "current_guardrail": null,
     "previous_total_ms": 97.08,
-    "current_total_ms": 99.07,
-    "current_qa_ms": 37.03,
-    "f1": 0.438
+    "current_total_ms": 106.6,
+    "current_qa_ms": 47.4,
+    "f1": 0.444
   },
   {
     "index": 12,
@@ -182,14 +182,14 @@
     "gold_answer": "एक अक्ष किंवा केंद्राभोवती फिरण्याची क्रिया.",
     "previous_answer": "ग्रह किंवा चंद्र एका वेळी त्याच्या अक्षाभोवती पूर्णपणे फिरतो किंवा फिरतो",
     "previous_status": "CORRECT",
-    "current_answer": "ग्रह किंवा चंद्र एका वेळी त्याच्या अक्षाभोवती पूर्णपणे फिरतो किंवा फिरतो",
+    "current_answer": "भ्रमण म्हणजे ग्रह किंवा चंद्र एका वेळी त्याच्या अक्षाभोवती पूर्णपणे फिरतो किंवा फिरतो.",
     "current_status": "CORRECT",
     "current_confidence": 0.2113,
     "current_guardrail": null,
     "previous_total_ms": 102.31,
-    "current_total_ms": 104.57,
-    "current_qa_ms": 36.97,
-    "f1": 0.75
+    "current_total_ms": 108.74,
+    "current_qa_ms": 47.0,
+    "f1": 0.686
   },
   {
     "index": 13,
@@ -198,14 +198,14 @@
     "gold_answer": "दोरी किंवा हार्नेसचा वापर न करता केले जाणारे एक प्रकारचे खडक चढणे.",
     "previous_answer": "प्रदाता आधारित बिलिंग म्हणजे रुग्णालयाच्या विभागात किंवा ठिकाणी दिलेल्या सेवांसाठी बिलिंग प्रक्रिया.",
     "previous_status": "CORRECT",
-    "current_answer": "प्रदाता आधारित बिलिंग म्हणजे रुग्णालयाच्या विभागात किंवा ठिकाणी दिलेल्या सेवांसाठी बिलिंग प्रक्रिया.",
+    "current_answer": "बोल्डरिंग हा एक प्रकारचा खडक चढण्याचा खेळ आहे ज्यासाठी कोणत्याही दोरी किंवा हार्नेसची आवश्यकता नसते.",
     "current_status": "CORRECT",
-    "current_confidence": 0.0077,
+    "current_confidence": 0.0164,
     "current_guardrail": null,
     "previous_total_ms": 95.9,
-    "current_total_ms": 100.51,
-    "current_qa_ms": 37.32,
-    "f1": 0.41
+    "current_total_ms": 115.53,
+    "current_qa_ms": 49.16,
+    "f1": 0.638
   },
   {
     "index": 14,
@@ -219,8 +219,8 @@
     "current_confidence": 0.0068,
     "current_guardrail": null,
     "previous_total_ms": 87.53,
-    "current_total_ms": 91.19,
-    "current_qa_ms": 28.22,
+    "current_total_ms": 110.28,
+    "current_qa_ms": 47.31,
     "f1": 0.385
   },
   {
@@ -232,11 +232,11 @@
     "previous_status": "INCORRECT",
     "current_answer": "आयुष्य: वाइल्डमधील पांढरे वाघ सुमारे 10 ते 15 वर्षे जगतात तर प्राणीसंग्रहालयातील वाघ सामान्यत: 16 ते 20 वर्षे जगतात.",
     "current_status": "CORRECT",
-    "current_confidence": 0.567,
+    "current_confidence": 0.6163,
     "current_guardrail": null,
     "previous_total_ms": 102.53,
-    "current_total_ms": 99.53,
-    "current_qa_ms": 36.18,
+    "current_total_ms": 114.18,
+    "current_qa_ms": 47.29,
     "f1": 0.255
   },
   {
@@ -251,8 +251,8 @@
     "current_confidence": 0.0001,
     "current_guardrail": null,
     "previous_total_ms": 104.12,
-    "current_total_ms": 102.55,
-    "current_qa_ms": 36.88,
+    "current_total_ms": 115.34,
+    "current_qa_ms": 46.85,
     "f1": 0.385
   },
   {
@@ -264,11 +264,11 @@
     "previous_status": "INCORRECT",
     "current_answer": "అవును | లేదు ధన్యవాదాలు!",
     "current_status": "CORRECT",
-    "current_confidence": 0.1599,
+    "current_confidence": 0.1738,
     "current_guardrail": null,
     "previous_total_ms": 101.99,
-    "current_total_ms": 102.18,
-    "current_qa_ms": 37.63,
+    "current_total_ms": 114.62,
+    "current_qa_ms": 47.1,
     "f1": 0.25
   },
   {
@@ -278,14 +278,14 @@
     "gold_answer": "రక్తాన్ని నిల్వ చేయడానికి (ముఖ్యంగా రక్తస్రావం సందర్భంలో) మరియు వ్యాధికారక సూక్ష్మజీవులను బంధించడానికి.",
     "previous_answer": "ఈ క్రోమోజోమ్‌లు బిగుతుగా చుట్టబడిన DNAతో తయారు చేయబడతాయి, ఇది జీవశాస్త్రం యొక్క కేంద్ర సిద్ధాంతం ప్రకారం DNA-RNA-ప్రోటీన్ అవుతుంది.",
     "previous_status": "CORRECT",
-    "current_answer": "ఈ క్రోమోజోమ్‌లు బిగుతుగా చుట్టబడిన DNAతో తయారు చేయబడతాయి, ఇది జీవశాస్త్రం యొక్క కేంద్ర సిద్ధాంతం ప్రకారం DNA-RNA-ప్రోటీన్ అవుతుంది.",
+    "current_answer": "ఒకే గది గల కణాలు ఒకే పెద్ద లిపిడ్ చుక్కను కలిగి ఉంటాయి, ఇది కణ కేంద్రకాన్ని ప్లాస్మా త్వచంపైకి తోస్తుంది, కణానికి సంతకం ఉంగరం ఆకారాన్ని ఇస్తుంది (ఫిగర్ 1).",
     "current_status": "CORRECT",
-    "current_confidence": 0.0083,
+    "current_confidence": 0.0664,
     "current_guardrail": null,
     "previous_total_ms": 97.9,
-    "current_total_ms": 107.18,
-    "current_qa_ms": 37.78,
-    "f1": 0.51
+    "current_total_ms": 115.45,
+    "current_qa_ms": 47.79,
+    "f1": 0.407
   },
   {
     "index": 19,
@@ -294,14 +294,14 @@
     "gold_answer": "ఒక్కో సందర్శనకు $30 నుండి $80 వరకు.",
     "previous_answer": "3 ప్రాథమిక దంతాల శుభ్రపరిచే సగటు ఖర్చు సుమారు $250.",
     "previous_status": "INCORRECT",
-    "current_answer": "3 ప్రాథమిక దంతాల శుభ్రపరిచే సగటు ఖర్చు సుమారు $250.",
+    "current_answer": "యు.ఎస్‌లో లాగ్ హోమ్‌ను నిర్మించడానికి సగటు ఖర్చు దాదాపు *$150.00-$200.00+ చదరపు అడుగుకు టర్న్‌కీ.",
     "current_status": "INCORRECT",
-    "current_confidence": 0.001,
+    "current_confidence": 0.0725,
     "current_guardrail": null,
     "previous_total_ms": 102.33,
-    "current_total_ms": 104.48,
-    "current_qa_ms": 37.16,
-    "f1": 0.148
+    "current_total_ms": 115.93,
+    "current_qa_ms": 47.63,
+    "f1": 0.129
   },
   {
     "index": 20,
@@ -315,8 +315,8 @@
     "current_confidence": 0.1972,
     "current_guardrail": null,
     "previous_total_ms": 111.96,
-    "current_total_ms": 101.98,
-    "current_qa_ms": 37.15,
+    "current_total_ms": 111.81,
+    "current_qa_ms": 47.29,
     "f1": 0.39
   },
   {
@@ -328,11 +328,11 @@
     "previous_status": "CORRECT",
     "current_answer": "కోహార్ట్ నాన్ [C].",
     "current_status": "CORRECT",
-    "current_confidence": 0.0112,
+    "current_confidence": 0.0121,
     "current_guardrail": null,
     "previous_total_ms": 99.42,
-    "current_total_ms": 95.99,
-    "current_qa_ms": 36.8,
+    "current_total_ms": 106.99,
+    "current_qa_ms": 47.0,
     "f1": 0.316
   },
   {
@@ -342,14 +342,14 @@
     "gold_answer": "$2,500-$3,500",
     "previous_answer": "$2,800 నుండి RX 400h",
     "previous_status": "CORRECT",
-    "current_answer": "$2,800 నుండి RX 400h",
+    "current_answer": "eBayలో ఉపయోగించిన యూనిట్ల కోసం బిడ్లు $2,800 నుండి RX 400h బ్యాటరీ వరకు ఉన్నాయి, ఇది 49,000 మైళ్లు ప్రయాణించిన వాహనం నుండి వచ్చింది, RX 450h కోసం $2,875 వరకు 48,214 మైళ్లు ప్రయాణించింది.",
     "current_status": "CORRECT",
     "current_confidence": 0.0023,
     "current_guardrail": null,
     "previous_total_ms": 98.32,
-    "current_total_ms": 102.45,
-    "current_qa_ms": 37.4,
-    "f1": 0.222
+    "current_total_ms": 107.82,
+    "current_qa_ms": 47.05,
+    "f1": 0.053
   },
   {
     "index": 23,
@@ -363,8 +363,8 @@
     "current_confidence": 0.0728,
     "current_guardrail": null,
     "previous_total_ms": 121.97,
-    "current_total_ms": 106.23,
-    "current_qa_ms": 36.57,
+    "current_total_ms": 116.36,
+    "current_qa_ms": 47.19,
     "f1": 0.267
   },
   {
@@ -374,14 +374,14 @@
     "gold_answer": "లేదు",
     "previous_answer": "కడుపు ఆమ్లత్వాన్ని తటస్థం చేసే బైకార్బోనేట్ ను స్రవిస్తాయి.",
     "previous_status": "INCORRECT",
-    "current_answer": "కడుపు ఆమ్లత్వాన్ని తటస్థం చేసే బైకార్బోనేట్ ను స్రవిస్తాయి.",
+    "current_answer": "శాఖాయుత ట్యూబ్ ల యొక్క ఎపిథీలియల్ పొరను ఏర్పరుస్తాయి",
     "current_status": "INCORRECT",
-    "current_confidence": 0.0037,
+    "current_confidence": 0.0048,
     "current_guardrail": null,
     "previous_total_ms": 118.94,
-    "current_total_ms": 100.6,
-    "current_qa_ms": 37.42,
-    "f1": 0.0
+    "current_total_ms": 114.38,
+    "current_qa_ms": 46.77,
+    "f1": 0.111
   },
   {
     "index": 25,
@@ -390,14 +390,14 @@
     "gold_answer": "பாரபின் மெழுகு என்பது பாரபினின் திண்ம வடிவமாகும், இது ஒரு குறிப்பிட்ட வகையான ஆல்க்கேன் ஹைட்ரோகார்பன் ஆகும்.",
     "previous_answer": "மெழுகுவர்த்தி தயாரிப்பிற்கு அதிகம் பயன்படுத்தப்படும் மெழுகாகும்",
     "previous_status": "CORRECT",
-    "current_answer": "மெழுகுவர்த்தி தயாரிப்பிற்கு அதிகம் பயன்படுத்தப்படும் மெழுகாகும்",
+    "current_answer": "பாரபின் என்பது மெழுகுவர்த்தி தயாரிப்பிற்கு அதிகம் பயன்படுத்தப்படும் மெழுகாகும்.",
     "current_status": "CORRECT",
     "current_confidence": 0.2898,
     "current_guardrail": null,
     "previous_total_ms": 100.04,
-    "current_total_ms": 100.11,
-    "current_qa_ms": 31.89,
-    "f1": 0.378
+    "current_total_ms": 98.22,
+    "current_qa_ms": 36.55,
+    "f1": 0.537
   },
   {
     "index": 26,
@@ -408,11 +408,11 @@
     "previous_status": "CORRECT",
     "current_answer": "சக்தி பொதுவாக ATP மூலக்கூறிலிருந்து ஒரு பாஸ்பேட்-ஆக்ஸிஜன் குழுவை நீக்கும் வினையால் செல்லில் வேலை செய்ய விடுவிக்கப்படுகிறது, இதனால் அடினோசின் டைபாஸ்பேட் (ADP) எஞ்சுகிறது.",
     "current_status": "CORRECT",
-    "current_confidence": 0.0127,
+    "current_confidence": 0.0138,
     "current_guardrail": null,
     "previous_total_ms": 96.91,
-    "current_total_ms": 104.16,
-    "current_qa_ms": 35.4,
+    "current_total_ms": 108.68,
+    "current_qa_ms": 43.32,
     "f1": 0.5
   },
   {
@@ -422,14 +422,14 @@
     "gold_answer": "மூளையில் K + அளவுகளின் கட்டுப்பாடு",
     "previous_answer": "நியூரோனல் செயல்பாடு ஓய்வு நிலையில் சுமார் 3 mM இலிருந்து உயிரியல் சூழ்நிலைகளில் அதிகபட்சமாக 10 - 12 mM வரை அதிகரிக்கிறது மற்றும் நோயியல் சூழ்நிலைகளில் இன்னும் அதிக மதிப்புகளுக்கு அதிகரிக்கிறது.",
     "previous_status": "CORRECT",
-    "current_answer": "நியூரோனல் செயல்பாடு ஓய்வு நிலையில் சுமார் 3 mM இலிருந்து உயிரியல் சூழ்நிலைகளில் அதிகபட்சமாக 10 - 12 mM வரை அதிகரிக்கிறது மற்றும் நோயியல் சூழ்நிலைகளில் இன்னும் அதிக மதிப்புகளுக்கு அதிகரிக்கிறது.",
-    "current_status": "CORRECT",
-    "current_confidence": 0.001,
+    "current_answer": "திருப்பு ஆஸ்மோசிஸ் என்பது உப்பு நீக்கம் (அல்லது கடல் நீரில் இருந்து உப்பை அகற்றுதல்) சாத்தியமாக்கும் செயல்முறைகளில் ஒன்றாகும்.",
+    "current_status": "INCORRECT",
+    "current_confidence": 0.0021,
     "current_guardrail": null,
     "previous_total_ms": 108.99,
-    "current_total_ms": 99.37,
-    "current_qa_ms": 37.28,
-    "f1": 0.318
+    "current_total_ms": 113.56,
+    "current_qa_ms": 47.67,
+    "f1": 0.222
   },
   {
     "index": 28,
@@ -438,14 +438,14 @@
     "gold_answer": "வினைப்பெயரை ஒரு சில முறைகள் மட்டுமே பயன்படுத்தவும்.",
     "previous_answer": "ஆதாரமற்ற கூற்றுகளை எவ்வாறு தவிர்ப்பது. முதல் பகுதி ஒரு நல்ல வாதமைடைய கட்டுரை எப்படி இருக்க வேண்டும் என்பதன் ஒரு வரைவை வழங்குகிறது. இரண்டாவது பகுதி உங்களை இந்த மகிழ்ச்சியான முடிவுக்கு இட்டுச் செல்லும் ஒரு படிப்படியான செயல்முறையை வழங்குகிறது. பகுதி ஒன்று: வாதமைடைய கட்டுரையின் வரைவு வடிவம் தொடக்கத்திற்கு, இதோ ஒரு மிகவும் சுருக்கமான வரைவு",
     "previous_status": "CORRECT",
-    "current_answer": "ஆதாரமற்ற கூற்றுகளை எவ்வாறு தவிர்ப்பது. முதல் பகுதி ஒரு நல்ல வாதமைடைய கட்டுரை எப்படி இருக்க வேண்டும் என்பதன் ஒரு வரைவை வழங்குகிறது. இரண்டாவது பகுதி உங்களை இந்த மகிழ்ச்சியான முடிவுக்கு இட்டுச் செல்லும் ஒரு படிப்படியான செயல்முறையை வழங்குகிறது. பகுதி ஒன்று: வாதமைடைய கட்டுரையின் வரைவு வடிவம் தொடக்கத்திற்கு, இதோ ஒரு மிகவும் சுருக்கமான வரைவு",
+    "current_answer": "ஆதாரமற்ற கூற்றுகளை எவ்வாறு தவிர்ப்பது",
     "current_status": "CORRECT",
     "current_confidence": 0.0018,
     "current_guardrail": null,
     "previous_total_ms": 103.63,
-    "current_total_ms": 103.75,
-    "current_qa_ms": 37.64,
-    "f1": 0.4
+    "current_total_ms": 109.47,
+    "current_qa_ms": 47.21,
+    "f1": 0.37
   },
   {
     "index": 29,
@@ -454,14 +454,14 @@
     "gold_answer": "நூல்",
     "previous_answer": "அடுத்த அடுக்கு அடுத்த அடுக்கைச் சுற்றி சுற்றப்பட்ட நூல் போல் தோன்றுகிறது, அது நூல்",
     "previous_status": "CORRECT",
-    "current_answer": "அடுத்த அடுக்கு அடுத்த அடுக்கைச் சுற்றி சுற்றப்பட்ட நூல் போல் தோன்றுகிறது, அது நூல்",
-    "current_status": "CORRECT",
-    "current_confidence": 0.0201,
+    "current_answer": "வெளிப்புறத்தில் தோல் அல்லது பிளாஸ்டிக் இருக்கும், அது பேஸ்பால் வகையைப் பொறுத்தது.",
+    "current_status": "INCORRECT",
+    "current_confidence": 0.0235,
     "current_guardrail": null,
     "previous_total_ms": 102.78,
-    "current_total_ms": 102.01,
-    "current_qa_ms": 36.59,
-    "f1": 0.25
+    "current_total_ms": 114.63,
+    "current_qa_ms": 49.03,
+    "f1": 0.1
   },
   {
     "index": 30,
@@ -475,8 +475,8 @@
     "current_confidence": 0.4524,
     "current_guardrail": null,
     "previous_total_ms": 98.66,
-    "current_total_ms": 100.79,
-    "current_qa_ms": 37.44,
+    "current_total_ms": 117.29,
+    "current_qa_ms": 47.37,
     "f1": 0.407
   },
   {
@@ -488,11 +488,11 @@
     "previous_status": "CORRECT",
     "current_answer": "ஹசஸ் தணிப்புத் திட்டமிடல் செயல்முறையின் மதிப்பீட்டுப் படியில் பயன்படுத்தப்படலாம், இது பேரழிவு இழப்புகளைக் குறைப்பதற்கும், பேரழிவு சேதம், புனரமைப்பு மற்றும் தொடர்ச்சியான சேதத்தின் சுழற்சியை உடைப்பதற்கும் ஒரு சமூகத்தின் நீண்டகால வியூகத்திற்கான அடித்தளமாகும்.",
     "current_status": "CORRECT",
-    "current_confidence": 0.0005,
+    "current_confidence": 0.0006,
     "current_guardrail": null,
     "previous_total_ms": 109.5,
-    "current_total_ms": 124.99,
-    "current_qa_ms": 39.17,
+    "current_total_ms": 118.89,
+    "current_qa_ms": 47.12,
     "f1": 0.441
   },
   {
@@ -507,8 +507,8 @@
     "current_confidence": 0.0002,
     "current_guardrail": null,
     "previous_total_ms": 106.02,
-    "current_total_ms": 97.39,
-    "current_qa_ms": 37.1,
+    "current_total_ms": 110.55,
+    "current_qa_ms": 47.93,
     "f1": 0.0
   },
   {
@@ -518,14 +518,14 @@
     "gold_answer": "চীনের মধ্যাঞ্চলের পর্বতসংকুল অঞ্চল, সিছুয়ান, শাআনশি এবং গানসু প্রদেশে।",
     "previous_answer": "শ্বেত বাঘবোৰ 10 বছৰ থেকে 15 বছৰ পৰ্যন্ত জীউই থাকে",
     "previous_status": "INCORRECT",
-    "current_answer": "শ্বেত বাঘবোৰ 10 বছৰ থেকে 15 বছৰ পৰ্যন্ত জীউই থাকে",
-    "current_status": "INCORRECT",
-    "current_confidence": 0.0148,
+    "current_answer": "আয়ুষ্কাল: বন্য পরিবেশত শ্বেত বাঘবোৰ 10 বছৰ থেকে 15 বছৰ পৰ্যন্ত জীউই থাকে আৰু চিৰিয়াখানাত থকা বাঘবোৰ সাধাৰণতে 16 বছৰ থেকে 20 বছৰ পৰ্যন্ত জীউই থাকে।",
+    "current_status": "CORRECT",
+    "current_confidence": 0.0161,
     "current_guardrail": null,
     "previous_total_ms": 133.66,
-    "current_total_ms": 104.8,
-    "current_qa_ms": 36.58,
-    "f1": 0.114
+    "current_total_ms": 118.24,
+    "current_qa_ms": 47.49,
+    "f1": 0.308
   },
   {
     "index": 34,
@@ -534,14 +534,14 @@
     "gold_answer": "আফ্রিকা",
     "previous_answer": "পূর্ব এবং দক্ষিণ আফ্রিকার গাছহীন ঘাসভূমি এবং বনভূমিতে",
     "previous_status": "CORRECT",
-    "current_answer": "পূর্ব এবং দক্ষিণ আফ্রিকার গাছহীন ঘাসভূমি এবং বনভূমিতে",
+    "current_answer": "প্লেন জেব্রারা পূর্ব এবং দক্ষিণ আফ্রিকার গাছহীন ঘাসভূমি এবং বনভূমিতে বাস করে।",
     "current_status": "CORRECT",
     "current_confidence": 0.0622,
     "current_guardrail": null,
     "previous_total_ms": 109.82,
-    "current_total_ms": 105.05,
-    "current_qa_ms": 37.39,
-    "f1": 0.3
+    "current_total_ms": 111.42,
+    "current_qa_ms": 47.96,
+    "f1": 0.25
   },
   {
     "index": 35,
@@ -555,8 +555,8 @@
     "current_confidence": 0.6226,
     "current_guardrail": null,
     "previous_total_ms": 100.73,
-    "current_total_ms": 103.6,
-    "current_qa_ms": 35.37,
+    "current_total_ms": 111.27,
+    "current_qa_ms": 43.95,
     "f1": 0.0
   },
   {
@@ -566,14 +566,14 @@
     "gold_answer": "৪৫-৬০ গ্রাম কার্বোহাইড্রেট।",
     "previous_answer": "ডায়াবেটিস খাদ্য বিনিময় তালিকার পরিবর্তে ব্যবহার করতে পারেন",
     "previous_status": "INCORRECT",
-    "current_answer": "ডায়াবেটিস খাদ্য বিনিময় তালিকার পরিবর্তে ব্যবহার করতে পারেন",
+    "current_answer": "আপনি ডায়াবেটিস খাদ্য বিনিময় তালিকার পরিবর্তে ব্যবহার করতে পারেন।",
     "current_status": "CORRECT",
     "current_confidence": 0.003,
     "current_guardrail": null,
     "previous_total_ms": 91.27,
-    "current_total_ms": 98.25,
-    "current_qa_ms": 37.04,
-    "f1": 0.286
+    "current_total_ms": 109.7,
+    "current_qa_ms": 47.4,
+    "f1": 0.276
   },
   {
     "index": 37,
@@ -587,8 +587,8 @@
     "current_confidence": 0.3778,
     "current_guardrail": null,
     "previous_total_ms": 93.02,
-    "current_total_ms": 105.07,
-    "current_qa_ms": 37.09,
+    "current_total_ms": 111.31,
+    "current_qa_ms": 46.92,
     "f1": 0.059
   },
   {
@@ -603,8 +603,8 @@
     "current_confidence": 0.0726,
     "current_guardrail": null,
     "previous_total_ms": 93.2,
-    "current_total_ms": 99.33,
-    "current_qa_ms": 36.62,
+    "current_total_ms": 111.65,
+    "current_qa_ms": 47.85,
     "f1": 0.552
   },
   {
@@ -614,14 +614,14 @@
     "gold_answer": "১৫০ ডলার থেকে ১ লাখ ডলার পর্যন্ত",
     "previous_answer": "2 একটি তুলনামূলকভাবে নতুন বাড়ির বেসমেন্ট শেষ করা প্রতি বর্গফুটে $20-$35 বা 1,500-2,000 বর্গফুটের জন্য $30,000-$70,000 থেকে শুরু হতে পারে -- কিন্তু একটি সম্পূর্ণভাবে সমাপ্ত স্থান তৈরি করতে $100,000 বা তার বেশি খরচ হতে পারে।",
     "previous_status": "INCORRECT",
-    "current_answer": "2 একটি তুলনামূলকভাবে নতুন বাড়ির বেসমেন্ট শেষ করা প্রতি বর্গফুটে $20-$35 বা 1,500-2,000 বর্গফুটের জন্য $30,000-$70,000 থেকে শুরু হতে পারে -- কিন্তু একটি সম্পূর্ণভাবে সমাপ্ত স্থান তৈরি করতে $100,000 বা তার বেশি খরচ হতে পারে।",
+    "current_answer": "2 গড়ে, আপনি একটি দত্তক নেওয়া, পরিণত গাধার জন্য মাত্র $100 খরচ করতে পারেন, একটি ছোট গাধার জন্য যা প্রশিক্ষিত এবং উচ্চ মানের জাত হিসাবে বিবেচিত হয় তার জন্য $3,000 পর্যন্ত।",
     "current_status": "INCORRECT",
-    "current_confidence": 0.0038,
+    "current_confidence": 0.009,
     "current_guardrail": null,
     "previous_total_ms": 94.02,
-    "current_total_ms": 99.49,
-    "current_qa_ms": 36.3,
-    "f1": 0.167
+    "current_total_ms": 118.62,
+    "current_qa_ms": 46.98,
+    "f1": 0.208
   },
   {
     "index": 40,
@@ -632,11 +632,11 @@
     "previous_status": "CORRECT",
     "current_answer": "এই শব্দটি সাধারণত আমাদের বিনামূল্যের অভিধানে প্রদর্শিত হয় না, তবে আমাদের প্রিমিয়াম আনব্রিজড ডিকশনারি থেকে সংজ্ঞাটি এখানে সীমিত ভিত্তিতে প্রদান করা হয়েছে।",
     "current_status": "CORRECT",
-    "current_confidence": 0.1812,
+    "current_confidence": 0.197,
     "current_guardrail": null,
     "previous_total_ms": 92.07,
-    "current_total_ms": 104.28,
-    "current_qa_ms": 36.37,
+    "current_total_ms": 111.88,
+    "current_qa_ms": 44.14,
     "f1": 0.318
   }
 ]
