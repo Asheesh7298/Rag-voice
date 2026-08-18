@@ -1,0 +1,1106 @@
+{
+  "total_queries": 120,
+  "passed": 116,
+  "accuracy_pct": 96.7,
+  "latency_p50": 111.76,
+  "latency_p90": 122.72,
+  "category_stats": {
+    "hi": {
+      "passed": 38,
+      "total": 40,
+      "accuracy": 95.0
+    },
+    "mr": {
+      "passed": 39,
+      "total": 40,
+      "accuracy": 97.5
+    },
+    "en": {
+      "passed": 39,
+      "total": 40,
+      "accuracy": 97.5
+    }
+  },
+  "results": [
+    {
+      "category": "hi",
+      "query": "दिनों की जिंदगी में केट रॉबर्ट्स का किरदार निभाने वाली अभिनेत्री कौन है?",
+      "ground_truth": "लॉरेन कोस्लो",
+      "model_answer": "केट रॉबर्ट्स की भूमिका में, जो एक प्रतिशोधी कॉल गर्ल से कॉर्पोरेट कार्यकारी बन गई, कोस्लो ने 'डेज ऑफ आवर लाइव्स' में अपनी छाप छोड़ी, और जल्द ही वह एक ऐसी महिला बन गई जिसे प्रशंसक 'नफरत करने के लिए प्यार' करते हैं।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 850.53
+    },
+    {
+      "category": "hi",
+      "query": "ट्राइजेमिनल न्यूराल्जिया क्या है?",
+      "ground_truth": "ट्राइजेमिनल न्यूराल्जिया ट्राइजेमिनल तंत्रिका की सूजन है, जिससे तेज चेहरे में दर्द होता है।",
+      "model_answer": "ट्राइजेमिनल न्यूराल्जिया का सबसे आम कारण मस्तिष्क स्टेम के पास नस पर दबाव डालने वाली रक्त वाहिका है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.27
+    },
+    {
+      "category": "hi",
+      "query": "झंडे पर पोल हेम क्या है?",
+      "ground_truth": "इसका उपयोग बाहर प्रदर्शित किए जाने वाले झंडों और/या बैनरों पर किया जाता है।",
+      "model_answer": "इसे पोल हेम या पोल पॉकेट कहा जाता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.45
+    },
+    {
+      "category": "hi",
+      "query": "दीमक बॉन्ड की कीमत कितनी होती है?",
+      "ground_truth": "प्रति वर्ष $100, लेकिन वे प्रति वर्ष $1000 तक जा सकते हैं।",
+      "model_answer": "1 क्षमता (10-40 घन यार्ड) के आधार पर, 3 से 4 दिनों के लिए एक रोल ऑफ डंपस्टर किराए पर लेने की कीमत $90 से $700 तक होती है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.72
+    },
+    {
+      "category": "hi",
+      "query": "अमेज़ॅन वर्षावन की प्रमुख भू-आकृतियाँ",
+      "ground_truth": "नदी बेसिन",
+      "model_answer": "अमेज़ॅन बेसिन (अमेज़ोनिया) दुनिया का सबसे बड़ा उष्णकटिबंधीय वर्षावन है, इसका केंद्र अमेज़ॅन नदी है जिसकी 1,000 से अधिक सहायक नदियाँ हैं।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 107.32
+    },
+    {
+      "category": "hi",
+      "query": "साँप के काटने के निशान कैसे दिखते हैं",
+      "ground_truth": "यह जानवर के दांतों से बने दो छेद जैसा दिखता है।",
+      "model_answer": "घोड़े की नाल के आकार में दांतों के निशान दिखाई देते हैं, लेकिन कोई फेंग के निशान नहीं होते हैं",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 108.44
+    },
+    {
+      "category": "hi",
+      "query": "मेरिस्टेम कल्चर क्या है",
+      "ground_truth": "उपयुक्त पोषक माध्यम पर निष्फल स्थितियों में काट-छांट किए गए मेरिस्टेम की संस्कृति।",
+      "model_answer": "एक मेरिस्टेम अधिकांश पौधों में एक ऊतक है जिसमें अविभेदित कोशिकाएं (मेरिस्टेमेटिक कोशिकाएं) होती हैं, जो पौधे के उन क्षेत्रों में पाई जाती हैं जहां वृद्धि हो सकती है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.25
+    },
+    {
+      "category": "hi",
+      "query": "सूर्य का आकार पृथ्वी की तुलना में",
+      "ground_truth": "पृथ्वी से 333,000 गुना भारी",
+      "model_answer": "पृथ्वी की तुलना में सूर्य बहुत बड़ा है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.77
+    },
+    {
+      "category": "hi",
+      "query": "शोटाइम रोटिसरी में पोर्क चॉप्स पकाने के लिए कितना समय लगता है",
+      "ground_truth": "प्रति पाउंड 20 मिनट",
+      "model_answer": "बोनलेस पोर्कचॉप पकाना\n\nबोनलेस चॉप्स जो 1/2 इंच से कम मोटे हों, 400 डिग्री ओवन में 20-30 मिनट के लिए पकाएं।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 108.94
+    },
+    {
+      "category": "hi",
+      "query": "हाइड्रोजन भाप सुधार की लागत",
+      "ground_truth": "हाइड्रोजन के प्रति किलोग्राम की कीमत  $4 – $5 है।",
+      "model_answer": "भाप सुधार में, हाइड्रोजन का उत्पादन हाइड्रोकार्बन फीडस्टॉक को सुधारने से किया जाता है, जिससे संश्लेषण गैस का उत्पादन होता है जिसमें कार्बन मोनोऑक्साइड और हाइड्रोजन का मिश्रण होता है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 105.06
+    },
+    {
+      "category": "hi",
+      "query": "ट्यूना मछली पकड़ने वालों के पहले साथी कितना कमाते हैं",
+      "ground_truth": "स्कूल ब्लूफिन ट्यूना का वजन 100 से 200 पाउंड होता है। विशाल ब्लूफिन ट्यूना का वजन 400 पाउंड होता है।",
+      "model_answer": "25%। मैंने सुना है कि नाव के खर्चों को घटाने के बाद 35%",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.24
+    },
+    {
+      "category": "hi",
+      "query": "संतुलन रिसेप्टर्स कहाँ स्थित होते हैं",
+      "ground_truth": "काउंटेस बी. ६५ योगदान",
+      "model_answer": "संतुलन के लिए संवेदी रिसेप्टर: संतुलन के लिए संवेदी रिसेप्टर विशेष प्रकार के संवेदी रिसेप्टर होते हैं जो भीतरी कान में स्थित होते हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.48
+    },
+    {
+      "category": "hi",
+      "query": "ड्रॉपबियर क्या है?",
+      "ground_truth": "एक कल्पनात्मक ऑस्ट्रेलियाई मारसूपियल।",
+      "model_answer": "ड्रॉप बियर (थाइलार्क्टोस प्लमेटस) एक ऑस्ट्रेलियाई मार्सूपियल है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.85
+    },
+    {
+      "category": "hi",
+      "query": "नागरिक अधिकार आंदोलन को किसने प्रेरित किया",
+      "ground_truth": "मूल अमेरिकी नागरिक अधिकार आंदोलन मूल अमेरिकियों के साथ किए गए दुर्व्यवहार से उत्पन्न हुआ था।",
+      "model_answer": "नागरिक अधिकार आंदोलन रोजा पार्क की गिरफ्तारी के बाद शुरू हुआ, जिसके कारण मार्टिन लूथर किंग जूनियर (एमएलके) ने दक्षिणी ईसाई नेतृत्व सम्मेलन (एससीएलसी) की शुरुआत की।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.0
+    },
+    {
+      "category": "hi",
+      "query": "धक्का परिभाषा",
+      "ground_truth": "किसी वस्तु पर बल लगाकर उसे हटाने के लिए दबाना",
+      "model_answer": "सुस्ती की परिभाषा उनींदापन या ऊर्जा की कमी है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 101.79
+    },
+    {
+      "category": "hi",
+      "query": "हैरिसनबर्ग, वीए में औसत गैस",
+      "ground_truth": "$2.03",
+      "model_answer": "हैरिसनबर्ग, वीए में औसत डीजल गैस मूल्य $3.17 है, जो यू.एस.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.74
+    },
+    {
+      "category": "hi",
+      "query": "बाड़ स्थापना की लागत",
+      "ground_truth": "इसकी औसत कीमत $2,388 है।",
+      "model_answer": "1 खुद से स्थापित करने वाली उच्च तन्यता वाली इलेक्ट्रिक बाड़ की स्थापना जो पशुओं या वन्यजीवों को नियंत्रित करने के लिए होती है, इसकी लागत लगभग $0.05-$0.75 प्रति फुट होती है, या एक वर्ग एकड़ को घेरने के लिए $50-$650 होती है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 107.23
+    },
+    {
+      "category": "hi",
+      "query": "बेकन संरक्षक क्या है?",
+      "ground_truth": "सूअर से तैयार किया गया एक मांस उत्पाद जिसे आमतौर पर संरक्षित किया जाता है।",
+      "model_answer": "बेकन में मौजूद वसा ही उसे वह स्वाद देती है जो आपको पसंद है, और उसे कुरकुरा बनाती है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 102.93
+    },
+    {
+      "category": "hi",
+      "query": "क्रैक का अर्थ क्या है",
+      "ground_truth": "यह शब्द समाचार, गपशप, मजाक, मनोरंजन और आनंददायक बातचीत के लिए एक शब्द है, जो विशेष रूप से आयरलैंड में प्रमुख है।",
+      "model_answer": "इस शब्द का एक असामान्य इतिहास है; अंग्रेजी क्रैक को 20वीं शताब्दी के मध्य में आयरिश में क्रैक के रूप में उधार लिया गया था और आयरिश वर्तनी को तब अंग्रेजी में पुनः उधार लिया गया था।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 113.68
+    },
+    {
+      "category": "hi",
+      "query": "रोडेल वैनिला क्या है?",
+      "ground_truth": "यह एक उच्च गुणवत्ता वाला वैनिला उत्पाद है जो एक बेहतर परिणाम देता है।",
+      "model_answer": "रोडेल अल्कोहल फ्री वैनिला फ्लेवरिंग को वैनिला एक्सट्रेक्ट की तरह ही बनाया जाता है, जिसमें असली, उच्च गुणवत्ता वाली वैनिला बीन्स का उपयोग किया जाता है - और बहुत सारे।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 103.63
+    },
+    {
+      "category": "hi",
+      "query": "तुर्की में सहायक प्रोफेसर का वेतन",
+      "ground_truth": "$60,000",
+      "model_answer": "सहायक प्रोफेसर",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 105.2
+    },
+    {
+      "category": "hi",
+      "query": "लैमिनेट फ्लोरिंग बिछाने की लागत कितनी है?",
+      "ground_truth": "प्रति वर्ग फुट $1 से $6 तक",
+      "model_answer": "47474 ज़िप कोड में 120 वर्ग फीट की एक बुनियादी परियोजना के लिए, लैमिनेट फ्लोरिंग स्थापित करने की मानक लागत प्रति वर्ग फुट $5.67 - $7.70 के बीच होती है*।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 108.5
+    },
+    {
+      "category": "hi",
+      "query": "विभाजित मटर का रंग क्या होता है?",
+      "ground_truth": "मटर की दो किस्में होती हैं - हरी और पीली।",
+      "model_answer": "हरे रंग की किस्मों के विभाजित मटर जो स्पष्ट रूप से पीले रंग के होते हैं या पीले रंग की किस्मों के विभाजित मटर जो स्पष्ट रूप से हरे रंग के होते हैं।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 105.61
+    },
+    {
+      "category": "hi",
+      "query": "धनिया के क्या फायदे हैं",
+      "ground_truth": "यह मसालेदार भोजन के लिए एक अच्छा पूरक है।",
+      "model_answer": "काले बीन टैकोस में स्वाद को बढ़ाने के लिए धनिया का कोई विकल्प नहीं है",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 104.13
+    },
+    {
+      "category": "hi",
+      "query": "कैलिफ़ोर्निया में एक दुर्भावनापूर्ण अपराध (फ़ेलनी) की सजा आपके रिकॉर्ड पर कितने समय तक रहती है?",
+      "ground_truth": "आयु",
+      "model_answer": "यदि आप एक वयस्क (18 वर्ष या उससे अधिक आयु) के रूप में एक गंभीर अपराध करते हैं, तो यह आपके रिकॉर्ड पर हमेशा के लिए रहेगा और इसे मिटाया नहीं जा सकता है।",
+      "status": "EXACT_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.54
+    },
+    {
+      "category": "hi",
+      "query": "मुझे अपने पिल्ले को रेबीज के खिलाफ कब टीका लगवाना चाहिए?",
+      "ground_truth": "आपके पिल्ले को पहला रेबीज टीका 16 और 26 सप्ताह की उम्र के बीच लगवाना चाहिए।",
+      "model_answer": "यदि कोई टीकाकरण न किया गया व्यक्ति हेपेटाइटिस ए के संपर्क में आता है, तो उसे जितनी जल्दी हो सके टीका या इम्यून ग्लोबुलिन दिया जाना चाहिए।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.27
+    },
+    {
+      "category": "hi",
+      "query": "कमरे के तापमान पर अंडे कितने दिन तक चलते हैं",
+      "ground_truth": "कमरे के तापमान पर 1 दिन में वे 1 सप्ताह में रेफ्रिजरेटर में रहने की तुलना में अधिक तेजी से खराब हो जाएंगे।",
+      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 0.1
+    },
+    {
+      "category": "hi",
+      "query": "मुर्गी को कूप में कितनी जगह चाहिए",
+      "ground_truth": "असली मुर्गी खोल कम से कम 3 वर्ग फुट प्रति मुर्गी होना चाहिए।",
+      "model_answer": "4-5 मुर्गियों प्रति एक घोंसला बॉक्स या एक वर्ग फुट की सामुदायिक घोंसला जगह",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.33
+    },
+    {
+      "category": "hi",
+      "query": "बेसमेंट को फ्रेम करने की लागत",
+      "ground_truth": "प्रति वर्ग फुट $2.51 - $3.17",
+      "model_answer": "$20-$35 प्रति वर्ग फुट से हो सकती है, या 1,500-2,000 वर्ग फीट के लिए $30,000-$70,000",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 121.5
+    },
+    {
+      "category": "hi",
+      "query": "लेब्रॉन जेम्स के माता-पिता कितने लंबे थे",
+      "ground_truth": "लेब्रॉन जेम्स के पिता 5'7 हैं और उनकी माँ 5'5 हैं।",
+      "model_answer": "लेब्रॉन जेम्स के माता-पिता कितने लंबे थे TMZ ने सीखा है... लेब्रॉन जेम्स और उनकी माँ",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 121.88
+    },
+    {
+      "category": "hi",
+      "query": "क्या कैंची जैक खतरनाक हैं?",
+      "ground_truth": "हाँ",
+      "model_answer": "कैंची जैक का उपयोग कारों पर टायर बदलने के लिए नहीं किया जाना चाहिए",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.7
+    },
+    {
+      "category": "hi",
+      "query": "ज़ेड पैक किस प्रकार के संक्रमणों का इलाज करता है?",
+      "ground_truth": "कान के संक्रमण, स्ट्रेप गले, निमोनिया, यात्रियों का दस्त, और कुछ अन्य आंतों के संक्रमण।",
+      "model_answer": "एज़िथ्रोमाइसिन एक एंटीबायोटिक है जो कई प्रकार के जीवाणु संक्रमणों के इलाज के लिए उपयोगी है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.13
+    },
+    {
+      "category": "hi",
+      "query": "लौरा नाम की उत्पत्ति",
+      "ground_truth": "लॉरेल वृक्ष या मीठा बे वृक्ष सम्मान और विजय का प्रतीक है।",
+      "model_answer": "लौरा एक स्त्री नाम है जो लैटिन, पश्चिमी यूरोप और उत्तरी अमेरिका में पाया जाता है, जिसका अर्थ (बे लॉरेल) विजेता के रूप में अनुवादित होता है, और लॉरेल और लॉरेन से एक प्रारंभिक हाइपोकोरिज़्म है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 108.6
+    },
+    {
+      "category": "hi",
+      "query": "सेंट लुईस से डेट्रॉइट तक गाड़ी चलाने में कितना समय लगता है?",
+      "ground_truth": "८ घंटे ४३ मिनट",
+      "model_answer": "इस सवारी के लिए कम से कम 44 इंच (112 सेमी) लंबा होना आवश्यक है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 156.4
+    },
+    {
+      "category": "hi",
+      "query": "आपको जन्म नियंत्रण पर कितने समय तक रहना होगा ताकि यह आपके मासिक धर्म को नियंत्रित करना शुरू कर दे?",
+      "ground_truth": "गोली शुरू करने के 25 दिन बाद",
+      "model_answer": "महीने के दौरान हार्मोन के स्तर का उतार-चढ़ाव मासिक धर्म चक्र को नियंत्रित करता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 120.44
+    },
+    {
+      "category": "hi",
+      "query": "एनाबॉलिक ऑस्टियोपोरोसिस दवाएं क्या हैं",
+      "ground_truth": "एनाबॉलिक दवाएं ऑस्टियोपोरोसिस के लिए दवाओं का एक नया और अलग वर्ग हैं।",
+      "model_answer": "2  हड्डी के निर्माण की दर को बढ़ाने वाली दवाओं को एनाबॉलिक कहा जाता है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.36
+    },
+    {
+      "category": "hi",
+      "query": "पैराफिन क्या है?",
+      "ground_truth": "पैराफिन मोम पैराफिन का एक ठोस रूप है, जो एक विशिष्ट प्रकार का एल्केन हाइड्रोकार्बन है।",
+      "model_answer": "यह स्पष्ट नहीं है कि कितने व्यक्ति टार्ट्राज़ाइन के प्रति संवेदनशील या असहिष्णु हैं, लेकिन ग्वेल्फ विश्वविद्यालय का अनुमान है कि यह हर दस हज़ार लोगों में से 1 से 10 है (जनसंख्या का 0.01% से 0.1%)।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.14
+    },
+    {
+      "category": "hi",
+      "query": "लसीका ऊतक के प्रकार",
+      "ground_truth": "लसीका ग्रंथियां, प्लीहा, टॉन्सिल, एडेनोइड्स और थाइमस",
+      "model_answer": "शरीर में लसीका ऊतक एक दूसरे के साथ मिलकर काम करते हैं ताकि लसीका प्रणाली के कार्यों को पूरा किया जा सके",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 100.2
+    },
+    {
+      "category": "hi",
+      "query": "कोडीन क्या है",
+      "ground_truth": "यह एक नारकोटिक दर्द निवारक और खांसी दमनक है जो मॉर्फिन और हाइड्रोकोडोन के समान है।",
+      "model_answer": "कोडीन का उपयोग हल्के से मध्यम गंभीर दर्द से राहत पाने के लिए किया जाता है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 118.06
+    },
+    {
+      "category": "hi",
+      "query": "उरुग्वे का औसत वार्षिक तापमान",
+      "ground_truth": "बहुत ही हल्का 15.8 डिग्री सेल्सियस (60.4 डिग्री फारेनहाइट) पर।",
+      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 0.1
+    },
+    {
+      "category": "mr",
+      "query": "स्पिनोसॅड म्हणजे काय",
+      "ground_truth": "स्पिनोसॅड हे एक नैसर्गिक पदार्थ आहे जे मातीच्या जीवाणूने तयार केले जाते जे कीटकांसाठी विषारी असू शकते.",
+      "model_answer": "मृद्विज्ञानातील सूक्ष्मजीवांपासून नैसर्गिक कीटकनाशक - स्पिनोसॅड हे एक तुलनेने नवीन कीटकनाशक आहे जे दोन जटिल कार्बनिक संयुगे, स्पिनोसिन ए (उजवीकडे) आणि स्पिनोसिन डी यांचे बनलेले आहे.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.63
+    },
+    {
+      "category": "mr",
+      "query": "पॅरोल अधिकारी कसे बनावे",
+      "ground_truth": "पॅरोल अधिकारी होण्यासाठी, गुन्हेगारी न्याय, सामाजिक कार्य, मानसशास्त्र किंवा संबंधित क्षेत्रातील ४ वर्षांची पदवी आवश्यक आहे.",
+      "model_answer": "पॅरोल अधिकारी पॅरोलवर सोडलेल्या अपराध्यांचे पर्यवेक्षण करतात.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.08
+    },
+    {
+      "category": "mr",
+      "query": "वाइल्डमध्ये पांडाचे निवासस्थान कसे असते",
+      "ground_truth": "चीनच्या मध्य भागातील डोंगराळ प्रदेश, सिचुआन, शानक्सी आणि गान्सू प्रांतांमध्ये.",
+      "model_answer": "वाइल्डमध्ये सुमारे 1,600 पांडे शिल्लक आहेत.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 121.27
+    },
+    {
+      "category": "mr",
+      "query": "भ्रमण म्हणजे काय",
+      "ground_truth": "एक अक्ष किंवा केंद्राभोवती फिरण्याची क्रिया.",
+      "model_answer": "भ्रमण म्हणजे ग्रह किंवा चंद्र एका वेळी त्याच्या अक्षाभोवती पूर्णपणे फिरतो किंवा फिरतो.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 113.26
+    },
+    {
+      "category": "mr",
+      "query": "बोल्डरिंग म्हणजे काय",
+      "ground_truth": "दोरी किंवा हार्नेसचा वापर न करता केले जाणारे एक प्रकारचे खडक चढणे.",
+      "model_answer": "बोल्डरिंग हा एक प्रकारचा खडक चढण्याचा खेळ आहे ज्यासाठी कोणत्याही दोरी किंवा हार्नेसची आवश्यकता नसते.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 143.02
+    },
+    {
+      "category": "mr",
+      "query": "स्नायू तंतूचे संकुचन कसे होते याचे रचनात्मक स्पष्टीकरणाला",
+      "ground_truth": "सरळ हालचाल सिद्धांत",
+      "model_answer": "स्नायू तंतूचे संकुचन कसे होते हे स्पष्ट करणारी रचनात्मक सिद्धांत _.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 110.14
+    },
+    {
+      "category": "mr",
+      "query": "वाघ कुठे राहतात?",
+      "ground_truth": "वाघ हे आशिया खंडात, विशेषतः आग्नेय आशिया, चीन, कोरिया आणि रशिया या देशांमध्ये आढळतात.",
+      "model_answer": "आयुष्य: वाइल्डमधील पांढरे वाघ सुमारे 10 ते 15 वर्षे जगतात तर प्राणीसंग्रहालयातील वाघ सामान्यत: 16 ते 20 वर्षे जगतात.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 115.59
+    },
+    {
+      "category": "mr",
+      "query": "decked definition\n\n\nसजवलेले व्याख्या",
+      "ground_truth": "इमारत किंवा जहाजाच्या बाहेरील बाजूस वाढवलेला मजला किंवा प्लॅटफॉर्मचा भाग.",
+      "model_answer": "[From Marathi source] हा शब्द सामान्यत: आमच्या मोफत शब्दकोशात दिसत नाही, परंतु आमच्या प्रीमियम अनॅब्रिज्ड डिक्शनरीमधील व्याख्या मर्यादित प्रमाणात येथे दिली जाते.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 116.88
+    },
+    {
+      "category": "mr",
+      "query": "छोटे घरासाठी मी मॉड्युलर घराचे रूपांतर करू शकतो का?",
+      "ground_truth": "होय",
+      "model_answer": "एलेक्स पिनो",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 87.8
+    },
+    {
+      "category": "mr",
+      "query": "एनएफएल मधील सरासरी कारकिर्दी किती काळ चालते?",
+      "ground_truth": "एनएफएल खेळाडूंसाठी सरासरी खेळण्याचा कारकीर्द 3.5 वर्षे आहे.",
+      "model_answer": "किकर आणि पंटर्सची सर्वात लांब कारकीर्द असते, ज्याची सरासरी 4.87 वर्षे असते.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 131.34
+    },
+    {
+      "category": "mr",
+      "query": "टॅलबॉट्स तासिक वेतन",
+      "ground_truth": "$12.00",
+      "model_answer": "यह चौथा साल है जब हॉबी लॉबी ने लगातार घंटे की दर से वेतन बढ़ाया है जो संघीय न्यूनतम वेतन से अधिक है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 102.29
+    },
+    {
+      "category": "mr",
+      "query": "इमल्सीफायर काय करतो",
+      "ground_truth": "सामान्यत: एकत्र मिसळत नसलेल्या दोन पदार्थांमध्ये मिसळण्याची क्षमता प्रदान करते.",
+      "model_answer": "दुरुपयोगाची तक्रार करा.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.39
+    },
+    {
+      "category": "mr",
+      "query": "बटरकप फुले कुठे लावावीत",
+      "ground_truth": "एशिया, ऑस्ट्रेलिया, मध्य अमेरिका, उत्तर अमेरिका आणि युरोप.",
+      "model_answer": "तुमच्या रॅन्युन्क्युलससाठी अशी जागा निवडा जिथे माती चांगली वाहून जाते.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.02
+    },
+    {
+      "category": "mr",
+      "query": "परिचारिकांसाठी वेतन श्रेणी",
+      "ground_truth": "$68,910",
+      "model_answer": "हम एक मध्य से वरिष्ठ स्तर के डेस्कटॉप सपोर्ट तकनीशियन की तलाश कर रहे हैं जो हमारी गतिशील और प्रतिभाशाली परामर्शदाता टीम में शामिल हो सके।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 98.63
+    },
+    {
+      "category": "mr",
+      "query": "सापाच्या चावण्याचे निशाण कसे दिसते",
+      "ground_truth": "प्राण्याच्या सुळ्यांपासून दोन छिद्रे झालेल्या जखमा दिसत आहेत.",
+      "model_answer": "त्याचे चावे धोकादायक आहेत, पण अत्यंत दुर्मिळ.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 122.67
+    },
+    {
+      "category": "mr",
+      "query": "सरलीकरणाची व्याख्या",
+      "ground_truth": "अवश्यक तपशीलांचा विचार न करता आणि गुंतागुंत कमी करणारे स्पष्टीकरण.",
+      "model_answer": "हाइपोनिम्स (निम्नलिखित में से प्रत्येक एक प्रकार का सरलीकरण है):",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 90.92
+    },
+    {
+      "category": "mr",
+      "query": "मोगास म्हणजे काय",
+      "ground_truth": "मोगॅस हा शब्द मोटार गॅसचा संक्षिप्त रूप आहे, म्हणजेच लोक सामान्यत: कारमध्ये टाकतात ते गॅस.",
+      "model_answer": "मोजो म्हणजे तुमचा प्रभाव, आत्मविश्वास किंवा व्यक्तिगत करिष्मा.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.62
+    },
+    {
+      "category": "mr",
+      "query": "प्रत्येक वर्गासाठी मला पेल ग्रँटमधून किती पैसे मिळतात",
+      "ground_truth": "एक सेमिस्टर १३ क्रेडिटसह आणि पूर्णवेळ पेल ग्रँटचे $2,000 चे पुरस्कार",
+      "model_answer": "वसंत तिमाहीत, विद्यार्थी 2 पेल ग्रँट मिळण्यासाठी अपात्र आहे कारण त्यांनी 25+ क्रेडिट तास आवश्यकता पूर्ण केली नाही.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 132.69
+    },
+    {
+      "category": "mr",
+      "query": "वल्लाही अजीम म्हणजे काय",
+      "ground_truth": "खुदाची कसम आणि महान रक्षक, संरक्षक.",
+      "model_answer": "अजीम हे सामान्यत: मुलाचे नाव म्हणून वापरले जाते.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 118.0
+    },
+    {
+      "category": "mr",
+      "query": "बागेच्या भिंतीसाठी काँक्रीट किती जाड असावे",
+      "ground_truth": "३ फूट पर्यंत भिंतीसाठी, ५.५ इंच जाड.",
+      "model_answer": "पहिल्यांदा, तुम्ही ठेवणारा पाया किमान 150mm जाड असावा.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 118.45
+    },
+    {
+      "category": "mr",
+      "query": "उत्तके विशिष्ट पेशींपासून तयार होतात",
+      "ground_truth": "पेशींपासून उतके तयार होतात. शरीरात पेशी एकत्र येऊन उतके तयार करतात.",
+      "model_answer": "समान उत्पत्ति की कोशिकाओं के समूह एक साथ मिलकर ऊतक बनाते हैं, जब ऊतक समूह एक साथ बनते हैं तो वे अंग",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 88.39
+    },
+    {
+      "category": "mr",
+      "query": "पूर्ण शिक्षण शुल्क",
+      "ground_truth": "राज्यातील रहिवाशांसाठी वर्षाला $7,651.",
+      "model_answer": "ट्यूशन बिलों का भुगतान अवधि की निर्धारित तिथियों तक नहीं किया जाता है",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 97.37
+    },
+    {
+      "category": "mr",
+      "query": "व्हिनेगारमध्ये काय असते",
+      "ground_truth": "व्हिनेगार हा एक द्रव आहे ज्यामध्ये मुख्यतः एसिटिक आम्ल (CH 3 COOH) आणि पाणी असते.",
+      "model_answer": "अपास्चराइझ्ड किंवा ऑर्गॅनिक ACV मध्ये व्हिनेगरची आई असते, ज्याला कोबवेबसारखे दिसते आणि व्हिनेगरला थोडेसे घट्ट दिसू शकते.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 123.4
+    },
+    {
+      "category": "mr",
+      "query": "नसा प्रतिक्रिया म्हणजे काय",
+      "ground_truth": "प्रतिक्षेप क्रिया, ज्याला प्रतिक्षेप म्हणूनही ओळखले जाते, ही एक अनैच्छिक आणि जवळजवळ तात्काळ होणारी हालचाल आहे जी एका उद्दीपकाच्या प्रतिसादात होते.",
+      "model_answer": "अँजिओग्राफी म्हणजे पातळ प्लास्टिकच्या नळीच्या (कॅथेटर) माध्यमातून रक्तप्रवाहात सोडलेल्या विरोधाभासी एजंट वापरून रक्तवाहिन्यांचे एक्स-रे इमेजिंग करणे.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 129.04
+    },
+    {
+      "category": "mr",
+      "query": "प्रेड्निसोलोनचे दुष्परिणाम",
+      "ground_truth": "संक्रमण हार्टबर्न झोप येण्यात अडचण निद्रानाश भूक लागणे मळमळ उलट्या होणे डोकेदुखी गुंगवावणे मासिक पाळीत बदल घाम येण्यात वाढ मुरुम आणि चिंता.",
+      "model_answer": "प्रेडनिसोलोन के साथ पेट की समस्या जैसे कुछ दुष्प्रभाव तुरंत हो सकते हैं, जबकि अन्य जैसे कि बाहों और पैरों की कमजोरी और गोल चेहरा केवल उपचार के सप्ताह या महीनों के बाद ही हो सकते हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 99.26
+    },
+    {
+      "category": "mr",
+      "query": "अमेरिकेत डॅलस कुठे आहे",
+      "ground_truth": "उत्तर टेक्सासमध्ये ट्रिनिटी नदीच्या काठावर हे शहर स्थित आहे.",
+      "model_answer": "डॅलस/फोर्ट वर्थ परिसरात फेस लिफ्ट सारख्या चेहऱ्यावरील उपचारांचा विचार करत असल्यास, ऑनलाइन परामर्शासाठी नोंदणी करा आणि प्लास्टिक सर्जन डॉ.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.93
+    },
+    {
+      "category": "mr",
+      "query": "सरासरी लग्नाच्या पोशाखाची किंमत",
+      "ground_truth": "लग्नाच्या पोशाखाचा सरासरी खर्च $1,089-$1,429 या दरम्यान आहे.",
+      "model_answer": "विवाह पोशाक पर खर्च की गई औसत राशि $1,211 थी।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 92.63
+    },
+    {
+      "category": "mr",
+      "query": "क्रोमॅटोग्राफी म्हणजे काय",
+      "ground_truth": "मिश्रणांच्या विभाजनासाठी प्रयोगशाळा तंत्रांच्या संचासाठी सामूहिक शब्द.",
+      "model_answer": "क्रोमॅटोग्राफी ही एक विलगीकरण तंत्र आहे जी संयुगांच्या दोन टप्प्यांशी वेगवेगळ्या परस्परसंवादावर आधारित आहे, एक चल टप्पा आणि एक स्थिर टप्पा, ज्यामध्ये संयुगे समर्थन माध्यमातून प्रवास करतात.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 118.96
+    },
+    {
+      "category": "mr",
+      "query": "आकाश दृश्य गुणक म्हणजे काय",
+      "ground_truth": "आकाश दृश्य गुणक म्हणजे पृष्ठभागाकडून आकाशाकडे असलेला दृश्य गुणक",
+      "model_answer": "आकाश दृश्य गुणक म्हणजे पृष्ठभागाकडून आकाशाकडे दृश्य गुणक.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 104.15
+    },
+    {
+      "category": "mr",
+      "query": "गाण्याचा अर्थ \"पपर्पल रेन\" काय आहे?",
+      "ground_truth": "मी तुला युद्धानंतरच्या / न्यायाच्या दिवसानंतरच्या जगात बघू इच्छितो.",
+      "model_answer": "मूळतः ओल्ड नॉर्स नावांचे संक्षिप्त रूप जे अर्न घटकाने सुरू होते, ज्याचा अर्थ गरुड आहे.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 126.9
+    },
+    {
+      "category": "mr",
+      "query": "डुकराच्या पसल्यांसाठी किती तापमान असावे",
+      "ground_truth": "२०० डिग्री",
+      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 0.1
+    },
+    {
+      "category": "mr",
+      "query": "एट्टा जेम्सने तिच्या कारकिर्दीची सुरुवात कधी केली",
+      "ground_truth": "१९९५",
+      "model_answer": "उनका 1963 का एल्बम एटा जेम्स रॉक्स द हाउस, जो नैशविले के न्यू एरा क्लब में काटा गया था, ने भी उनके करियर को बढ़ावा दिया।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 83.34
+    },
+    {
+      "category": "mr",
+      "query": "विविध टन मापे",
+      "ground_truth": "अमेरिकन इंग्रजीमध्ये, टन हे एक मापाचे एकक आहे जे 2,000 पौंडांच्या समान आहे. अमेरिकेशिवाय इतर ठिकाणच्या मापदंडांनुसार, टन हे 2,240 पौंडांच्या समान आहे.",
+      "model_answer": "गैर-अमेरिकी माप में, एक टन 2,240 पाउंड के बराबर है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 94.19
+    },
+    {
+      "category": "mr",
+      "query": "गिनी अंड्याला उबवायला किती वेळ लागतो",
+      "ground_truth": "२८ दिवस.",
+      "model_answer": "नमस्कार थेल्मा, गिनी फाउलची अंडी उबवायला 28 दिवस लागतात.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 103.51
+    },
+    {
+      "category": "mr",
+      "query": "मार्केटर्स किती कमावतात",
+      "ground_truth": "$126,190",
+      "model_answer": "BLS च्या अहवालानुसार, वरच्या 10 टक्के मार्केटिंग व्यवस्थापकांनी $187,200 पेक्षा जास्त कमावले, जसे की जाहिरात आणि प्रमोशनमधील व्यवस्थापकांनी केले.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 93.92
+    },
+    {
+      "category": "mr",
+      "query": "ड्रॉपबेअर म्हणजे काय",
+      "ground_truth": "काल्पनिक ऑस्ट्रेलियन मारसूपियल.",
+      "model_answer": "ड्रॉप बिअर (Thylarctos plummetus) हा एक ऑस्ट्रेलियन मार्सुपियल आहे.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 113.9
+    },
+    {
+      "category": "mr",
+      "query": "सर्वोच्च फिको स्कोअर काय आहे",
+      "ground_truth": "फिको स्कोअर 300 ते 850 पर्यंत असू शकतो.",
+      "model_answer": "जॉन स्टीयर्न्सच्या डेस्कवर कधीही आलेले सर्वोच्च क्रेडिट स्कोअर होते 834.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.74
+    },
+    {
+      "category": "mr",
+      "query": "जेनी काय आहे",
+      "ground_truth": "जेनी हे एक कॉर्निश बाळाचे नाव आहे.",
+      "model_answer": "कॉर्निशमध्ये जेनी नावाचा अर्थ आहे: गोरा आणि सहनशील.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.0
+    },
+    {
+      "category": "mr",
+      "query": "लसीका ऊतकांचे प्रकार",
+      "ground_truth": "लसीका ग्रंथी, प्लीहा, टॉन्सिल, एडेनॉइड आणि थायमस",
+      "model_answer": "शरीर में लसीका ऊतक एक दूसरे के साथ मिलकर काम करते हैं ताकि लसीका प्रणाली के कार्यों को पूरा किया जा सके",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.1
+    },
+    {
+      "category": "mr",
+      "query": "तुम्ही खूप लहान असलेली टोपी बसवण्यासाठी टोपी बँड खरेदी करू शकता का?",
+      "ground_truth": "होय",
+      "model_answer": "अपने सिर के चारों ओर पूरी तरह से जाने के लिए टेप काट लें",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 96.89
+    },
+    {
+      "category": "en",
+      "query": "How fast does a commercial jetliner fly?",
+      "ground_truth": "160 to 180 mph during takeoff, and 500 to 600 mph cruising speed.",
+      "model_answer": "[From Nepali source] व्यावसायिक जेटलाइनर सामान्यतया 160 देखि 180 माइल प्रति घण्टाको बीचमा उडान भर्छ ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 106.68
+    },
+    {
+      "category": "en",
+      "query": "What is the average cost of lawn mowing?",
+      "ground_truth": "$25 to $35 per week or $20 to $25 per hour.",
+      "model_answer": "[From Nepali source] 47474 जिप कोडमा 120 वर्ग फिटको बेसिक परियोजनाको लागि ल्यामिनेट फ्लोरिङ स्थापना गर्ने मानक लागत प्रति वर्ग फिट $5.67 - $7.70 को बीचमा पर्छ* ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 114.52
+    },
+    {
+      "category": "en",
+      "query": "What is the function of astrocytes in the brain?",
+      "ground_truth": "Regulating extracellular K+ levels and synaptic support in the CNS.",
+      "model_answer": "[From Marathi source] अ‍ॅस्ट्रोसाइट्सचे एक मान्यताप्राप्त कार्य म्हणजे मेंदूतील K + पातळीचे नियंत्रण करणे.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 139.77
+    },
+    {
+      "category": "en",
+      "query": "Where does lactase enzyme come from?",
+      "ground_truth": "Produced by the small intestine to break down lactose into glucose and galactose.",
+      "model_answer": "[From Nepali source] सामान्यतया, सानो आंत ल्याक्टेज नामक एंजाइम उत्पादन गर्दछ, जसले ल्याक्टोजलाई दुई सरल चिनी, ग्लूकोज र ग्यालेक्टोजमा तोड्छ, जसलाई रक्तप्रवाहमा अवशोषित गर्न सकिन्छ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 204.24
+    },
+    {
+      "category": "en",
+      "query": "How long does passport renewal take?",
+      "ground_truth": "Passport processing generally takes 4 to 6 weeks after your appointment.",
+      "model_answer": "[From Nepali source] पासपोर्ट स्वीकृति सुविधामा तपाईंको नियुक्ति पछि, पासपोर्ट प्रक्रिया सामान्यतया चार देखि छ हप्ता लाग्छ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 122.72
+    },
+    {
+      "category": "en",
+      "query": "Where is Nunavut located?",
+      "ground_truth": "Bordered by Baffin Bay and Labrador Sea to east, Manitoba to south, Northwest Territories to west.",
+      "model_answer": "[From Nepali source] नुनावुटको पूर्वमा बाफिन खाडी र ल्याब्राडोर सागर, दक्षिणमा म्यानिटोबा र सास्केचेवान र पश्चिममा नोर्थवेस्ट टेरिटोरिज स्थित छ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 119.42
+    },
+    {
+      "category": "en",
+      "query": "What causes hepatitis A, B, and C?",
+      "ground_truth": "Hepatitis A and E from contaminated food/water; B, C, D from blood and infected body fluids.",
+      "model_answer": "[From Marathi source] हेपेटायटिस A आणि E सामान्यत: दूषित अन्न किंवा पाण्याच्या सेवनामुळे होतात.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 116.23
+    },
+    {
+      "category": "en",
+      "query": "What is fire blight?",
+      "ground_truth": "A bacterial disease caused by Erwinia amylovora affecting roses, apples, and pears.",
+      "model_answer": "[From Marathi source] हा रोग एका जीवाणू (Erwinia amylovora) मुळे होतो, जो सामान्यतः फुलांपासून सुरू होतो आणि नंतर टहन्यांवर आणि शाखांवर पसरतो.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 121.17
+    },
+    {
+      "category": "en",
+      "query": "What are parathyroid glands?",
+      "ground_truth": "Four pea-sized endocrine glands located in the neck behind the thyroid gland.",
+      "model_answer": "[From Hindi source] पैराथायराइड ग्रंथियां चार मटर के दाने के आकार की ग्रंथियां होती हैं जो गर्दन में थायराइड ग्रंथि पर स्थित होती हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.58
+    },
+    {
+      "category": "en",
+      "query": "What is the average winter temperature in Alaska?",
+      "ground_truth": "Around 5 to 30 degrees Fahrenheit (-15 to -1 degrees Celsius).",
+      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 0.1
+    },
+    {
+      "category": "en",
+      "query": "What are the main responsibilities of HRM?",
+      "ground_truth": "Staffing, employee compensation and benefits, and defining/designing work.",
+      "model_answer": "[From Telugu source] ఈ కారణంగా, హ్యూమన్ రిసోర్సెస్ మేనేజర్ తప్పనిసరిగా ప్రతి హ్యూమన్ రిసోర్సెస్ విభాగాలలో ప్రావీణ్యం కలిగి ఉండాలి - జీతాలు మరియు ప్రయోజనాలు, శిక్షణ మరియు అభివృద్ధి, ఉద్యోగి సంబంధాలు మరియు నియామకం మరియు ఎంపిక.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 94.46
+    },
+    {
+      "category": "en",
+      "query": "What bacteria does Dettol target?",
+      "ground_truth": "E. coli, Salmonella, Listeria, MRSA, and flu virus.",
+      "model_answer": "[From Odia source] এই পরীক্ষার জন্য স্বাধীন চলক হল dettol জীবাণুনাশক ব্যবহৃত ঘনত্ব - 25%, 50% এবং 75%।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 109.28
+    },
+    {
+      "category": "en",
+      "query": "What is the cost of basement construction per square foot?",
+      "ground_truth": "$10 to $35 per square foot.",
+      "model_answer": "[From Gujarati source] ફ્લોરિંગનો ખર્ચ, જે $4.50 પ્રતિ ચોરસ ફૂટથી વધુ હોય છે.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 115.33
+    },
+    {
+      "category": "en",
+      "query": "What is the function of the ciliary body in the eye?",
+      "ground_truth": "Accommodation, aqueous humor production, and maintaining lens zonules.",
+      "model_answer": "[From Hindi source] लेंस ज़ोन्यूल्स पर खींचकर या आराम करके लेंस के आकार को नियंत्रित करता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 110.0
+    },
+    {
+      "category": "en",
+      "query": "How much money do first round NFL draft picks make?",
+      "ground_truth": "$1.7 million to $4.5 million per year.",
+      "model_answer": "[From Telugu source] 2013 NFL డ్రాఫ్ట్ ఆధారంగా, మొదటి రౌండ్ డ్రాఫ్ట్ పిక్ 4 సంవత్సరాల ఒప్పందంపై సంతకం చేయడానికి ఆశించవచ్చు, సంవత్సరానికి 1.7 మిలియన్ మరియు 4.5 మిలియన్ డాలర్ల మధ్య సంపాదించవచ్చు (రౌండ్ చేయబడింది).",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 122.31
+    },
+    {
+      "category": "en",
+      "query": "What does the peripheral nervous system consist of?",
+      "ground_truth": "Cranial nerves, spinal nerves, and peripheral neuromuscular junctions outside the CNS.",
+      "model_answer": "[From Urdu source] کرانیل اعصاب، ریڑھ کی اعصاب اور ان کی جڑیں اور شاخیں، پیریفرل اعصاب، اور عصبی عضلہ جڑیں",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 118.55
+    },
+    {
+      "category": "en",
+      "query": "How many times a day do you take Tessalon Perles?",
+      "ground_truth": "Up to three times a day depending on your prescription.",
+      "model_answer": "[From Punjabi source] ਨੂੰ ਚੂਸੋ ਜਾਂ ਚਬਾਓ ਨਹੀਂ। ਗੋਲੀ ਨੂੰ ਪੂਰੀ ਤਰ੍ਹਾਂ ਨਿਗਲ ਲਵੋ। ਕੈਪਸੂਲ ਨੂੰ ਚੂਸਣਾ ਜਾਂ ਚਬਾਉਣਾ",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 120.8
+    },
+    {
+      "category": "en",
+      "query": "How much does biofeedback therapy cost?",
+      "ground_truth": "$720 for QEEG and $90 per session.",
+      "model_answer": "[From Gujarati source] હેલ્થકેરબ્લુબુક.કોમ મુજબ, ઇસીજીનો ખર્ચ આશરે $50 છે, અને એક્સરસાઇઝ સ્ટ્રેસ ટેસ્ટનો ખર્ચ આશરે $200 થી $300 છે.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 118.53
+    },
+    {
+      "category": "en",
+      "query": "What is the definition of a deck bridge?",
+      "ground_truth": "A bridge whose supporting elements are entirely below the roadway or track.",
+      "model_answer": "[From Marathi source] डेक ब्रिजची व्याख्या: एक पूल ज्याचे आधारभूत घटक (जसे की ट्रस, गिर्डर, कमानी) ट्रॅक किंवा रस्त्याच्या खाली असतात - थ्रू ब्रिजशी तुलना करा.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.2
+    },
+    {
+      "category": "en",
+      "query": "What is the function of frontal sinuses in the human skull?",
+      "ground_truth": "Lined with mucous membrane to secrete fluid that moistens and protects passages.",
+      "model_answer": "[From Marathi source] फ्रंटल साइनस दुर्मिळपणे सममित असतात आणि त्यांच्यामधील मध्य रेषेच्या एका किंवा दुसऱ्या बाजूला विचलन होते.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 114.27
+    },
+    {
+      "category": "en",
+      "query": "What ingredients are in Noxzema cream?",
+      "ground_truth": "Camphor, menthol, phenol, and eucalyptus oil.",
+      "model_answer": "[From Assamese source] অভিলেখ\n\nনক্সিমা হৈছে এক বিশেষ চামৰা পৰিষ্কাৰক যি মুখৰ চামৰাৰ পৰা ধূলি, তেল আৰু মেকআপ অপসাৰণ কৰার বাবে ডিজাইন কৰা হৈছে।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.6
+    },
+    {
+      "category": "en",
+      "query": "What is the psychological definition of dreams?",
+      "ground_truth": "Sigmund Freud considered dreams the royal road to the unconscious mind.",
+      "model_answer": "[From Tamil source] அப்பாவிதமான... மனதின் அறியாத பகுதிக்கான அரச பாதை",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.6
+    },
+    {
+      "category": "en",
+      "query": "Who is a lessee in property leasing?",
+      "ground_truth": "A person who leases or rents property or assets from a lessor.",
+      "model_answer": "[From Urdu source] زمیندار",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 105.04
+    },
+    {
+      "category": "en",
+      "query": "Who was Charles Lindbergh?",
+      "ground_truth": "A shy young pilot from Minnesota who flew the first solo transatlantic flight.",
+      "model_answer": "[From Bengali source] তিনি ছিলেন চার্লস অগাস্ট লিন্ডবার্গের (জন্ম নাম কার্ল ম্যানসন) (ম্যানসন-1859) 1924 এর তৃতীয় সন্তান, যিনি শিশু অবস্থায় সুইডেন থেকে মেলরোজ, মিনেসোটায় অভিবাসী হয়েছিলেন এবং তার দ্বিতীয় স্ত্রী ইভাঞ্জেলিন লজ ল্যান্ড (লিন্ডবার্গ-1876), 1954 এর সাথে তার একমাত্র সন্তান।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 125.01
+    },
+    {
+      "category": "en",
+      "query": "What causes foul smelling stool?",
+      "ground_truth": "Malabsorption, dietary allergies, infections, peptic ulcers, or digestive disorders.",
+      "model_answer": "[From Marathi source] काही औषधे पोटाच्या अस्वस्थता आणि अतिसाराचा कारणीभूत ठरू शकतात.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 117.37
+    },
+    {
+      "category": "en",
+      "query": "How many calories and carbs are in a sweet potato?",
+      "ground_truth": "A medium sweet potato has about 103 calories and 27 grams of carbohydrates.",
+      "model_answer": "[From Hindi source] 1 291 कैलोरी, 6g वसा, 48g कार्ब्स, 14g प्रोटीन, 12g फाइबर।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 114.36
+    },
+    {
+      "category": "en",
+      "query": "How much does an MRI cost in Dallas?",
+      "ground_truth": "$400 to $1,500 depending on insurance deductible and facility.",
+      "model_answer": "[From Telugu source] డిడక్టిబుల్స్ తీరినట్లయితే, సాధారణ అవుట్-ఆఫ్-పాకెట్ ఖర్చు డాక్టర్ సందర్శన మరియు విధానం కోసం $20-$100 కోపేలను కలిగి ఉంటుంది.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.29
+    },
+    {
+      "category": "en",
+      "query": "What is voluntary repossession of a vehicle?",
+      "ground_truth": "Surrendering the vehicle back to the lender when unable to make loan payments.",
+      "model_answer": "[From Odia source] ଏହାକୁ ଅଭାବ ପରିମାଣ କୁହା ଯାଏ ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 113.61
+    },
+    {
+      "category": "en",
+      "query": "What nutrients do teenagers need most?",
+      "ground_truth": "Calcium, iron, protein, and essential vitamins for growth.",
+      "model_answer": "[From Hindi source] कुछ विटामिन और मिनरल्स (विशेष रूप से विटामिन ए, आयरन, कैल्शियम, जिंक और आयोडीन) का सेवन किशोरों (विशेष रूप से लड़कियों) में कम होता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.55
+    },
+    {
+      "category": "en",
+      "query": "What is the lifespan of a white tiger?",
+      "ground_truth": "10 to 15 years in the wild, and up to 20 years in captivity.",
+      "model_answer": "[From Tamil source] ஆயுட்காலம்: காட்டில் வாழும் வெள்ளைப் புலிகள் சுமார் 10 முதல் 15 ஆண்டுகள் வரை வாழ்கின்றன, அதே சமயம் உயிரியல் பூங்காக்களில் உள்ள புலிகள் பொதுவாக 16 முதல் 20 ஆண்டுகள் வரை வாழ்கின்றன.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 108.37
+    },
+    {
+      "category": "en",
+      "query": "What is photosynthesis in green plants?",
+      "ground_truth": "Converting sunlight, carbon dioxide, and water into glucose and oxygen.",
+      "model_answer": "[From Malayalam source] ട്രാൻസ്പിറേഷൻ എന്നത് ചെടികളിലൂടെ വേരുകളിൽ നിന്ന് ഇലകളുടെ അടിഭാഗത്തുള്ള ചെറിയ ദ്വാരങ്ങളിലേക്ക് നനവ് കൈമാറുന്ന പ്രക്രിയയാണ്, അവിടെ അത് ബാഷ്പമായി മാറുകയും അന്തരീക്ഷത്തിലേക്ക് വിടുകയും ചെയ്യുന്നു.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.97
+    },
+    {
+      "category": "en",
+      "query": "What are common symptoms of diabetes?",
+      "ground_truth": "Increased thirst, frequent urination, unexplained weight loss, and fatigue.",
+      "model_answer": "[From Hindi source] हृदय रोग आपकी कोरोनरी धमनियों में प्लेक के निर्माण का परिणाम है - जिसे एथेरोस्क्लेरोसिस कहा जाता है - जिससे रुकावटें पैदा होती हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.87
+    },
+    {
+      "category": "en",
+      "query": "What is a normal blood pressure reading?",
+      "ground_truth": "Less than 120/80 mm Hg for healthy adults.",
+      "model_answer": "[From Telugu source] ఈ పరీక్ష తరచుగా పూర్తి రక్త గణన (CBC)తో చేర్చబడుతుంది.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.76
+    },
+    {
+      "category": "en",
+      "query": "What is the structure of DNA?",
+      "ground_truth": "A double helix composed of nucleotides (adenine, thymine, cytosine, guanine).",
+      "model_answer": "[From Telugu source] డిఆక్సీరైబో న్యూక్లిక్ ఆమ్లం: ఒక అత్యంత పొడవైన, రెండు-తంతువుల న్యూక్లిక్ ఆమ్ల అణువు, ఇది డబుల్ హెలిక్స్‌గా అమర్చబడి ఉంటుంది, ఇది క్రోమోజోమ్ యొక్క ప్రధాన భాగం మరియు దాని తంతువుల వెంట విభాగాలుగా జన్యువులను తీసుకువెళుతుంది.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.4
+    },
+    {
+      "category": "en",
+      "query": "What is the primary function of the human heart?",
+      "ground_truth": "Pumping oxygenated blood throughout the circulatory system.",
+      "model_answer": "[From Hindi source] हृदय के मुख्य कार्यों को निम्नलिखित रूप में सारांशित किया जा सकता है: हृदय का दाहिना भाग शरीर के ऊतकों से ऑक्सीजन-रहित रक्त (ऊपरी और निचले शरीर से क्रमशः सुपीरियर वेना कावा और इन्फीरियर वेना कावा के माध्यम से) दाहिने आलिंद में प्राप्त करता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 111.65
+    },
+    {
+      "category": "en",
+      "query": "What do red blood cells do in the human body?",
+      "ground_truth": "Carry oxygen from the lungs to the body tissues using hemoglobin.",
+      "model_answer": "[From Kannada source] ಇಆರ್ ಅನ್ನು ಎರಡು ವಿಧಗಳಾಗಿ ವಿಂಗಡಿಸಲಾಗಿದೆ - ರಫ್ ಮತ್ತು ಸ್ಮೂತ್ ಇಆರ್.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 113.49
+    },
+    {
+      "category": "en",
+      "query": "Which organ produces insulin?",
+      "ground_truth": "The beta cells in the islets of Langerhans of the pancreas.",
+      "model_answer": "[From Nepali source] उत्तम उत्तर: इन्सुलिन प्यान्क्रियासको बीटा कोषहरूद्वारा उत्पादित हार्मोन हो।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.89
+    },
+    {
+      "category": "en",
+      "query": "How many bones are in the adult human body?",
+      "ground_truth": "206 bones in the adult human skeleton.",
+      "model_answer": "[From Punjabi source] ਸਾੜ ਪੂਰੀ ਹੋਣ ਦਾ ਸਮਾਂ ਹਰੇਕ ਮਨੁੱਖੀ ਸਰੀਰ ਦੇ ਆਕਾਰ ਅਤੇ ਭਾਰ ਨਾਲ ਵੱਖ-ਵੱਖ ਹੁੰਦਾ ਹੈ ਪਰ ਆਮ ਤੌਰ 'ਤੇ 1-1/2 – 3 ਘੰਟੇ ਲੱਗਦੇ ਹਨ।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 112.73
+    },
+    {
+      "category": "en",
+      "query": "What is the most abundant gas in Earth atmosphere?",
+      "ground_truth": "Nitrogen gas, making up approximately 78% of the atmosphere.",
+      "model_answer": "[From Malayalam source] ഒരു ബോണ്ടിലെ ഊർജ്ജത്തിന്റെ അളവ് ഏതാണ്ട് പ്രതീക്ഷകൾക്ക് വിരുദ്ധമാണ് - ബോണ്ട് ശക്തമോ സ്ഥിരമോ ആയാൽ, ബന്ധപ്പെട്ട ആറ്റങ്ങൾക്കിടയിൽ രാസ ഊർജ്ജം കുറവാണ്.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 116.05
+    },
+    {
+      "category": "en",
+      "query": "What is the powerhouse of the cell?",
+      "ground_truth": "Mitochondria, which generate most of the chemical energy needed by the cell (ATP).",
+      "model_answer": "[From Tamil source] அமைலேஸ் எனப்படும் நொதி கார்போஹைட்ரேட்டுகளை குளுக்கோஸ் (இரத்த சர்க்கரை) ஆக உடைக்க உதவுகிறது, இது உங்கள் உடலுக்கு ஆற்றலை அளிக்கிறது.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 116.48
+    }
+  ]
+}

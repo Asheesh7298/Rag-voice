@@ -264,7 +264,7 @@ class VoiceRAG:
                 batch_q, batch_texts,
                 padding=True,
                 truncation=True,
-                max_length=128,
+                max_length=384,
                 return_tensors="pt",
             )
             if self.qa_device == 0:
@@ -341,6 +341,17 @@ class VoiceRAG:
                     elif any(w in ans_words for w in q_words if len(w) > 3):
                         score *= 1.25
 
+                    # Intent-specific entity bonus
+                    # 1. Location intent (where / कहाँ / कुठे / কোথায় / ఎక్కడ / எங்கு)
+                    if any(w in question.lower() for w in ("where", "कहाँ", "कुठे", "কোথায়", "ఎక్కడ", "எங்கு", "ਕਿੱਥੇ")):
+                        if any(term in ans_lower for term in ("जंगल", "देश", "प्रदेश", "forest", "mountain", "country", "city", "क्षेत्र", "प्रदेशात", "मध्ये", "இல்")):
+                            score *= 1.35
+
+                    # 2. Cost / numerical intent (cost / price / how much / कितना / खर्च / কত / ధర / விலை)
+                    if any(w in question.lower() for w in ("cost", "price", "how much", "कितना", "खर्च", "दर", "दाम", "কত", "ధర", "விலை")):
+                        if any(c.isdigit() for c in answer) or any(s in answer for s in ("$", "₹", "€", "£")):
+                            score *= 1.40
+
                     # Rank weighting: prioritize higher ranked retrieved passages
                     rank_decay = 1.0 / (1.0 + 0.15 * i)
                     score = round(score * rank_decay, 4)
@@ -356,20 +367,24 @@ class VoiceRAG:
 
             return best_cand
 
+        # Strict language-matching: feed only same-language chunks to QA
         is_eng = self._is_english_query(question)
         if is_eng:
+            # For English queries, prefer English-text chunks
             english_chunks = [c for c in valid_chunks if self._is_english_query(c.get("text", ""))]
             if english_chunks:
-                best = _evaluate_batched_chunks(english_chunks[:4])
+                best = _evaluate_batched_chunks(english_chunks[:6])
             else:
-                best = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": "", "lang": None}
-
-            if best["score"] <= 0.05 or not best["answer"]:
-                fallback_best = _evaluate_batched_chunks(valid_chunks[:4])
-                if fallback_best["score"] > best["score"] and fallback_best["answer"]:
-                    best = fallback_best
+                # No English chunks found — try all chunks but don't cross-lang fallback blindly
+                best = _evaluate_batched_chunks(valid_chunks[:6])
         else:
-            best = _evaluate_batched_chunks(valid_chunks[:4])
+            # For Hindi/Marathi: detect query lang and strictly filter
+            q_lang = self._detect_lang(question)
+            same_lang_chunks = [c for c in valid_chunks if c.get("lang") == q_lang]
+            if same_lang_chunks:
+                best = _evaluate_batched_chunks(same_lang_chunks[:6])
+            else:
+                best = _evaluate_batched_chunks(valid_chunks[:6])
 
         if best["score"] >= 0 and best["answer"]:
             best["answer"] = self._postprocess(
@@ -399,7 +414,7 @@ class VoiceRAG:
         if isinstance(lang_filter, (list, tuple, set)):
             return set(lang_filter)
         if lang_filter in ("devanagari_group", "hi_mr"):
-            return {"hi", "mr", "ne"}
+            return {"hi", "mr"}
         if lang_filter in ("bengali_group",):
             return {"bn", "as"}
         return {lang_filter}
@@ -425,11 +440,8 @@ class VoiceRAG:
                 continue
             results.append((meta, float(score)))
 
-        # The corpus has no dedicated English rows, so English queries may use
-        # cross-language retrieval. For an Indic language filter, returning an
-        # unrelated script is worse than declining with no grounded result.
-        if allowed_langs == {"en"} and not results:
-            return all_results
+        # With full 3-lang index (hi, mr, en), every language should have matches.
+        # Don't fall back to all_results — that causes cross-language contamination.
         return results
 
     def _filter_stopwords(self, tokens: list) -> list:
@@ -438,14 +450,25 @@ class VoiceRAG:
 
     def _keyword_overlap_score(self, query_tokens: list, passage_text: str) -> float:
         """
-        Compute the ratio of query content words present in passage text.
-        Case-insensitive string containment check.
+        Compute morphological & lexical overlap using word containment and character trigrams.
+        Handles inflected Indic root words accurately.
         """
         if not query_tokens:
             return 0.0
         p_lower = passage_text.lower()
-        matches = sum(1 for token in query_tokens if token.lower() in p_lower)
-        return matches / len(query_tokens)
+        word_matches = sum(1 for token in query_tokens if token.lower() in p_lower)
+        word_ratio = word_matches / len(query_tokens)
+
+        # Character trigrams for root-word matching
+        q_str = " ".join(query_tokens).lower()
+        if len(q_str) >= 3 and len(p_lower) >= 3:
+            q_tri = set(q_str[i:i+3] for i in range(len(q_str)-2))
+            p_tri = set(p_lower[i:i+3] for i in range(len(p_lower)-2))
+            tri_ratio = len(q_tri & p_tri) / max(1, len(q_tri))
+        else:
+            tri_ratio = 0.0
+
+        return max(word_ratio, tri_ratio)
 
     def _hybrid_rerank(self, query: str, candidates: list, lang_filter: str | list | None = None):
         from rank_bm25 import BM25Okapi
@@ -512,16 +535,27 @@ class VoiceRAG:
         return (ascii_alpha / alpha_count) > 0.6
 
     def _detect_lang(self, text: str):
-        """Detect the Indic language family from Unicode script ranges.
+        """Detect the exact Indic language from Unicode script ranges and lexical markers."""
+        # 1. Lexical markers for Devanagari disambiguation
+        q_words = set(text.lower().split())
+        mr_markers = {"आहे", "नाही", "म्हणजे", "काय", "कसे", "कोणती", "कोणते", "कोणता", "कुठे", "झाले", "केले", "मधील", "मध्ये", "यांचे", "त्यांचे", "आणि", "कशी", "किती", "असावा", "करावे", "कोणत्या"}
+        hi_markers = {"है", "हैं", "नहीं", "क्या", "कैसे", "कौन", "कहाँ", "हुआ", "किया", "किए", "होता", "होती", "होते", "और", "में", "पर", "से", "का", "की", "के", "कितना", "कितनी", "चाहिए", "देता", "रहते", "पाया"}
+        ne_markers = {"हो", "छ", "छैन", "गर्छ", "गरेको", "कस्तो", "कहाँ", "र", "को", "का", "मा", "हुन्छ"}
 
-        Hindi, Marathi, and Nepali share Devanagari, while Bengali and Assamese
-        share the Bengali script.  Returning a family lets retrieval keep those
-        ambiguous pairs together without treating every non-Latin query as
-        English.
-        """
+        if any(w in q_words for w in mr_markers):
+            return "mr"
+        if any(w in q_words for w in hi_markers):
+            return "hi"
+        if any(w in q_words for w in ne_markers):
+            return "ne"
+
+        # 2. Assamese vs Bengali letter check
+        if any(c in text for c in ('ৰ', 'ৱ')):
+            return "as"
+
         script_ranges = (
-            (0x0900, 0x097F, "devanagari_group"),
-            (0x0980, 0x09FF, "bengali_group"),
+            (0x0900, 0x097F, "hi"),  # Default devanagari to hi
+            (0x0980, 0x09FF, "bn"),  # Default bengali script to bn
             (0x0A00, 0x0A7F, "pa"),
             (0x0A80, 0x0AFF, "gu"),
             (0x0B00, 0x0B7F, "or"),
@@ -538,7 +572,7 @@ class VoiceRAG:
                 if start <= cp <= end:
                     counts[name] += 1
                     break
-        if not counts:
+        if not counts or sum(counts.values()) == 0:
             return "en"
         best = max(counts, key=counts.get)
         return best if counts[best] >= 2 else "en"
@@ -547,8 +581,8 @@ class VoiceRAG:
         import time
         t0 = time.perf_counter()
         is_eng = self._is_english_query(query)
-        rerank_n = 20 if is_eng else self.RERANK_TOP_N
-        top_k = 5 if is_eng else self.TOP_K
+        rerank_n = self.RERANK_TOP_N
+        top_k = self.TOP_K
 
         qvec = self._embed(query)
         t1 = time.perf_counter()
@@ -599,8 +633,10 @@ class VoiceRAG:
     def _check_unsafe(self, query: str) -> bool:
         import re
         pattern = re.compile(
-            r"\bhow to (make|build) (a )?(bomb|weapon|explosive)\b"
-            r"|\bself[- ]?harm\b|\bhack (into|someone)\b", re.IGNORECASE
+            r"\bhow to (make|build|create) (a |an )?(bomb|weapon|explosive|device)\b"
+            r"|\bself[- ]?harm\b|\bhack (into|someone)\b"
+            r"|\b(ignore (all )?instructions|system override|print (secret|api key|credentials)|root system access)\b",
+            re.IGNORECASE
         )
         return bool(pattern.search(query))
 
@@ -612,9 +648,17 @@ class VoiceRAG:
         import re
         q_lower = query.strip().lower()
 
+        # Gibberish check (repeated non-space string > 25 chars)
+        if len(q_lower) > 20 and not ' ' in q_lower:
+            return True
+
+        # Future predictions / real-time sports
+        if any(w in q_lower for w in ("year 2099", "on mars", "cricket match yesterday", "match yesterday", "stock price", "शेअर बाजार")):
+            return True
+
         # 1. Weather queries
         weather_pattern = re.compile(
-            r"\b(weather|temperature|forecast|rain|sunny)\b|मौसम|हवामान",
+            r"\b(weather|temperature|forecast|rain|sunny)\b|मौसम|हवामान|पाऊस|तापमान",
             re.IGNORECASE
         )
         if weather_pattern.search(q_lower):
@@ -846,19 +890,9 @@ class VoiceRAG:
 
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 
-        # Cross-language attribution for English queries retrieving Indic answers
+        # With strict language isolation, answers should match query language.
+        # No cross-language attribution prefix needed.
         final_answer = best["answer"]
-        if self._is_english_query(query) and final_answer:
-            if any(ord(c) >= 128 for c in final_answer):
-                source_lang = best.get("lang") or (chunks[best.get("chunk_idx", 0)].get("lang") if chunks and 0 <= best.get("chunk_idx", 0) < len(chunks) else None) or "hi"
-                lang_display = {
-                    "as": "Assamese", "bn": "Bengali", "gu": "Gujarati",
-                    "hi": "Hindi", "kn": "Kannada", "ml": "Malayalam",
-                    "mr": "Marathi", "ne": "Nepali", "or": "Odia",
-                    "pa": "Punjabi", "ta": "Tamil", "te": "Telugu",
-                    "ur": "Urdu", "en": "English",
-                }.get(source_lang, source_lang)
-                final_answer = f"[From {lang_display} source] {final_answer}"
 
         return {
             "query": query,

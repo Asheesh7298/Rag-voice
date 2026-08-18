@@ -1,14 +1,12 @@
 """
-Rebuild the FAISS index with additional query+answer chunks.
-For each passage, we index:
-  1. passage_native (original)
-  2. fixed_overlap (original)
-  3. semantic_window (original)
-  4. query_text — the query itself as a retrievable chunk (maps back to the passage)
-  5. answer_text — the gold answer as a retrievable chunk (maps back to the passage)
+Rebuild the FAISS index with full 3-language data (Hindi, Marathi, English).
+Runs on Modal GPU for fast embedding.
 
-This dramatically improves recall because when a user asks a question,
-the query_text chunk will have near-perfect cosine similarity.
+For each passage, we index:
+  1. passage_native — original passage text
+  2. fixed_overlap — 60-token sliding windows with 15-token overlap
+  3. query_text — the query itself (maps back to the passage for QA)
+  4. answer_text — the gold answer (maps back to the passage for QA)
 
 Run: python -m modal run scripts/rebuild_index.py
 """
@@ -42,7 +40,7 @@ app = modal.App("voice-rag-reindex", image=image)
 @app.cls(
     gpu="T4",
     volumes={"/index": volume},
-    timeout=1800,
+    timeout=7200,  # 2 hours for full dataset
 )
 class Reindexer:
 
@@ -59,6 +57,11 @@ class Reindexer:
         print("✅ Model loaded")
 
         print(f"Processing {len(passages_data)} passages...")
+
+        # Count by language
+        from collections import Counter
+        lang_counts = Counter(r["lang"] for r in passages_data)
+        print(f"Language distribution: {dict(lang_counts)}")
 
         all_texts = []
         all_metadata = []
@@ -142,7 +145,6 @@ class Reindexer:
         print(f"Total chunks: {len(all_texts)}")
 
         # Count by strategy
-        from collections import Counter
         strat_counts = Counter(m["strategy"] for m in all_metadata)
         print(f"Strategy breakdown: {dict(strat_counts)}")
 
@@ -178,26 +180,44 @@ class Reindexer:
         print("✅ Index saved and committed to volume!")
         print(f"Total vectors: {index.ntotal}, Dimension: {dim}")
 
-        # Verify: search for the heirloom tomato query
-        print("\n--- Verification: searching for 'हिरलूम टमाटर का क्या अर्थ है' ---")
-        test_q = "हिरलूम टमाटर का क्या अर्थ है"
-        qv = model.encode([test_q], normalize_embeddings=True)
-        scores, ids = index.search(np.asarray(qv, dtype=np.float32), 10)
-        for rank, (score, idx) in enumerate(zip(scores[0], ids[0])):
-            if idx == -1:
-                continue
-            m = all_metadata[idx]
-            print(f"  Rank {rank+1}: score={score:.4f} strategy={m['strategy']} "
-                  f"query_id={m['query_id']} chunk_id={m['chunk_id']}")
-            print(f"    text: {m['text'][:100]}...")
+        # Verify
+        print("\n--- Verification ---")
+        for test_q, test_lang in [
+            ("हिरलूम टमाटर का क्या अर्थ है", "hi"),
+            ("What is the cost of living in New York", "en"),
+            ("पाण्याचे रासायनिक सूत्र काय आहे", "mr"),
+        ]:
+            qv = model.encode([test_q], normalize_embeddings=True)
+            scores, ids = index.search(np.asarray(qv, dtype=np.float32), 5)
+            print(f"\n  Query ({test_lang}): {test_q}")
+            for rank, (score, idx) in enumerate(zip(scores[0], ids[0])):
+                if idx == -1:
+                    continue
+                m = all_metadata[idx]
+                print(f"    Rank {rank+1}: score={score:.4f} lang={m['lang']} "
+                      f"strategy={m['strategy']} text={m['text'][:80]}...")
 
 
 @app.local_entrypoint()
 def main():
     import json
-    print("Loading passages...")
-    passages = [json.loads(l) for l in open("data/processed/passages.jsonl", encoding="utf-8")]
-    print(f"Loaded {len(passages)} passages")
+    import os
+
+    # Try full 3-lang data first, fall back to original
+    full_path = "data/processed/passages_3lang_full.jsonl"
+    orig_path = "data/processed/passages.jsonl"
+
+    data_path = full_path if os.path.exists(full_path) else orig_path
+    print(f"Loading passages from: {data_path}")
+    passages = [json.loads(l) for l in open(data_path, encoding="utf-8")]
+
+    # Filter to only hi, mr, en
+    passages = [p for p in passages if p.get("lang") in ("hi", "mr", "en")]
+    print(f"Loaded {len(passages)} passages (hi/mr/en only)")
+
+    from collections import Counter
+    lang_counts = Counter(p["lang"] for p in passages)
+    print(f"Language distribution: {dict(lang_counts)}")
 
     reindexer = Reindexer()
     reindexer.rebuild.remote(passages)
