@@ -7,7 +7,7 @@ import re
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-ENDPOINT = "https://prkhr-g--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 def evaluate_50():
     with open('data/sample_50_eval.json', 'r', encoding='utf-8') as f:

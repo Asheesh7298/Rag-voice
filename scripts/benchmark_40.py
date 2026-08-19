@@ -10,7 +10,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 with open('data/sample_40_eval.json', 'r', encoding='utf-8') as f:
     sample_40 = json.load(f)[:40]
 
-ENDPOINT = "https://prkhr-g--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 def run_eval():
     results = []

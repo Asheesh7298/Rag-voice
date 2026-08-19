@@ -5,7 +5,7 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-ENDPOINT = "https://prkhr-g--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
 data = urllib.parse.urlencode({'query': 'भारत की राजधानी क्या है?'}).encode()
 req = urllib.request.Request(ENDPOINT, data=data, headers={'Content-Type': 'application/x-www-form-urlencoded'}, method='POST')
 

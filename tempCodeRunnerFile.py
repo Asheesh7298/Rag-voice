@@ -83,11 +83,10 @@ class MetadataStore:
 
 @app.cls(
     gpu="A10G",
-    cpu=8.0,
     memory=16384,
+    timeout=300,
     scaledown_window=300,
     min_containers=1,
-    timeout=300,
     volumes={"/index": volume},
 )
 class VoiceRAG:
@@ -118,11 +117,6 @@ class VoiceRAG:
             shutil.copyfile("/index/metadata.jsonl", local_meta_path)
             print(f"Index and metadata copied in {time.perf_counter()-t0:.1f}s")
 
-        # Set FAISS threads explicitly
-        n_threads = os.cpu_count() or 8
-        faiss.omp_set_num_threads(n_threads)
-        print(f"FAISS using {faiss.omp_get_max_threads()} threads (os.cpu_count()={os.cpu_count()})")
-
         # ── Embedding model ──
         print("Loading embedding model...")
         self.embed_model = SentenceTransformer("/models/e5-base", device="cuda" if device == 0 else "cpu")
@@ -134,7 +128,7 @@ class VoiceRAG:
         print("Loading FAISS index into RAM...")
         self.faiss_index = faiss.read_index(local_index_path)
         if hasattr(self.faiss_index, "hnsw"):
-            self.faiss_index.hnsw.efSearch = 32
+            self.faiss_index.hnsw.efSearch = 64
         print(f"FAISS index loaded: {self.faiss_index.ntotal:,} vectors")
 
         # ── Fast In-Memory Metadata Store ──
@@ -482,10 +476,12 @@ class VoiceRAG:
         
         allowed_langs = self._resolve_lang_filter(lang_filter)
         results = []
+        all_results = []
         for score, idx in zip(scores[0], ids[0]):
             if idx < 0 or idx >= len(self.metadata):
                 continue
             meta = self.metadata[idx]
+            all_results.append((meta, float(score)))
             if allowed_langs and meta.get("lang") not in allowed_langs:
                 continue
             results.append((meta, float(score)))
@@ -541,7 +537,7 @@ class VoiceRAG:
         has_mr_markers = is_devanagari and any(w.endswith(('चा', 'ची', 'चे', 'ला', 'ने')) for w in query_words)
 
         # Filter stopwords from both corpus and query for BM25
-        corpus = [self._filter_stopwords(c[0].get("text", "").split()) for c in candidates]
+        corpus = [self._filter_stopwords(c[0]["text"].split()) for c in candidates]
         query_tokens = self._filter_stopwords(query.split())
         # rank_bm25 divides by the corpus length while building IDF and raises
         # when every candidate is empty after filtering (common for very short
@@ -554,7 +550,7 @@ class VoiceRAG:
         max_b = max(bm25_scores) if max(bm25_scores) > 0 else 1.0
         combined = []
         for (meta, dense), bm25_s in zip(candidates, bm25_scores):
-            overlap_score = self._keyword_overlap_score(query_tokens, meta.get("text", ""))
+            overlap_score = self._keyword_overlap_score(query_tokens, meta["text"])
             keyword_boost = 1.0 + (0.3 * overlap_score)
             rerank_score = (0.85 * dense + 0.15 * (bm25_s / max_b)) * keyword_boost
 
@@ -570,10 +566,10 @@ class VoiceRAG:
             combined.append({
                 "text": meta.get("text", ""),
                 "score": round(rerank_score, 4),
-                "lang": meta.get("lang"),
+                "lang": meta.get("lang", "en"),
                 "strategy": meta.get("strategy", "passage_native"),
-                "chunk_id": meta.get("chunk_id"),
-                "query_id": meta.get("query_id"),
+                "chunk_id": meta.get("chunk_id", ""),
+                "query_id": meta.get("query_id", ""),
             })
         combined.sort(key=lambda c: c["score"], reverse=True)
         return combined
@@ -698,35 +694,53 @@ class VoiceRAG:
         import re
         q_lower = query.strip().lower()
 
-        # Prime ministers, presidents, current office holders
-        political_patterns = [
-            r"\b(who is|who's|name of|current)\s+(the\s+)?(prime minister|pm|president|chief minister|cm|governor|vice president)\b",
-            r"(प्रधानमंत्री|राष्ट्रपति|मुख्यमंत्री|राज्यपाल|उपराष्ट्रपति)\s*(कौन|का नाम)?",
-            r"(पंतप्रधान|राष्ट्रपती|मुख्यमंत्री|राज्यपाल)\s*(कोण|चे नाव)?",
-        ]
-        for p in political_patterns:
-            if re.search(p, q_lower):
-                return True
+        # Gibberish check (repeated non-space string > 25 chars)
+        if len(q_lower) > 20 and not ' ' in q_lower:
+            return True
 
-        # Weather / live status patterns
-        weather_patterns = [
-            r"\b(weather|temperature|forecast|rain|snow|humidity|wind speed)\s+(today|now|tomorrow|tonight|in\s+\w+)?\b",
-            r"\b(today|tomorrow|now)('s)?\s+(weather|temperature|forecast)\b",
-            r"\b(will it rain|is it raining|is it hot|is it cold)\b",
-            r"(मौसम|तापमान|बारिश|वर्षा|हवामाना?|थंडी|ऊन|पाऊस)\s*(कैसा|कितना|होगी|आहे|पडेल|का|आज|उद्या|सध्या)",
-        ]
-        for p in weather_patterns:
-            if re.search(p, q_lower):
-                return True
+        # Future predictions / real-time sports
+        if any(w in q_lower for w in ("year 2099", "on mars", "cricket match yesterday", "match yesterday", "stock price", "शेअर बाजार")):
+            return True
 
-        # Pure temporal / "right now" queries
-        temporal_patterns = [
-            r"\b(what time is it|current time|today's date|what day is it)\b",
-            r"(आज क्या तारीख है|आज कौन सा दिन है|आजची तारीख काय)",
-        ]
-        for p in temporal_patterns:
-            if re.search(p, q_lower):
-                return True
+        # 1. Weather queries
+        weather_pattern = re.compile(
+            r"\b(weather|temperature|forecast|rain|sunny)\b|मौसम|हवामान|पाऊस|तापमान",
+            re.IGNORECASE
+        )
+        if weather_pattern.search(q_lower):
+            return True
+
+        # 2. Current news
+        news_pattern = re.compile(
+            r"\b(today|right now|currently|latest news|breaking)\b",
+            re.IGNORECASE
+        )
+        if news_pattern.search(q_lower):
+            return True
+
+        # 3. Real-time data
+        realtime_pattern = re.compile(
+            r"\b(stock price|exchange rate|live score|current price)\b",
+            re.IGNORECASE
+        )
+        if realtime_pattern.search(q_lower):
+            return True
+
+        # 4. Personal/location queries
+        location_pattern = re.compile(
+            r"^(where am i|my location|near me)\b|\bnear me\b",
+            re.IGNORECASE
+        )
+        if location_pattern.search(q_lower):
+            return True
+
+        # 5. Current political office holders / heads of state
+        political_pattern = re.compile(
+            r"\b(prime minister|president of|current pm|pm of india|who is the pm|who is the president)\b|प्रधानमंत्री|राष्ट्रपती|पंतप्रधान",
+            re.IGNORECASE
+        )
+        if political_pattern.search(q_lower):
+            return True
 
         return False
 
@@ -735,42 +749,78 @@ class VoiceRAG:
         return len(ta & tb) / len(ta) if ta else 0.0
 
     def _scripts_match(self, query: str, answer: str) -> bool:
-        """Verify that answer script matches query script."""
-        import re
-        # Only check alphabetic content, ignoring digits, punctuation, and latin technical units
-        q_clean = re.sub(r'[\d\s\W]+', '', query)
-        a_clean = re.sub(r'[\d\s\W]+', '', answer)
-        if not q_clean or not a_clean:
+        """
+        Detect if the extracted answer matches the query script.
+        Zero latency cost — pure Unicode range checking.
+        Supports Devanagari (Hindi/Marathi) and Latin/ASCII (English).
+        """
+        # Count Devanagari characters in query
+        q_devanagari = sum(1 for ch in query if 0x0900 <= ord(ch) <= 0x097F)
+
+        # If query is Latin/ASCII (e.g. English query), allow matches from any passage
+        if q_devanagari < 2:
             return True
 
-        q_lang = self._detect_lang(query)
-        a_lang = self._detect_lang(answer)
-
-        # Allow matching within script families (e.g. Hindi/Marathi both Devanagari)
-        devanagari_langs = {"hi", "mr", "ne"}
-        if q_lang in devanagari_langs and a_lang in devanagari_langs:
-            return True
-        bengali_langs = {"bn", "as"}
-        if q_lang in bengali_langs and a_lang in bengali_langs:
+        # For Devanagari queries (Hindi/Marathi):
+        # Answer should contain Devanagari characters OR be Latin/ASCII (names, numbers, acronyms)
+        ans_devanagari = sum(1 for ch in answer if 0x0900 <= ord(ch) <= 0x097F)
+        if ans_devanagari > 0:
             return True
 
-        return q_lang == a_lang
+        # Check if answer is Latin/ASCII (e.g., numbers, English scientific terms)
+        indic_other_chars = sum(
+            1 for ch in answer
+            if (0x0980 <= ord(ch) <= 0x0DFF) or (0x0600 <= ord(ch) <= 0x06FF)
+        )
+        if indic_other_chars == 0:
+            # Entirely Latin/ASCII
+            return True
+
+        # Answer is in an unsupported script
+        return False
 
     def _is_plausible_answer(self, query: str, answer: str, source_text: str = "") -> bool:
-        """Plausibility validation: rejects hallucinated values, wrong unit formats, etc."""
+        """
+        Domain sanity check: detects implausible numerical answers for cost queries.
+        Allows ranges, small currency amounts (<10,000), and unit-qualified costs.
+        """
         import re
-        ans_lower = answer.lower()
+        if not answer:
+            return True
+
         q_lower = query.lower()
 
-        # Reject answers that are purely non-informative phrases
-        generic_rejects = [
-            "unknown", "not mentioned", "not provided", "no information",
-            "पता नहीं", "माहित नाही", "उल्लेख नाही", "उपलब्ध नाही"
-        ]
-        if any(g == ans_lower.strip() for g in generic_rejects):
-            return False
+        # Special case: per-unit cost queries can legitimately vary widely
+        if any(k in q_lower for k in ("per square foot", "per sq ft", "per sqft", "प्रति वर्ग फुट", "प्रति चौरस फूट")):
+            return True
 
-        # Reject answers that are unrealistically large numbers (>100,000 without unit qualifier)
+        COST_KEYWORDS = (
+            "cost", "price", "fee", "rate", "charge", "expense", "expensive", "cheap",
+            "लागत", "कीमत", "दाम", "मूल्य", "दर", "शुल्क", "खर्च", "पैसे", "भाव",
+        )
+        ans_lower = answer.lower()
+        is_cost_query = any(kw in q_lower for kw in COST_KEYWORDS)
+
+        if not is_cost_query:
+            return True
+
+        # 1. Range exception: ranges (e.g. "$11 to $22", "$10-$20", "500 to 1000") are valid cost answers
+        range_pattern = re.compile(r'[$₹€£]?\s*\d+[\d,.]*\s*(?:to|-|–|—|से|ते)\s*[$₹€£]?\s*\d+[\d,.]*', re.IGNORECASE)
+        if range_pattern.search(answer):
+            return True
+
+        # 2. Currency exception: currency symbol followed by number < 10,000 is always plausible
+        curr_matches = re.findall(r'[$₹€£]\s*([\d,]+(?:\.\d+)?)', answer)
+        for m in curr_matches:
+            clean = re.sub(r'[^\d.]', '', m)
+            if clean:
+                try:
+                    if float(clean) < 10000:
+                        return True
+                except ValueError:
+                    pass
+
+        # 3. Check for large numbers > 100,000 without unit qualifiers
         has_unit_qualifier = any(u in ans_lower for u in ("per", "each", "/", "प्रति", "दर", "चौरस", "sq", "sq ft", "square"))
         num_tokens = re.findall(r'[\d,.]+', answer)
         for token in num_tokens:
@@ -787,8 +837,7 @@ class VoiceRAG:
 
     # ── Decline helper ────────────────────────────────────────────────────────
 
-    def _decline(self, query, reason, timings, transcript=None, debug_score=None):
-        print(f"[GUARDRAIL DECLINE] Query: {query!r} | Reason: {reason!r} | Score: {debug_score} | Timings: {timings}")
+    def _decline(self, query, reason, timings, transcript=None):
         msgs = {
             "unsafe_input":           "I can't help with that request.",
             "out_of_scope":           "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
@@ -807,11 +856,9 @@ class VoiceRAG:
             "sources": [], "confidence": 0.0, "grounded": False,
             "guardrail_triggered": reason, "timings_ms": timings,
             "lang_detected": None,
-            "debug_qa_score": debug_score,
         }
 
     # ── Main query pipeline ───────────────────────────────────────────────────
-
     def _run_query(self, query: str) -> dict:
         import time, re
         timings = {}
@@ -821,6 +868,11 @@ class VoiceRAG:
         if self._check_unsafe(query):
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "unsafe_input", timings)
+
+        # Weather decline (0ms string match)
+        weather_patterns = ["weather", "temperature", "forecast", "rain today", "sunny today", "मौसम", "हवामान", "तापमान"]
+        if any(p in query.lower() for p in weather_patterns):
+            return self._decline(query, "out_of_scope", {"total_ms": 0.1})
 
         # Guardrail 1b — out of scope / current events (regex, <1ms)
         if self._is_current_events_query(query):
@@ -836,12 +888,12 @@ class VoiceRAG:
         top_score = chunks[0]["score"] if chunks else 0.0
         if top_score < self.OFF_TOPIC_THRESHOLD:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "off_topic", timings, debug_score=top_score)
+            return self._decline(query, "off_topic", timings)
 
         # Guardrail 3 — retrieval confidence
         if not chunks or top_score < self.MIN_RETRIEVAL_SCORE:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "low_retrieval_confidence", timings, debug_score=top_score)
+            return self._decline(query, "low_retrieval_confidence", timings)
 
         # Extractive QA — single forward pass per chunk, pick best span
         t_qa0 = time.perf_counter()
@@ -858,7 +910,7 @@ class VoiceRAG:
             or not any(c.isalnum() for c in ans_clean)
         ):
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "low_qa_confidence", timings, debug_score=best["score"])
+            return self._decline(query, "low_qa_confidence", timings)
 
         # Guardrail 5 — Query-answer semantic relevance
         # Catch cases where QA confidently extracts from an irrelevant passage
@@ -868,7 +920,7 @@ class VoiceRAG:
         relevance = float(np.dot(query_vec.astype(np.float32), answer_vec.astype(np.float32)))
         if relevance < self.MIN_ANSWER_RELEVANCE:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "low_answer_relevance", timings, debug_score=relevance)
+            return self._decline(query, "low_answer_relevance", timings)
 
         # Guardrail 6 — Script match
         if not self._scripts_match(query, best["answer"]):
@@ -951,17 +1003,13 @@ class VoiceRAG:
 
         @api.get("/debug-qa")
         def debug_qa(query: str = "हिरलूम टमाटर क्या है", context: str = "हिरलूम टमाटर एक पुरानी किस्म है जो खुले परागण से उगाई जाती है।"):
-            try:
-                result = self._extract_answer(query, context)
-                chunks, _ = self._retrieve(query)
-                chunk_results = []
-                for c in chunks[:3]:
-                    r = self._extract_answer(query, c.get("text", ""))
-                    chunk_results.append({"chunk_lang": c.get("lang"), "chunk_text": c.get("text", "")[:100], "answer": r.get("answer"), "score": r.get("score")})
-                return {"direct_test": result, "top_chunks": chunk_results}
-            except Exception as e:
-                import traceback
-                return {"error": str(e), "traceback": traceback.format_exc()}
+            result = self._extract_answer(query, context)
+            chunks, _ = self._retrieve(query)
+            chunk_results = []
+            for c in chunks[:3]:
+                r = self._extract_answer(query, c["text"])
+                chunk_results.append({"chunk_lang": c["lang"], "chunk_text": c["text"][:100], "answer": r["answer"], "score": r["score"]})
+            return {"direct_test": result, "top_chunks": chunk_results}
 
         @api.get("/health")
         def health():
@@ -984,28 +1032,17 @@ class VoiceRAG:
             }
 
         @api.post("/query")
-        async def text_query(request: Request):
-            q = None
-            try:
-                form = await request.form()
-                q = form.get("query")
-            except Exception:
-                pass
+        async def text_query(request: Request, query: str = Form(None)):
+            q = query
             if not q:
                 try:
                     body = await request.json()
-                    if isinstance(body, dict):
-                        q = body.get("query")
+                    q = body.get("query")
                 except Exception:
                     pass
             if not q:
                 return {"error": "Missing query parameter"}
-            try:
-                return self._run_query(q)
-            except Exception as e:
-                import traceback
-                print(f"[ERROR in _run_query] {traceback.format_exc()}")
-                return {"error": str(e), "traceback": traceback.format_exc()}
+            return self._run_query(q)
 
         @api.post("/voice-query")
         async def voice_query(

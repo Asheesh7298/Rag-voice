@@ -5,7 +5,7 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-ENDPOINT = "https://prkhr-g--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 test_queries = [
     "भारत की राजधानी क्या है?",
@@ -31,4 +31,8 @@ for q in test_queries:
     print(f"Confidence: {res.get('confidence')}")
     print(f"Guardrail: {res.get('guardrail_triggered')}")
     print(f"Timings: {res.get('timings_ms')}")
-    print(f"Sources top 1: {res.get('sources', [{}])[0].get('text', '')[:100]}...")
+    srcs = res.get("sources", [])
+    if srcs:
+        print(f"Sources top 1: {srcs[0].get('text', '')[:100]}...")
+    else:
+        print("Sources: []")

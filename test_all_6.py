@@ -5,7 +5,7 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-ENDPOINT = "https://prkhr-g--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 test_queries = [
     "भारत की राजधानी क्या है?",
