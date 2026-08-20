@@ -68,3 +68,4 @@ Earlier benchmark iterations replaced by the official 90-question benchmark suit
 - `complete_90.py`, `extract_more_mr_candidates.py`, `finalize_90_set2.py`, `find_clean_examples.py`, `generate_90_verified_benchmark.py`, `verify_and_build_90_bench.py`: Intermediate data preparation scripts used to construct the official 90-question benchmark suites (`benchmark_90.py` and `benchmark_90_set2.py`).
 - `multilang_test.py`: Multi-language prototype test.
 - `rebuild_index.py`, `modal_index_2_76m.py`: Previous 2.76M index build attempt before optimizing to the 1.51M multi-strategy target scale.
+- `benchmark_1000_results.md`: Early 1,000-query benchmark run on the initial 58k-vector T4 GPU prototype.
