@@ -825,8 +825,10 @@ def run_benchmark():
     latencies.sort()
     n = len(latencies)
     p50 = latencies[int(0.50 * n)] if n else 0.0
+    p70 = latencies[int(0.70 * n)] if n else 0.0
     p90 = latencies[int(0.90 * n)] if n else 0.0
     p95 = latencies[int(0.95 * n)] if n else 0.0
+    p100 = latencies[-1] if n else 0.0
     avg_lat = sum(latencies) / max(1, n)
     acc_pct = round((passed_queries / total_queries) * 100.0, 1)
 
@@ -836,8 +838,9 @@ def run_benchmark():
     print(f"Total Queries Evaluated:      {total_queries}")
     print(f"Accurate / Grounded Answers:  {passed_queries} / {total_queries} ({acc_pct}%)")
     print(f"Server Latency P50:           {p50:.2f} ms")
+    print(f"Server Latency P70:           {p70:.2f} ms")
     print(f"Server Latency P90:           {p90:.2f} ms")
-    print(f"Server Latency P95:           {p95:.2f} ms")
+    print(f"Server Latency P100:          {p100:.2f} ms")
     print(f"Average Server Latency:       {avg_lat:.2f} ms")
     print("-" * 110)
     for c, st in category_stats.items():

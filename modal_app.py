@@ -134,7 +134,7 @@ class VoiceRAG:
         print("Loading FAISS index into RAM...")
         self.faiss_index = faiss.read_index(local_index_path)
         if hasattr(self.faiss_index, "hnsw"):
-            self.faiss_index.hnsw.efSearch = 32
+            self.faiss_index.hnsw.efSearch = 24
         print(f"FAISS index loaded: {self.faiss_index.ntotal:,} vectors")
 
         # ── Fast In-Memory Metadata Store ──
@@ -316,7 +316,7 @@ class VoiceRAG:
                 batch_q, batch_texts,
                 padding=True,
                 truncation=True,
-                max_length=384,
+                max_length=256,
                 return_tensors="pt",
             )
             if self.qa_device == 0:
@@ -650,7 +650,7 @@ class VoiceRAG:
             "search_ms": round((t2 - t1) * 1000, 2),
             "rerank_ms": round((t3 - t2) * 1000, 2),
             "total_ms": round((t3 - t0) * 1000, 2),
-        }
+        }, qvec
 
     # ── STT ───────────────────────────────────────────────────────────────────
 
@@ -698,11 +698,13 @@ class VoiceRAG:
         import re
         q_lower = query.strip().lower()
 
-        # Prime ministers, presidents, current office holders
+        # Prime ministers, presidents, current office holders, elections
         political_patterns = [
             r"\b(who is|who's|name of|current)\s+(the\s+)?(prime minister|pm|president|chief minister|cm|governor|vice president)\b",
+            r"\b(prime minister|president of|current pm|pm of india|who is the pm|who is the president|who won.*election|election results|presidential election)\b",
             r"(प्रधानमंत्री|राष्ट्रपति|मुख्यमंत्री|राज्यपाल|उपराष्ट्रपति)\s*(कौन|का नाम)?",
             r"(पंतप्रधान|राष्ट्रपती|मुख्यमंत्री|राज्यपाल)\s*(कोण|चे नाव)?",
+            r"(निवडणूक निकाल|चुनाव परिणाम)",
         ]
         for p in political_patterns:
             if re.search(p, q_lower):
@@ -829,7 +831,7 @@ class VoiceRAG:
 
         # Retrieval — embed + FAISS + hybrid rerank
         detected_lang = "en" if self._is_english_query(query) else self._detect_lang(query)
-        chunks, ret_timings = self._retrieve(query, lang_filter=detected_lang)
+        chunks, ret_timings, query_vec_cached = self._retrieve(query, lang_filter=detected_lang)
         timings.update(ret_timings)
 
         # Guardrail 2 — off-topic (top retrieval score too low)
@@ -864,8 +866,7 @@ class VoiceRAG:
         # Catch cases where QA confidently extracts from an irrelevant passage
         import numpy as np
         answer_vec = self.embed_model.encode([best["answer"]], normalize_embeddings=True)[0]
-        query_vec = self.embed_model.encode([query], normalize_embeddings=True)[0]
-        relevance = float(np.dot(query_vec.astype(np.float32), answer_vec.astype(np.float32)))
+        relevance = float(np.dot(query_vec_cached.astype(np.float32), answer_vec.astype(np.float32)))
         if relevance < self.MIN_ANSWER_RELEVANCE:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "low_answer_relevance", timings, debug_score=relevance)
@@ -953,7 +954,7 @@ class VoiceRAG:
         def debug_qa(query: str = "हिरलूम टमाटर क्या है", context: str = "हिरलूम टमाटर एक पुरानी किस्म है जो खुले परागण से उगाई जाती है।"):
             try:
                 result = self._extract_answer(query, context)
-                chunks, _ = self._retrieve(query)
+                chunks, _, _ = self._retrieve(query)
                 chunk_results = []
                 for c in chunks[:3]:
                     r = self._extract_answer(query, c.get("text", ""))

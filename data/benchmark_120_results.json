@@ -1,24 +1,24 @@
 {
   "total_queries": 120,
-  "passed": 42,
-  "accuracy_pct": 35.0,
-  "latency_p50": 3721.81,
-  "latency_p90": 4708.57,
+  "passed": 57,
+  "accuracy_pct": 47.5,
+  "latency_p50": 131.31,
+  "latency_p90": 141.92,
   "category_stats": {
     "hi": {
-      "passed": 10,
+      "passed": 19,
       "total": 40,
-      "accuracy": 25.0
+      "accuracy": 47.5
     },
     "mr": {
-      "passed": 6,
+      "passed": 16,
       "total": 40,
-      "accuracy": 15.0
+      "accuracy": 40.0
     },
     "en": {
-      "passed": 26,
+      "passed": 22,
       "total": 40,
-      "accuracy": 65.0
+      "accuracy": 55.0
     }
   },
   "results": [
@@ -26,19 +26,19 @@
       "category": "hi",
       "query": "दिनों की जिंदगी में केट रॉबर्ट्स का किरदार निभाने वाली अभिनेत्री कौन है?",
       "ground_truth": "लॉरेन कोस्लो",
-      "model_answer": "डी.आई.टी. डेबोरा",
-      "status": "PARTIAL_MATCH",
+      "model_answer": "इस भूमिका को वर्तमान में लॉरेन द्वारा निभाया जा रहा है।",
+      "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 3834.97
+      "server_latency_ms": 143.94
     },
     {
       "category": "hi",
       "query": "ट्राइजेमिनल न्यूराल्जिया क्या है?",
       "ground_truth": "ट्राइजेमिनल न्यूराल्जिया ट्राइजेमिनल तंत्रिका की सूजन है, जिससे तेज चेहरे में दर्द होता है।",
-      "model_answer": "ट्राइजेमिनल न्यूराल्जिया एक पुरानी दर्द की स्थिति है जो ट्राइजेमिनल तंत्रिका (क्रैनियोफेशियल तंत्रिकाओं में सबसे बड़ी) को प्रभावित करती है।",
+      "model_answer": "ट्राइजेमिनल न्यूरोल्जिया ट्राइजेमिनल तंत्रिका की सूजन है, जिससे चेहरे में तीव्र दर्द होता है।",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 3692.32
+      "server_latency_ms": 132.48
     },
     {
       "category": "hi",
@@ -47,7 +47,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3557.75
+      "server_latency_ms": 126.97
     },
     {
       "category": "hi",
@@ -56,7 +56,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3700.95
+      "server_latency_ms": 134.65
     },
     {
       "category": "hi",
@@ -65,7 +65,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3648.61
+      "server_latency_ms": 123.58
     },
     {
       "category": "hi",
@@ -74,7 +74,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3665.63
+      "server_latency_ms": 122.57
     },
     {
       "category": "hi",
@@ -83,16 +83,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3401.87
+      "server_latency_ms": 118.18
     },
     {
       "category": "hi",
       "query": "सूर्य का आकार पृथ्वी की तुलना में",
       "ground_truth": "पृथ्वी से 333,000 गुना भारी",
-      "model_answer": "पृथ्वी की तुलना में सूर्य बहुत बड़ा है।",
-      "status": "GROUNDED_MATCH",
-      "passed": true,
-      "server_latency_ms": 4547.85
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 128.24
     },
     {
       "category": "hi",
@@ -101,7 +101,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4212.05
+      "server_latency_ms": 137.84
     },
     {
       "category": "hi",
@@ -110,7 +110,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3614.44
+      "server_latency_ms": 123.5
     },
     {
       "category": "hi",
@@ -119,7 +119,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3509.06
+      "server_latency_ms": 123.97
     },
     {
       "category": "hi",
@@ -128,7 +128,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3580.48
+      "server_latency_ms": 135.01
     },
     {
       "category": "hi",
@@ -137,16 +137,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3551.28
+      "server_latency_ms": 128.9
     },
     {
       "category": "hi",
       "query": "नागरिक अधिकार आंदोलन को किसने प्रेरित किया",
       "ground_truth": "मूल अमेरिकी नागरिक अधिकार आंदोलन मूल अमेरिकियों के साथ किए गए दुर्व्यवहार से उत्पन्न हुआ था।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3546.2
+      "model_answer": "नागरिक अधिकार नेता जो अहिंसा से अधीर हो गए और ब्लैक पावर स्टोकली कारमाइकल",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 145.21
     },
     {
       "category": "hi",
@@ -155,16 +155,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3504.49
+      "server_latency_ms": 119.63
     },
     {
       "category": "hi",
       "query": "हैरिसनबर्ग, वीए में औसत गैस",
       "ground_truth": "$2.03",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3536.88
+      "model_answer": "तक चलाने की लागत के लिए गैस की कीमतें इस महीने 15वीं  की गई हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 141.94
     },
     {
       "category": "hi",
@@ -173,34 +173,34 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3528.39
+      "server_latency_ms": 126.59
     },
     {
       "category": "hi",
       "query": "बेकन संरक्षक क्या है?",
       "ground_truth": "सूअर से तैयार किया गया एक मांस उत्पाद जिसे आमतौर पर संरक्षित किया जाता है।",
-      "model_answer": "न्यू ऑरलियन्स (ए.पी.) - बेकन को ठीक करने के लिए इस्तेमाल किए जाने वाले संरक्षक का परीक्षण राष्ट्र के अनुमानित 50 लाख जंगली सूअरों के लिए जहर के रूप में किया जा रहा है: बेकन संरक्षक जंगली सूअरों को मार सकता है।",
+      "model_answer": "बेकन को ठीक करने के लिए इस्तेमाल किए जाने वाले संरक्षक का जंगली सूअरों के लिए जहर के रूप में परीक्षण किया जा रहा है।",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 3671.46
+      "server_latency_ms": 138.54
     },
     {
       "category": "hi",
       "query": "क्रैक का अर्थ क्या है",
       "ground_truth": "यह शब्द समाचार, गपशप, मजाक, मनोरंजन और आनंददायक बातचीत के लिए एक शब्द है, जो विशेष रूप से आयरलैंड में प्रमुख है।",
-      "model_answer": "क्रैक का अर्थ है मज़ा या आनंद, लेकिन यह आयरिश नहीं है।",
+      "model_answer": "क्रॉकिंग का अर्थ है घर्षण के अधीन होने पर कपड़े से रंग का रगड़ना।",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3556.77
+      "server_latency_ms": 131.52
     },
     {
       "category": "hi",
       "query": "रोडेल वैनिला क्या है?",
       "ground_truth": "यह एक उच्च गुणवत्ता वाला वैनिला उत्पाद है जो एक बेहतर परिणाम देता है।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3485.69
+      "model_answer": "वैनिला मूल आइसक्रीम का स्वाद है, आप इसे दुनिया में कहीं भी पा सकते हैं, यह हर एक कौर के लायक है और भीड़ को खुश कर देता है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 130.35
     },
     {
       "category": "hi",
@@ -209,7 +209,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3403.78
+      "server_latency_ms": 130.19
     },
     {
       "category": "hi",
@@ -218,52 +218,52 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3355.04
+      "server_latency_ms": 121.88
     },
     {
       "category": "hi",
       "query": "विभाजित मटर का रंग क्या होता है?",
       "ground_truth": "मटर की दो किस्में होती हैं - हरी और पीली।",
-      "model_answer": "पीला विभाजित मटर लगभग 1/4 इंच चौड़ा होता है और हल्का पीला रंग का होता है।",
+      "model_answer": "और जब वे गीले होते हैं तो वे उसी रंग के होते हैं।",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3395.11
+      "server_latency_ms": 134.49
     },
     {
       "category": "hi",
       "query": "धनिया के क्या फायदे हैं",
       "ground_truth": "यह मसालेदार भोजन के लिए एक अच्छा पूरक है।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3564.99
+      "model_answer": "पौधे के फूलने और बीज विकसित होने के बाद, इसे धनिया कहा जाता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.76
     },
     {
       "category": "hi",
       "query": "कैलिफ़ोर्निया में एक दुर्भावनापूर्ण अपराध (फ़ेलनी) की सजा आपके रिकॉर्ड पर कितने समय तक रहती है?",
       "ground_truth": "आयु",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3350.81
+      "model_answer": "रिकॉर्ड पर 10 साल के लिए है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 143.83
     },
     {
       "category": "hi",
       "query": "मुझे अपने पिल्ले को रेबीज के खिलाफ कब टीका लगवाना चाहिए?",
       "ground_truth": "आपके पिल्ले को पहला रेबीज टीका 16 और 26 सप्ताह की उम्र के बीच लगवाना चाहिए।",
-      "model_answer": "पालतू जानवरों को कम से कम 12 सप्ताह का होना चाहिए जब उन्हें रेबीज के खिलाफ टीका लगाया जाए, अन्यथा उन्हें फिर से टीका लगाना होगा।",
-      "status": "GROUNDED_MATCH",
+      "model_answer": "तीन महीने",
+      "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3431.19
+      "server_latency_ms": 128.05
     },
     {
       "category": "hi",
       "query": "कमरे के तापमान पर अंडे कितने दिन तक चलते हैं",
       "ground_truth": "कमरे के तापमान पर 1 दिन में वे 1 सप्ताह में रेफ्रिजरेटर में रहने की तुलना में अधिक तेजी से खराब हो जाएंगे।",
-      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 0.1
+      "server_latency_ms": 124.75
     },
     {
       "category": "hi",
@@ -272,7 +272,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3486.09
+      "server_latency_ms": 132.08
     },
     {
       "category": "hi",
@@ -281,16 +281,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3308.72
+      "server_latency_ms": 123.45
     },
     {
       "category": "hi",
       "query": "लेब्रॉन जेम्स के माता-पिता कितने लंबे थे",
       "ground_truth": "लेब्रॉन जेम्स के पिता 5'7 हैं और उनकी माँ 5'5 हैं।",
-      "model_answer": "लेब्रॉन जेम्स 6 फीट 8 इंच लंबे हैं।",
-      "status": "GROUNDED_MATCH",
-      "passed": true,
-      "server_latency_ms": 3312.27
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 124.06
     },
     {
       "category": "hi",
@@ -299,97 +299,97 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3664.13
+      "server_latency_ms": 123.79
     },
     {
       "category": "hi",
       "query": "ज़ेड पैक किस प्रकार के संक्रमणों का इलाज करता है?",
       "ground_truth": "कान के संक्रमण, स्ट्रेप गले, निमोनिया, यात्रियों का दस्त, और कुछ अन्य आंतों के संक्रमण।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3371.61
+      "model_answer": "साइनस संक्रमण पर निर्भर करते हुए, आपको कुछ दिनों में बेहतर महसूस होना शुरू हो जाता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 129.8
     },
     {
       "category": "hi",
       "query": "लौरा नाम की उत्पत्ति",
       "ground_truth": "लॉरेल वृक्ष या मीठा बे वृक्ष सम्मान और विजय का प्रतीक है।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3344.34
+      "model_answer": "लौरा नाम का उपयोग अक्सर लड़की के नाम या महिला नाम के रूप में किया जाता है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.54
     },
     {
       "category": "hi",
       "query": "सेंट लुईस से डेट्रॉइट तक गाड़ी चलाने में कितना समय लगता है?",
       "ground_truth": "८ घंटे ४३ मिनट",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3310.92
+      "model_answer": "टोलेडो डेट्रॉइट से केवल 45 मिनट की कार की सवारी है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 142.17
     },
     {
       "category": "hi",
       "query": "आपको जन्म नियंत्रण पर कितने समय तक रहना होगा ताकि यह आपके मासिक धर्म को नियंत्रित करना शुरू कर दे?",
       "ground_truth": "गोली शुरू करने के 25 दिन बाद",
-      "model_answer": "1 डॉक्टर सहमत हैं: एमडी एप्ट की सिफारिश करें: सामान्यतः एक बार जब आप जन्म नियंत्रण गोली शुरू कर देते हैं तो आपके चक्र को नियंत्रित करने में 3 महीने लगते हैं।",
-      "status": "GROUNDED_MATCH",
-      "passed": true,
-      "server_latency_ms": 4317.81
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 124.57
     },
     {
       "category": "hi",
       "query": "एनाबॉलिक ऑस्टियोपोरोसिस दवाएं क्या हैं",
       "ground_truth": "एनाबॉलिक दवाएं ऑस्टियोपोरोसिस के लिए दवाओं का एक नया और अलग वर्ग हैं।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4357.62
+      "model_answer": "ऑस्टियोपोरोसिस के उपचार के लिए निर्धारित की जाने वाली सबसे आम दवाएं बिस्फॉस्फोनेट हैं।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.62
     },
     {
       "category": "hi",
       "query": "पैराफिन क्या है?",
       "ground_truth": "पैराफिन मोम पैराफिन का एक ठोस रूप है, जो एक विशिष्ट प्रकार का एल्केन हाइड्रोकार्बन है।",
-      "model_answer": "पैराफिन उपयोग: पैराफिन एक एल्केन हाइड्रोकार्बन है जिसका उपयोग विभिन्न उद्योगों जैसे कि दवा, कृषि और सौंदर्य प्रसाधनों में विभिन्न व्यावहारिक उपयोग होता है।",
+      "model_answer": "पैराफिन कई रूपों में आता है और यह एक प्रकार का खनिज तेल है जो अक्सर चेहरे की क्रीम और बॉडी लोशन में पाया जाता है।",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 4664.33
+      "server_latency_ms": 135.43
     },
     {
       "category": "hi",
       "query": "लसीका ऊतक के प्रकार",
       "ground_truth": "लसीका ग्रंथियां, प्लीहा, टॉन्सिल, एडेनोइड्स और थाइमस",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 5119.58
+      "model_answer": "लसीकाणु लसीका ग्रंथियों में केंद्रित होते हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.95
     },
     {
       "category": "hi",
       "query": "कोडीन क्या है",
       "ground_truth": "यह एक नारकोटिक दर्द निवारक और खांसी दमनक है जो मॉर्फिन और हाइड्रोकोडोन के समान है।",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3739.55
+      "model_answer": "अन्य नशीली दवाओं की तरह, कोडीन एक व्यसनी दवा है।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 140.7
     },
     {
       "category": "hi",
       "query": "उरुग्वे का औसत वार्षिक तापमान",
       "ground_truth": "बहुत ही हल्का 15.8 डिग्री सेल्सियस (60.4 डिग्री फारेनहाइट) पर।",
-      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 0.1
+      "model_answer": "उरुग्वे में पूरा जुलाई सर्दियों का मौसम होता है इसलिए तापमान 0 डिग्री सेल्सियस से लगभग 15 डिग्री तक होता है।",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 132.7
     },
     {
       "category": "mr",
       "query": "स्पिनोसॅड म्हणजे काय",
       "ground_truth": "स्पिनोसॅड हे एक नैसर्गिक पदार्थ आहे जे मातीच्या जीवाणूने तयार केले जाते जे कीटकांसाठी विषारी असू शकते.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4303.47
+      "model_answer": "अँकिलोजिंग स्पॉन्डिलायटिस - वैद्यकशास्त्रात अँकिलोजिंग स्पॉन्डिलायटिस म्हणजे संधिवाताचा रोग, जो रुमेटॉइड संधिवातासारखा असतो आणि ज्यामुळे मणक्याचे होणारे ओलांडणे किंवा एकत्रीकरण होते.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 140.46
     },
     {
       "category": "mr",
@@ -398,7 +398,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3484.61
+      "server_latency_ms": 120.75
     },
     {
       "category": "mr",
@@ -407,7 +407,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4269.5
+      "server_latency_ms": 129.2
     },
     {
       "category": "mr",
@@ -416,7 +416,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3335.23
+      "server_latency_ms": 119.8
     },
     {
       "category": "mr",
@@ -425,34 +425,34 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4300.45
+      "server_latency_ms": 130.39
     },
     {
       "category": "mr",
       "query": "स्नायू तंतूचे संकुचन कसे होते याचे रचनात्मक स्पष्टीकरणाला",
       "ground_truth": "सरळ हालचाल सिद्धांत",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3506.07
+      "model_answer": "स्नायू संकुचनाचे शरीरशास्त्र या पृष्ठावर आम्ही स्नायू संकुचनामागील शरीरशास्त्र आणि संकुचन थांबवण्याचे कारण काय आहे ते पाहतो.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 141.6
     },
     {
       "category": "mr",
       "query": "वाघ कुठे राहतात?",
       "ground_truth": "वाघ हे आशिया खंडात, विशेषतः आग्नेय आशिया, चीन, कोरिया आणि रशिया या देशांमध्ये आढळतात.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4125.98
+      "model_answer": "बर्‍याचशे वाघ आशियामध्ये, विशेषतः संपूर्ण आग्नेय आशिया, चीन, कोरिया आणि रशियामध्ये राहतात.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 131.64
     },
     {
       "category": "mr",
       "query": "decked definition\n\n\nसजवलेले व्याख्या",
       "ground_truth": "इमारत किंवा जहाजाच्या बाहेरील बाजूस वाढवलेला मजला किंवा प्लॅटफॉर्मचा भाग.",
-      "model_answer": "That question is outside the knowledge base scope.",
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3427.93
+      "server_latency_ms": 113.79
     },
     {
       "category": "mr",
@@ -461,16 +461,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4892.02
+      "server_latency_ms": 120.06
     },
     {
       "category": "mr",
       "query": "एनएफएल मधील सरासरी कारकिर्दी किती काळ चालते?",
       "ground_truth": "एनएफएल खेळाडूंसाठी सरासरी खेळण्याचा कारकीर्द 3.5 वर्षे आहे.",
-      "model_answer": "3 1⁄2 वर्षे",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 3599.68
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 169.35
     },
     {
       "category": "mr",
@@ -479,7 +479,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4465.76
+      "server_latency_ms": 124.44
     },
     {
       "category": "mr",
@@ -488,7 +488,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3315.63
+      "server_latency_ms": 126.94
     },
     {
       "category": "mr",
@@ -497,16 +497,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4936.85
+      "server_latency_ms": 126.54
     },
     {
       "category": "mr",
       "query": "परिचारिकांसाठी वेतन श्रेणी",
       "ground_truth": "$68,910",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "model_answer": "That question is outside the knowledge base scope.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3375.46
+      "server_latency_ms": 106.96
     },
     {
       "category": "mr",
@@ -515,7 +515,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4289.13
+      "server_latency_ms": 128.33
     },
     {
       "category": "mr",
@@ -524,52 +524,52 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3276.66
+      "server_latency_ms": 111.87
     },
     {
       "category": "mr",
       "query": "मोगास म्हणजे काय",
       "ground_truth": "मोगॅस हा शब्द मोटार गॅसचा संक्षिप्त रूप आहे, म्हणजेच लोक सामान्यत: कारमध्ये टाकतात ते गॅस.",
-      "model_answer": "मी एक पायलट आहे आणि मला विमान वाहतूकीच्या सर्व गोष्टी आवडतात, पण विमान इंधन पुरवठादार म्हणून 25 वर्षे काम केल्यानंतर, मला विमानांमध्ये ऑटोमोटिव्ह मोटर गॅसोलीन (मोगास) वापरण्याबद्दल काही खरे चिंता आहेत.",
+      "model_answer": "मोरोसची व्याख्या म्हणजे उदासीन वृत्ती किंवा स्वभाव असणे.",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 4264.4
+      "server_latency_ms": 141.92
     },
     {
       "category": "mr",
       "query": "प्रत्येक वर्गासाठी मला पेल ग्रँटमधून किती पैसे मिळतात",
       "ground_truth": "एक सेमिस्टर १३ क्रेडिटसह आणि पूर्णवेळ पेल ग्रँटचे $2,000 चे पुरस्कार",
-      "model_answer": "मी पेटको येथे काम करतो आणि तिथे बेसिक प्रशिक्षण वर्गासाठी 99.95 डॉलर्स पडतात.",
+      "model_answer": "मला त्यांच्याकडून 3-चरणी प्रणाली आणि कामाच्या बूटांची एक जोडी मिळाली, जवळजवळ हजार डॉलर्सची.",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3416.2
+      "server_latency_ms": 142.27
     },
     {
       "category": "mr",
       "query": "वल्लाही अजीम म्हणजे काय",
       "ground_truth": "खुदाची कसम आणि महान रक्षक, संरक्षक.",
-      "model_answer": "वल्लाही म्हणजे अल्लाहची शपथ घेणे, जे मुस्लिम वापरतात, पण ते टी-डॉटमध्ये प्रसिद्ध झाले आहे (टी-डॉटमधील मूळ राहता राहता हे राहता आहे) कारण समोलीचे म्हणणे आहे की ते जवळजवळ प्रत्येक वाक्यात आहे.",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 4521.81
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 114.67
     },
     {
       "category": "mr",
       "query": "बागेच्या भिंतीसाठी काँक्रीट किती जाड असावे",
       "ground_truth": "३ फूट पर्यंत भिंतीसाठी, ५.५ इंच जाड.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3471.62
+      "model_answer": "मी माझ्या ग्राहकांपैकी एकासाठी 6 इंच जाड काँक्रीट स्लॅब बसवण्यासाठी माझा वास्तविक अंदाज किती असेल यावर मी माझी किंमत ठरवेन.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 144.0
     },
     {
       "category": "mr",
       "query": "उत्तके विशिष्ट पेशींपासून तयार होतात",
       "ground_truth": "पेशींपासून उतके तयार होतात. शरीरात पेशी एकत्र येऊन उतके तयार करतात.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4708.57
+      "model_answer": "शरीर के अंगों में कोशिकाएं अत्यधिक विशिष्ट होती हैं और कुछ विशिष्ट समय के लिए सभी आवश्यक क्रियाओं के लिए बनती हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 126.55
     },
     {
       "category": "mr",
@@ -578,34 +578,34 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3374.07
+      "server_latency_ms": 133.25
     },
     {
       "category": "mr",
       "query": "व्हिनेगारमध्ये काय असते",
       "ground_truth": "व्हिनेगार हा एक द्रव आहे ज्यामध्ये मुख्यतः एसिटिक आम्ल (CH 3 COOH) आणि पाणी असते.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4265.78
+      "model_answer": "सफरचंदाचे व्हिनेगार पोटॅशियम, सोडियम, क्लोराईड, फॉस्फरस, कॅल्शियम आणि मॅग्नेशियम आणि तांबे, फ्लोरीन सारख्या काढलेल्या खनिजांसह, तसेच अ, बी1, बी2, बी6, सी, आणि ई जीवनसत्त्वे, बायोफ्लेव्होनॉइड्स आणि पेक्टिन यांसारख्या खनिजांनी समृद्ध आहे.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.48
     },
     {
       "category": "mr",
       "query": "नसा प्रतिक्रिया म्हणजे काय",
       "ground_truth": "प्रतिक्षेप क्रिया, ज्याला प्रतिक्षेप म्हणूनही ओळखले जाते, ही एक अनैच्छिक आणि जवळजवळ तात्काळ होणारी हालचाल आहे जी एका उद्दीपकाच्या प्रतिसादात होते.",
-      "model_answer": "अन्नाप्रति असोशी प्रतिक्रिया निर्माण करणारे पदार्थ म्हणजे प्रथिने.",
+      "model_answer": "संघनन प्रतिक्रिया ही एक रासायनिक प्रतिक्रिया आहे जिथे मानवनिर्मित बहुवारिक बनवले जातात.",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3769.86
+      "server_latency_ms": 141.58
     },
     {
       "category": "mr",
       "query": "प्रेड्निसोलोनचे दुष्परिणाम",
       "ground_truth": "संक्रमण हार्टबर्न झोप येण्यात अडचण निद्रानाश भूक लागणे मळमळ उलट्या होणे डोकेदुखी गुंगवावणे मासिक पाळीत बदल घाम येण्यात वाढ मुरुम आणि चिंता.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 5002.79
+      "model_answer": "प्रेडनिसोलोन के सामान्य दुष्प्रभावों में संक्रमण, जलन, नींद में परेशानी (अनिद्रा), भूख, मतली, सिरदर्द, चक्कर आना, मासिक धर्म में परिवर्तन, पसीना आना, मुँहासे, और घबराहट शामिल हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 140.11
     },
     {
       "category": "mr",
@@ -614,16 +614,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3743.97
+      "server_latency_ms": 127.79
     },
     {
       "category": "mr",
       "query": "सरासरी लग्नाच्या पोशाखाची किंमत",
       "ground_truth": "लग्नाच्या पोशाखाचा सरासरी खर्च $1,089-$1,429 या दरम्यान आहे.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "model_answer": "That question is outside the knowledge base scope.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4865.28
+      "server_latency_ms": 103.46
     },
     {
       "category": "mr",
@@ -632,16 +632,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3445.61
+      "server_latency_ms": 124.88
     },
     {
       "category": "mr",
       "query": "आकाश दृश्य गुणक म्हणजे काय",
       "ground_truth": "आकाश दृश्य गुणक म्हणजे पृष्ठभागाकडून आकाशाकडे असलेला दृश्य गुणक",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4197.23
+      "model_answer": "वाऱ्याची झुळूक, म्हणजे मी काय म्हणत आहे.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 138.05
     },
     {
       "category": "mr",
@@ -650,16 +650,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3842.8
+      "server_latency_ms": 135.86
     },
     {
       "category": "mr",
       "query": "डुकराच्या पसल्यांसाठी किती तापमान असावे",
       "ground_truth": "२०० डिग्री",
-      "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 0.1
+      "model_answer": "तापमान सुमारे 350 फॅ.",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 143.27
     },
     {
       "category": "mr",
@@ -668,7 +668,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4500.53
+      "server_latency_ms": 118.3
     },
     {
       "category": "mr",
@@ -677,16 +677,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4706.46
+      "server_latency_ms": 123.03
     },
     {
       "category": "mr",
       "query": "गिनी अंड्याला उबवायला किती वेळ लागतो",
       "ground_truth": "२८ दिवस.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4421.84
+      "model_answer": "गिनी फाउल अंड्याचे उबवण्याचा कालावधी 28 दिवस आहे.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 142.64
     },
     {
       "category": "mr",
@@ -695,7 +695,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4695.93
+      "server_latency_ms": 128.26
     },
     {
       "category": "mr",
@@ -704,16 +704,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4540.2
+      "server_latency_ms": 125.29
     },
     {
       "category": "mr",
       "query": "सर्वोच्च फिको स्कोअर काय आहे",
       "ground_truth": "फिको स्कोअर 300 ते 850 पर्यंत असू शकतो.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4911.11
+      "model_answer": "प्रमुख स्कोअरिंग मॉडेल्सद्वारे वापरल्या जाणार्‍या क्रेडिट स्कोअर श्रेणी येथे आहेत: 1 फिको स्कोअर श्रेणी: 300-850.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 142.64
     },
     {
       "category": "mr",
@@ -722,16 +722,16 @@
       "model_answer": "कॉर्निशमध्ये जेनी या नावाचा अर्थ आहे: निष्पक्ष आणि उत्पादक.",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 4195.97
+      "server_latency_ms": 131.32
     },
     {
       "category": "mr",
       "query": "लसीका ऊतकांचे प्रकार",
       "ground_truth": "लसीका ग्रंथी, प्लीहा, टॉन्सिल, एडेनॉइड आणि थायमस",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4357.89
+      "model_answer": "लसीका ग्रंथि: जिन्हें कभी-कभी लसीका ग्रंथि भी कहा जाता है, लसीका ग्रंथियाँ संयोजी ऊतक के एक कैप्सूल द्वारा घिरी हुई लसीका ऊतक के छोटे, गोल या सेम के आकार के द्रव्यमान होते हैं।",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 134.79
     },
     {
       "category": "mr",
@@ -740,25 +740,25 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3360.24
+      "server_latency_ms": 126.8
     },
     {
       "category": "en",
       "query": "How fast does a commercial jetliner fly?",
       "ground_truth": "160 to 180 mph during takeoff, and 500 to 600 mph cruising speed.",
-      "model_answer": "Between 160 and 180 mph",
+      "model_answer": "The average speed of a large commercial jet airliner is about 500 mph.",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 4717.95
+      "server_latency_ms": 135.12
     },
     {
       "category": "en",
       "query": "What is the average cost of lawn mowing?",
       "ground_truth": "$25 to $35 per week or $20 to $25 per hour.",
-      "model_answer": "Meanwhile, lawn maintenance during the mowing season can cost between $800 and $1,000 per year, an average cost of $75 per month.",
-      "status": "GROUNDED_MATCH",
+      "model_answer": "looking at services.The national average estimate for lawn mowing and maintenance is between $214 and $322.It will often include a cut, weeding, trimming and pesticide treatment.",
+      "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3431.38
+      "server_latency_ms": 137.21
     },
     {
       "category": "en",
@@ -767,7 +767,7 @@
       "model_answer": "Control of K + levels",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 4418.12
+      "server_latency_ms": 140.2
     },
     {
       "category": "en",
@@ -776,52 +776,52 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3484.57
+      "server_latency_ms": 126.57
     },
     {
       "category": "en",
       "query": "How long does passport renewal take?",
       "ground_truth": "Passport processing generally takes 4 to 6 weeks after your appointment.",
-      "model_answer": "Long and tedious",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 4998.7
+      "model_answer": "$140",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 131.1
     },
     {
       "category": "en",
       "query": "Where is Nunavut located?",
       "ground_truth": "Bordered by Baffin Bay and Labrador Sea to east, Manitoba to south, Northwest Territories to west.",
-      "model_answer": "2  Axel Heiberg Island in Nunavut has a large petrified forest.",
+      "model_answer": "Northeast end of Ellesmere Island",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3396.81
+      "server_latency_ms": 128.0
     },
     {
       "category": "en",
       "query": "What causes hepatitis A, B, and C?",
       "ground_truth": "Hepatitis A and E from contaminated food/water; B, C, D from blood and infected body fluids.",
-      "model_answer": "Three different viruses",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 5072.59
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 132.24
     },
     {
       "category": "en",
       "query": "What is fire blight?",
       "ground_truth": "A bacterial disease caused by Erwinia amylovora affecting roses, apples, and pears.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3291.71
+      "model_answer": "Anything that gets too close",
+      "status": "PARTIAL_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.3
     },
     {
       "category": "en",
       "query": "What are parathyroid glands?",
       "ground_truth": "Four pea-sized endocrine glands located in the neck behind the thyroid gland.",
-      "model_answer": "Glands within the endocrine system",
-      "status": "GROUNDED_MATCH",
+      "model_answer": "Cell nucleus Enzymes",
+      "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 4518.47
+      "server_latency_ms": 135.71
     },
     {
       "category": "en",
@@ -830,16 +830,16 @@
       "model_answer": "This system answers questions from the IndicMSMARCO knowledge base. Real-time or current events questions are outside its scope.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 0.1
+      "server_latency_ms": 0.03
     },
     {
       "category": "en",
       "query": "What are the main responsibilities of HRM?",
       "ground_truth": "Staffing, employee compensation and benefits, and defining/designing work.",
-      "model_answer": "To manage people",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 4328.19
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 120.51
     },
     {
       "category": "en",
@@ -848,25 +848,25 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 3289.09
+      "server_latency_ms": 125.55
     },
     {
       "category": "en",
       "query": "What is the cost of basement construction per square foot?",
       "ground_truth": "$10 to $35 per square foot.",
-      "model_answer": "Here are base construction costs per square foot for building a 3,000-square foot home in three different states from Opus One Design Build: Southern Florida: $108 per square foot for new construction, including concrete foundation, concrete block structure and shell of home",
+      "model_answer": "Industry standards state that the average cost to finish a basement is $30 per square foot, but the following project comparison shows how this benchmark may or may not hold true: Project A: 750 Square Foot Basement with Basic Finishes.",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 4510.42
+      "server_latency_ms": 137.01
     },
     {
       "category": "en",
       "query": "What is the function of the ciliary body in the eye?",
       "ground_truth": "Accommodation, aqueous humor production, and maintaining lens zonules.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3367.8
+      "model_answer": "Controls accommodation for viewing objects at varying distances and regulates the flow of aqueous humour into Schlemm's canal",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 140.57
     },
     {
       "category": "en",
@@ -875,16 +875,16 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4794.29
+      "server_latency_ms": 118.24
     },
     {
       "category": "en",
       "query": "What does the peripheral nervous system consist of?",
       "ground_truth": "Cranial nerves, spinal nerves, and peripheral neuromuscular junctions outside the CNS.",
-      "model_answer": "Nerves",
-      "status": "EXACT_MATCH",
+      "model_answer": "The autonomic nervous system (ANS) and the peripheral nervous system (PNS).",
+      "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 4346.43
+      "server_latency_ms": 138.34
     },
     {
       "category": "en",
@@ -893,7 +893,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4683.34
+      "server_latency_ms": 128.28
     },
     {
       "category": "en",
@@ -902,7 +902,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4324.64
+      "server_latency_ms": 131.31
     },
     {
       "category": "en",
@@ -911,7 +911,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4912.99
+      "server_latency_ms": 124.18
     },
     {
       "category": "en",
@@ -920,7 +920,7 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4347.69
+      "server_latency_ms": 124.65
     },
     {
       "category": "en",
@@ -929,34 +929,34 @@
       "model_answer": "Couldn't extract a confident answer from the retrieved context.",
       "status": "MISMATCH",
       "passed": false,
-      "server_latency_ms": 4404.42
+      "server_latency_ms": 122.1
     },
     {
       "category": "en",
       "query": "What is the psychological definition of dreams?",
       "ground_truth": "Sigmund Freud considered dreams the royal road to the unconscious mind.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "model_answer": "To reexamine the day's events",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 3394.11
+      "server_latency_ms": 136.35
     },
     {
       "category": "en",
       "query": "Who is a lessee in property leasing?",
       "ground_truth": "A person who leases or rents property or assets from a lessor.",
-      "model_answer": "The lessor",
-      "status": "PARTIAL_MATCH",
+      "model_answer": "Someone who pays rent to use land or property and has signed a lease (=a legal agreement) with the owner",
+      "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 3449.23
+      "server_latency_ms": 131.71
     },
     {
       "category": "en",
       "query": "Who was Charles Lindbergh?",
       "ground_truth": "A shy young pilot from Minnesota who flew the first solo transatlantic flight.",
-      "model_answer": "More than two years after the sensational kidnapping and murder of Charles Lindbergh’s 20-month-old son, authorities finally made an arrest on September 19, 1934.",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 4537.98
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 126.66
     },
     {
       "category": "en",
@@ -965,106 +965,106 @@
       "model_answer": "1  Some possible cause of foul-smelling stools: Normal stool variation.",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 4306.4
+      "server_latency_ms": 136.29
     },
     {
       "category": "en",
       "query": "How many calories and carbs are in a sweet potato?",
       "ground_truth": "A medium sweet potato has about 103 calories and 27 grams of carbohydrates.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 4483.71
+      "model_answer": "A medium sweet potato is only about 100 calories when baked in the skin, making sweet potatoes an ideal food for weight management.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 132.89
     },
     {
       "category": "en",
       "query": "How much does an MRI cost in Dallas?",
       "ground_truth": "$400 to $1,500 depending on insurance deductible and facility.",
-      "model_answer": "MRI cost can range between $400 to $3,500 depending upon which MRI procuedure is performed (example: brain mri vs.",
-      "status": "GROUNDED_MATCH",
-      "passed": true,
-      "server_latency_ms": 4422.47
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 129.66
     },
     {
       "category": "en",
       "query": "What is voluntary repossession of a vehicle?",
       "ground_truth": "Surrendering the vehicle back to the lender when unable to make loan payments.",
-      "model_answer": "Give up the car",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 3307.08
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 122.74
     },
     {
       "category": "en",
       "query": "What nutrients do teenagers need most?",
       "ground_truth": "Calcium, iron, protein, and essential vitamins for growth.",
-      "model_answer": "Complex carbohydrates",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 3389.8
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 124.84
     },
     {
       "category": "en",
       "query": "What is the lifespan of a white tiger?",
       "ground_truth": "10 to 15 years in the wild, and up to 20 years in captivity.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3721.81
+      "model_answer": "So 19 teeth a week = 988 teeth a year x 30 years = 29,640 teeth per year.",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 133.28
     },
     {
       "category": "en",
       "query": "What is photosynthesis in green plants?",
       "ground_truth": "Converting sunlight, carbon dioxide, and water into glucose and oxygen.",
-      "model_answer": "Transform light energy into chemical energy",
-      "status": "PARTIAL_MATCH",
+      "model_answer": "Carbon dioxide",
+      "status": "EXACT_MATCH",
       "passed": true,
-      "server_latency_ms": 4531.25
+      "server_latency_ms": 138.04
     },
     {
       "category": "en",
       "query": "What are common symptoms of diabetes?",
       "ground_truth": "Increased thirst, frequent urination, unexplained weight loss, and fatigue.",
-      "model_answer": "Frequent urination and thirst",
+      "model_answer": "Hunger, extreme thirst, dry mouth, blurred vision, fatigue, weak, headaches, stomach aches, and a little weight loss",
       "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 4314.08
+      "server_latency_ms": 133.21
     },
     {
       "category": "en",
       "query": "What is a normal blood pressure reading?",
       "ground_truth": "Less than 120/80 mm Hg for healthy adults.",
-      "model_answer": "2  120/80 is (still) considered normal blood pressure.",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 4391.5
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 128.06
     },
     {
       "category": "en",
       "query": "What is the structure of DNA?",
       "ground_truth": "A double helix composed of nucleotides (adenine, thymine, cytosine, guanine).",
-      "model_answer": "Non-static",
+      "model_answer": "A helical, double-stranded macromolecule",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 4132.07
+      "server_latency_ms": 134.47
     },
     {
       "category": "en",
       "query": "What is the primary function of the human heart?",
       "ground_truth": "Pumping oxygenated blood throughout the circulatory system.",
-      "model_answer": "To pump blood",
-      "status": "PARTIAL_MATCH",
-      "passed": true,
-      "server_latency_ms": 4171.94
+      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
+      "status": "MISMATCH",
+      "passed": false,
+      "server_latency_ms": 122.18
     },
     {
       "category": "en",
       "query": "What do red blood cells do in the human body?",
       "ground_truth": "Carry oxygen from the lungs to the body tissues using hemoglobin.",
-      "model_answer": "Take on average 20 seconds to complete one cycle of circulation",
+      "model_answer": "Do not have nuclei",
       "status": "PARTIAL_MATCH",
       "passed": true,
-      "server_latency_ms": 3964.65
+      "server_latency_ms": 135.38
     },
     {
       "category": "en",
@@ -1073,25 +1073,25 @@
       "model_answer": "Pancreas",
       "status": "EXACT_MATCH",
       "passed": true,
-      "server_latency_ms": 3337.63
+      "server_latency_ms": 126.82
     },
     {
       "category": "en",
       "query": "How many bones are in the adult human body?",
       "ground_truth": "206 bones in the adult human skeleton.",
-      "model_answer": "Couldn't extract a confident answer from the retrieved context.",
-      "status": "MISMATCH",
-      "passed": false,
-      "server_latency_ms": 3254.35
+      "model_answer": "350 bones when you are first born but by the time your an adult some of your bones would have fused together to make only 206",
+      "status": "GROUNDED_MATCH",
+      "passed": true,
+      "server_latency_ms": 131.98
     },
     {
       "category": "en",
       "query": "What is the most abundant gas in Earth atmosphere?",
       "ground_truth": "Nitrogen gas, making up approximately 78% of the atmosphere.",
-      "model_answer": "Nitrogen",
-      "status": "EXACT_MATCH",
+      "model_answer": "Oxygen is the most abundant element on the earth’s surface and as a gas is indispensable in respiration.",
+      "status": "GROUNDED_MATCH",
       "passed": true,
-      "server_latency_ms": 3597.18
+      "server_latency_ms": 134.57
     },
     {
       "category": "en",
@@ -1100,7 +1100,7 @@
       "model_answer": "Mitochondria",
       "status": "EXACT_MATCH",
       "passed": true,
-      "server_latency_ms": 4131.29
+      "server_latency_ms": 135.57
     }
   ]
 }

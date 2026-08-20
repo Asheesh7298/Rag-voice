@@ -1,0 +1,1634 @@
+{
+  "overall_accuracy": 100.0,
+  "total_correct": 90,
+  "total_queries": 90,
+  "p50_total_ms": 136.14,
+  "p70_total_ms": 140.05,
+  "p90_total_ms": 145.75,
+  "p100_total_ms": 181.46,
+  "mean_total_ms": 137.78955555555555,
+  "p50_search_ms": 95.84,
+  "p50_qa_ms": 16.38,
+  "results": [
+    {
+      "lang": "hi",
+      "id": "hi-436492-p1-native",
+      "query": "सबसे बड़ा उड़ने वाला सरीसृप अब तक",
+      "ground_truth": "प्रोजेक्टोरिया का अज़हद्रिचिडे परिवार",
+      "answer": "सबसे बड़े उड़ने वाले जानवर जो कभी भी जीवित रहे थे, वे अज़हद्रिचिडे परिवार के सदस्य थे, जो उड़ने वाले सरीसृप थे जो डायनासोर के लगभग एक ही समय में रहते थे, हालांकि वे वास्तव में डायनासोर नहीं थे।",
+      "guardrail": null,
+      "confidence": 0.0602,
+      "timings_ms": {
+        "embed_ms": 11.2,
+        "search_ms": 99.93,
+        "rerank_ms": 1.17,
+        "total_ms": 138.37,
+        "qa_ms": 15.5
+      },
+      "client_ms": 1670.8663000026718,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-746312-p6-native",
+      "query": "सैंटेंडर स्पेन के बारे में क्या प्रसिद्ध है",
+      "ground_truth": "छोटी नौका यात्राएँ और पारिवारिक पर्यटन।",
+      "answer": "स्पेन में कैंटाब्रिया की राजधानी, सैंटेंडर, स्पेन के लोगों के लिए एक प्रसिद्ध अवकाश स्थल है, और इन दिनों ब्रिटेन के लोग भी यू.के.",
+      "guardrail": null,
+      "confidence": 0.2094,
+      "timings_ms": {
+        "embed_ms": 10.93,
+        "search_ms": 96.21,
+        "rerank_ms": 1.96,
+        "total_ms": 137.0,
+        "qa_ms": 17.58
+      },
+      "client_ms": 1329.282400009106,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-804443-p2-native",
+      "query": "फ्लोरिडा में गोल्फ कार्ट चलाने की उम्र क्या है",
+      "ground_truth": "14 वर्ष",
+      "answer": "कई राज्यों में न्यूनतम आयु 13 है, लेकिन फ्लोरिडा कानून निर्धारित करता है कि गोल्फ कार्ट चालकों की आयु कम से कम 14 वर्ष होनी चाहिए, हालांकि आपको लाइसेंस की आवश्यकता नहीं है।",
+      "guardrail": null,
+      "confidence": 0.4007,
+      "timings_ms": {
+        "embed_ms": 11.35,
+        "search_ms": 95.04,
+        "rerank_ms": 1.89,
+        "total_ms": 137.47,
+        "qa_ms": 18.09
+      },
+      "client_ms": 1431.4303999999538,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-602859-p0-native",
+      "query": "कौन सी काउंटी बेसिन वाई है",
+      "ground_truth": "बिग हॉर्न काउंटी",
+      "answer": "जूडिथ बेसिन काउंटी की काउंटी सीट स्टैनफोर्ड, लेविसटाउन और ग्रेट फॉल्स के बीच मिडवे पर एम.टी.",
+      "guardrail": null,
+      "confidence": 0.0738,
+      "timings_ms": {
+        "embed_ms": 11.39,
+        "search_ms": 95.21,
+        "rerank_ms": 1.29,
+        "total_ms": 134.47,
+        "qa_ms": 15.71
+      },
+      "client_ms": 1345.226100005675,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-952644-p7-native",
+      "query": "साइबोर्ग डीसी फिल्म कब आ रही है",
+      "ground_truth": "3 अप्रैल 2020 को",
+      "answer": "साइबोर्ग 3 अप्रैल 2020 को रिलीज़ होने वाला है, और ग्रीन लैंटर्न 19 जून 2020 को रिलीज़ होगा।",
+      "guardrail": null,
+      "confidence": 0.1989,
+      "timings_ms": {
+        "embed_ms": 11.21,
+        "search_ms": 94.38,
+        "rerank_ms": 1.92,
+        "total_ms": 133.1,
+        "qa_ms": 15.11
+      },
+      "client_ms": 1317.569699996966,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-578380-p8-native",
+      "query": "कौन से बैंड में अभी भी मूल सदस्य हैं",
+      "ground_truth": "एल.ए. गन्स",
+      "answer": "ट्रैसी गन्स इस बैंड के एकमात्र स्थायी सदस्य थे जो 1983 से 2002 तक अपने मूल संस्करण के माध्यम से चले।",
+      "guardrail": null,
+      "confidence": 0.6075,
+      "timings_ms": {
+        "embed_ms": 11.2,
+        "search_ms": 93.91,
+        "rerank_ms": 1.67,
+        "total_ms": 134.37,
+        "qa_ms": 17.41
+      },
+      "client_ms": 1331.3354999991134,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-718277-p4-native",
+      "query": "निक्स का दूसरा नाम क्या है",
+      "ground_truth": "कुछ भी नहीं",
+      "answer": "मूल रूप से विक्टोरियन स्लैंग, निक्स की तुलना पहले के जर्मन निक्स से की जा सकती है, जो कुछ नहीं (‘कुछ नहीं’) का एक बोलचाल का छोटा रूप है।",
+      "guardrail": null,
+      "confidence": 0.1064,
+      "timings_ms": {
+        "embed_ms": 11.43,
+        "search_ms": 91.84,
+        "rerank_ms": 1.63,
+        "total_ms": 131.05,
+        "qa_ms": 15.77
+      },
+      "client_ms": 1331.2465000053635,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-815775-p5-native",
+      "query": "एक तीव्र कोण का क्या स्तर है",
+      "ground_truth": "एक तीव्र कोण 90 डिग्री से अधिक और 180 डिग्री से कम कोण होता है।",
+      "answer": "90 डिग्री से अधिक और 180 डिग्री से कम कोण होता है। हाँ, एक तीव्र कोण ज्यामितीय रूप से एक समकोण से अधिक",
+      "guardrail": null,
+      "confidence": 0.0504,
+      "timings_ms": {
+        "embed_ms": 11.14,
+        "search_ms": 93.08,
+        "rerank_ms": 1.61,
+        "total_ms": 138.19,
+        "qa_ms": 20.88
+      },
+      "client_ms": 1230.9279999899445,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-230267-p3-native",
+      "query": "पेनसाकोला से जैक्सनविले तक कितना दूर",
+      "ground_truth": "358 मील या 576 किलोमीटर",
+      "answer": "तक की कुल ड्राइविंग दूरी 358 मील या 576 किलोमीटर है।",
+      "guardrail": null,
+      "confidence": 0.2213,
+      "timings_ms": {
+        "embed_ms": 11.31,
+        "search_ms": 100.16,
+        "rerank_ms": 1.3,
+        "total_ms": 138.23,
+        "qa_ms": 14.55
+      },
+      "client_ms": 1431.8265999900177,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-580360-p8-native",
+      "query": "कौन सी थोक परिवहन प्रक्रिया सामग्री को कोशिकाओं में ले जाती है?",
+      "ground_truth": "एक्सोसाइटोसिस",
+      "answer": "एक्सोसाइटोसिस (एक्सो = बाहरी, साइटोसिस = परिवहन तंत्र) थोक परिवहन का एक रूप है जिसमें सामग्री को झिल्ली-बद्ध पुटिकाओं में कोशिका के अंदर से बाहर की ओर परिवहन किया जाता है जो प्लाज्मा झिल्ली के साथ जुड़ जाते हैं।",
+      "guardrail": null,
+      "confidence": 0.1244,
+      "timings_ms": {
+        "embed_ms": 12.61,
+        "search_ms": 106.65,
+        "rerank_ms": 2.11,
+        "total_ms": 149.94,
+        "qa_ms": 16.88
+      },
+      "client_ms": 1331.6743000032147,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-311886-p2-native",
+      "query": "एक भर्ती किए गए ट्रक चालक कितना कमाता है?",
+      "ground_truth": "70,000 डॉलर से 85,000 डॉलर तक",
+      "answer": "एक ट्रक चालक, भारी/ट्रैक्टर-ट्रेलर औसतन 20.59 न्यूजीलैंड डॉलर प्रति घंटा की मजदूरी कमाता है।",
+      "guardrail": null,
+      "confidence": 0.1326,
+      "timings_ms": {
+        "embed_ms": 12.78,
+        "search_ms": 109.65,
+        "rerank_ms": 1.25,
+        "total_ms": 153.05,
+        "qa_ms": 17.9
+      },
+      "client_ms": 1432.6871999946889,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-966761-p0-native",
+      "query": "श्रोणि तल की मांसपेशियाँ कहाँ स्थित होती हैं",
+      "ground_truth": "पैरों के बीच",
+      "answer": "श्रोणि तल की मांसपेशियां आपके पैरों के बीच स्थित होती हैं और आपके जघनास्थि से आपके रीढ़ की हड्डी के आधार तक आगे की ओर जाती हैं।",
+      "guardrail": null,
+      "confidence": 0.3389,
+      "timings_ms": {
+        "embed_ms": 12.82,
+        "search_ms": 108.54,
+        "rerank_ms": 2.28,
+        "total_ms": 150.71,
+        "qa_ms": 16.11
+      },
+      "client_ms": 1242.8012000018498,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-611357-p2-native",
+      "query": "कौन सी काउंटी पिट्सफोर्ड, न्यूयॉर्क में है",
+      "ground_truth": "मोनरो काउंटी",
+      "answer": "पिट्सफोर्ड, रोचेस्टर का एक उपनगर, मोनरो काउंटी, न्यूयॉर्क, संयुक्त राज्य अमेरिका में एक शहर है।",
+      "guardrail": null,
+      "confidence": 0.4747,
+      "timings_ms": {
+        "embed_ms": 11.72,
+        "search_ms": 110.25,
+        "rerank_ms": 1.49,
+        "total_ms": 151.54,
+        "qa_ms": 16.45
+      },
+      "client_ms": 1439.3810000037774,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-899543-p0-native",
+      "query": "कौन से उपपरमाण्विक कण",
+      "ground_truth": "उपपरमाण्विक कण परमाणु से छोटे कण होते हैं।",
+      "answer": "उपपरमाण्विक कण: एक उपपरमाण्विक कण एक परमाणु से छोटा कण होता है: यह प्राथमिक या मिश्रित हो सकता है।",
+      "guardrail": null,
+      "confidence": 0.0788,
+      "timings_ms": {
+        "embed_ms": 11.98,
+        "search_ms": 100.34,
+        "rerank_ms": 1.26,
+        "total_ms": 140.05,
+        "qa_ms": 15.36
+      },
+      "client_ms": 1310.9581999888178,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-1176436-p0-native",
+      "query": "बैरी बरबैंक का मौसम पूर्वानुमान कितना पुराना है",
+      "ground_truth": "बैरी बरबैंक 67 वर्ष के हैं।",
+      "answer": "बरबैंक, सीए - अपने क्षेत्र के लिए घंटे-दर-घंटे के दृश्य, 10-दिवसीय पूर्वानुमान, तापमान, आर्द्रता, वर्षा सहित बहुत ही नवीनतम मौसम पूर्वानुमान प्राप्त करें।",
+      "guardrail": null,
+      "confidence": 0.086,
+      "timings_ms": {
+        "embed_ms": 11.89,
+        "search_ms": 109.96,
+        "rerank_ms": 1.63,
+        "total_ms": 148.75,
+        "qa_ms": 14.37
+      },
+      "client_ms": 1334.53659999941,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-764113-p0-native",
+      "query": "लैक्टोन क्या है",
+      "ground_truth": "एक खाद्य योजक।",
+      "answer": "यह ग्लुकोनिक एसिड का एक लैक्टोन (चक्रीय एस्टर) है।",
+      "guardrail": null,
+      "confidence": 0.1076,
+      "timings_ms": {
+        "embed_ms": 11.53,
+        "search_ms": 97.65,
+        "rerank_ms": 2.25,
+        "total_ms": 148.23,
+        "qa_ms": 25.92
+      },
+      "client_ms": 1225.6816999870352,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-240237-p3-native",
+      "query": "टैटू लगवाने के बाद पानी में जाने से पहले तुम्हें कितने समय तक इंतजार करना पड़ेगा?",
+      "ground_truth": "48 घंटे",
+      "answer": "टैटू लगवाने के बाद, आपको अपने नए टैटू को सुरक्षात्मक बाधा बनने के लिए कम से कम 48 घंटे तक इंतजार करना चाहिए, लेकिन कभी-कभी ऐसा होना अपरिहार्य होता है।",
+      "guardrail": null,
+      "confidence": 0.5691,
+      "timings_ms": {
+        "embed_ms": 11.11,
+        "search_ms": 96.34,
+        "rerank_ms": 1.59,
+        "total_ms": 134.88,
+        "qa_ms": 15.57
+      },
+      "client_ms": 1523.9842000009958,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-646677-p8-native",
+      "query": "रमजान मुबारक क्या है",
+      "ground_truth": "बधाई हो, यह रमजान है।",
+      "answer": "नवीनतम सबसे पुराना सर्वश्रेष्ठ उत्तर: रमजान मुबारक का अर्थ है बधाई, यह रमजान है...(मूल रूप से) हम बधाई कहते हैं क्योंकि हम इस बार और इस द्वारा लाए जाने वाले सभी आशीर्वादों के लिए उत्साहित हैं।",
+      "guardrail": null,
+      "confidence": 0.4303,
+      "timings_ms": {
+        "embed_ms": 10.68,
+        "search_ms": 92.08,
+        "rerank_ms": 0.82,
+        "total_ms": 131.72,
+        "qa_ms": 17.88
+      },
+      "client_ms": 1301.4851000043564,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-609744-p3-native",
+      "query": "कौन सी काउंटी मोंट्रोस, वा है",
+      "ground_truth": "वेस्टमोरलैंड काउंटी",
+      "answer": "मोंट्रोस वेस्टमोरलैंड काउंटी, वर्जीनिया, संयुक्त राज्य अमेरिका में एक शहर है।",
+      "guardrail": null,
+      "confidence": 0.0676,
+      "timings_ms": {
+        "embed_ms": 11.31,
+        "search_ms": 92.04,
+        "rerank_ms": 1.34,
+        "total_ms": 133.59,
+        "qa_ms": 18.21
+      },
+      "client_ms": 1257.5857000047108,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-606592-p4-native",
+      "query": "ग्राहम्सविले न्यूयॉर्क कौन्टी में",
+      "ground_truth": "सुलिवन काउंटी",
+      "answer": "1.83 एकड़ ग्राहम्सविले, सुलिवन काउंटी, न्यूयॉर्क।",
+      "guardrail": null,
+      "confidence": 0.0516,
+      "timings_ms": {
+        "embed_ms": 11.25,
+        "search_ms": 93.2,
+        "rerank_ms": 1.5,
+        "total_ms": 136.75,
+        "qa_ms": 20.29
+      },
+      "client_ms": 1231.0852999944473,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-215430-p0-native",
+      "query": "उत्तरी यूरोप में पुनर्जागरण कैसे विकसित हुआ?",
+      "ground_truth": "उत्तरी पुनर्जागरण वह पुनर्जागरण था जो आल्प्स के उत्तर में यूरोप में हुआ था। 1497 से पहले, इतालवी पुनर्जागरण का इटली के बाहर बहुत कम प्रभाव था। 15वीं शताब्दी के अंत से, इसके विचार पूरे यूरोप में फैल गए। इसने जर्मन पुनर्जागरण, फ्रांसीसी पुनर्जागरण, अंग्रेजी पुनर्जागरण, निम्न देशों में पुनर्जागरण, पोलिश पुनर्जागरण और अन्य राष्ट्रीय और स्थानीयकृत आंदोलनों को प्रभावित किया, प्रत्येक की अपनी विशेषताएं और ताकत थीं।",
+      "answer": "उत्तरी पुनर्जागरण प्रोटेस्टेंट सुधार से भी निकटता से जुड़ा हुआ था, जिसके परिणामस्वरूप विभिन्न प्रोटेस्टेंट समूहों और रोमन कैथोलिक चर्च के बीच आंतरिक और बाहरी संघर्षों की लंबी श्रृंखला थी।",
+      "guardrail": null,
+      "confidence": 0.0561,
+      "timings_ms": {
+        "embed_ms": 10.73,
+        "search_ms": 92.38,
+        "rerank_ms": 2.28,
+        "total_ms": 137.57,
+        "qa_ms": 22.07
+      },
+      "client_ms": 1327.3426999949152,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-229532-p9-native",
+      "query": "आपको शादी के लिए कितने समय पहले निमंत्रण भेजना चाहिए?",
+      "ground_truth": "छह से आठ सप्ताह के बीच",
+      "answer": "ये कार्यक्रम से छह से आठ सप्ताह पहले भेजे जाने चाहिए, यह इस बात पर निर्भर करता है कि सूची में कितने बाहरी लोग हैं।",
+      "guardrail": null,
+      "confidence": 0.304,
+      "timings_ms": {
+        "embed_ms": 11.03,
+        "search_ms": 90.83,
+        "rerank_ms": 1.4,
+        "total_ms": 134.37,
+        "qa_ms": 20.46
+      },
+      "client_ms": 1333.6877999972785,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-590721-p0-native",
+      "query": "श्रोणि घूर्णन का कारण क्या है",
+      "ground_truth": "मांसपेशियों का असंतुलन",
+      "answer": "मांसपेशियों का असंतुलन होना ही पूर्व श्रोणि झुकाव का सबसे आम कारण है।",
+      "guardrail": null,
+      "confidence": 0.1086,
+      "timings_ms": {
+        "embed_ms": 12.32,
+        "search_ms": 93.53,
+        "rerank_ms": 1.65,
+        "total_ms": 131.6,
+        "qa_ms": 13.47
+      },
+      "client_ms": 1227.1678999968572,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-108443-p3-native",
+      "query": "लेपित डामर को सील करने की लागत प्रति वर्ग फुट",
+      "ground_truth": "3.00 डॉलर प्रति वर्ग फुट।",
+      "answer": "31 वर्षों में, आप अपने डामर को सील करने के लिए कुल 3.00 डॉलर प्रति वर्ग फुट खर्च करेंगे।",
+      "guardrail": null,
+      "confidence": 0.248,
+      "timings_ms": {
+        "embed_ms": 11.29,
+        "search_ms": 93.34,
+        "rerank_ms": 2.19,
+        "total_ms": 138.88,
+        "qa_ms": 21.73
+      },
+      "client_ms": 1227.8330999979516,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-253482-p1-native",
+      "query": "अवसादरोधी दवाओं को काम करने में कितना समय लगता है",
+      "ground_truth": "2 से 6 सप्ताह",
+      "answer": "और त्रिचक्रीय अवसादरोधी - अधिकांश लोगों के लिए 2 से 6 सप्ताह तक के समय के लगभग समान समय में काम करते हैं, जबकि अधिकांश लोग 3 से 4 सप्ताह के भीतर लाभ महसूस करना शुरू कर देंगे।",
+      "guardrail": null,
+      "confidence": 0.1406,
+      "timings_ms": {
+        "embed_ms": 11.1,
+        "search_ms": 91.27,
+        "rerank_ms": 1.82,
+        "total_ms": 135.26,
+        "qa_ms": 20.63
+      },
+      "client_ms": 1232.8990999958478,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-606554-p2-native",
+      "query": "कौन सी काउंटी में गोल्ड रिवर सीए।",
+      "ground_truth": "सैक्रामेंटो",
+      "answer": "गोल्ड रिवर कैलिफोर्निया के सैक्रामेंटो काउंटी में एक जनगणना-नामित स्थान (सी.डी.पी.) है।",
+      "guardrail": null,
+      "confidence": 0.358,
+      "timings_ms": {
+        "embed_ms": 11.36,
+        "search_ms": 94.66,
+        "rerank_ms": 1.55,
+        "total_ms": 136.39,
+        "qa_ms": 18.43
+      },
+      "client_ms": 1325.8381000050576,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-230795-p7-native",
+      "query": "कोपर शहर से हॉलीवुड कितना दूर है",
+      "ground_truth": "11 मील या 18 किमी।",
+      "answer": "तक की दूरी 11 मील या 18 किमी है।",
+      "guardrail": null,
+      "confidence": 0.2089,
+      "timings_ms": {
+        "embed_ms": 11.45,
+        "search_ms": 97.87,
+        "rerank_ms": 1.56,
+        "total_ms": 141.44,
+        "qa_ms": 20.29
+      },
+      "client_ms": 1330.9372999938205,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-550556-p0-native",
+      "query": "आप किस उम्र के हो सकते हैं जीसी?",
+      "ground_truth": "14 से 16 साल के",
+      "answer": "किसी भी उम्र के हो सकते हैं। जीसीएसई 16 साल",
+      "guardrail": null,
+      "confidence": 0.1732,
+      "timings_ms": {
+        "embed_ms": 11.13,
+        "search_ms": 93.33,
+        "rerank_ms": 1.76,
+        "total_ms": 131.74,
+        "qa_ms": 15.38
+      },
+      "client_ms": 1331.6060000070138,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-605041-p7-native",
+      "query": "दिल्ली कैलिफोर्निया कौन्टी है",
+      "ground_truth": "मेर्सिड काउंटी",
+      "answer": "दिल्ली संयुक्त राज्य अमेरिका के कैलिफोर्निया राज्य के मर्सिड काउंटी में एक जनगणना नामित स्थान (सी.डी.पी.) है, जो मर्सिड से 18 मील (29 कि.मी.) पश्चिम-उत्तर-पश्चिम में 118 फीट (36 मीटर) की ऊँचाई पर स्थित है।",
+      "guardrail": null,
+      "confidence": 0.6577,
+      "timings_ms": {
+        "embed_ms": 11.86,
+        "search_ms": 96.8,
+        "rerank_ms": 1.82,
+        "total_ms": 141.9,
+        "qa_ms": 21.01
+      },
+      "client_ms": 1329.5547000016086,
+      "success": true
+    },
+    {
+      "lang": "hi",
+      "id": "hi-38282-p0-native",
+      "query": "मीठे पानी में एन.एच.3 का औसत स्तर",
+      "ground_truth": "0.02 पी.पी.एम.",
+      "answer": "मीठे पानी या समुद्री वातावरण में एन.एच.3 के रूप में 0.02 पी.पी.एम.",
+      "guardrail": null,
+      "confidence": 0.1417,
+      "timings_ms": {
+        "embed_ms": 11.38,
+        "search_ms": 93.6,
+        "rerank_ms": 1.57,
+        "total_ms": 132.02,
+        "qa_ms": 15.22
+      },
+      "client_ms": 1229.3490000010934,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-334111-p3-native",
+      "query": "पृथ्वी किती जुनी आहे",
+      "ground_truth": "४.५ ते ४.६ अब्ज वर्षे जुने.",
+      "answer": "खूप तरुण पृथ्वीसाठी निर्मिती \"वैज्ञानिकां\"नी पुढे केलेल्या युक्तिवादांचे विश्लेषण करण्यासाठी, मी येथे पृथ्वी 4.5 ते 4.6 अब्ज वर्षे जुनी आहे याची खात्री देणारा पुरावा थोडक्यात सारांशित केला आहे.",
+      "guardrail": null,
+      "confidence": 0.327,
+      "timings_ms": {
+        "embed_ms": 11.28,
+        "search_ms": 97.86,
+        "rerank_ms": 1.16,
+        "total_ms": 137.8,
+        "qa_ms": 17.27
+      },
+      "client_ms": 1331.0484000103315,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-766412-p0-native",
+      "query": "यकृताच्या कर्करोगाला काय म्हणतात",
+      "ground_truth": "यकृताचा कर्करोग",
+      "answer": "याला पित्त नलिकेचा कर्करोग असेही म्हणतात.",
+      "guardrail": null,
+      "confidence": 0.1478,
+      "timings_ms": {
+        "embed_ms": 11.68,
+        "search_ms": 94.76,
+        "rerank_ms": 1.86,
+        "total_ms": 136.16,
+        "qa_ms": 17.85
+      },
+      "client_ms": 1332.2980999946594,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-8710-p3-native",
+      "query": "दातांच्या रक्तवाहिन्या आणि मज्जातंतूंनी बनलेले _____ हे दातांचे जिवंत ऊतक आहे.",
+      "ground_truth": "दंतमज्जा",
+      "answer": "दातांच्या मूळ वाहिन्यांमध्ये रक्तवाहिन्या, मज्जातंतू आणि संयोजी ऊती असलेले दंतमज्जा हे जिवंत ऊती असतात, त्यामुळे दातांना दुखापत झाल्यावर काय होते आणि कोणत्या उपचाराची आवश्यकता असते याबद्दलच्या सामान्य प्रश्नांची उत्तरे हा लेख देतो.",
+      "guardrail": null,
+      "confidence": 0.6546,
+      "timings_ms": {
+        "embed_ms": 11.59,
+        "search_ms": 98.53,
+        "rerank_ms": 1.93,
+        "total_ms": 141.21,
+        "qa_ms": 18.0
+      },
+      "client_ms": 1473.224899993511,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-283567-p8-native",
+      "query": "जगातील सर्वात उंच इमारत किती फूट आहे",
+      "ground_truth": "२,७२२ फूट",
+      "answer": "इमारतीची अंतिम उंची 1,776 फूट (541 मीटर) युनायटेड स्टेट्सच्या स्वातंत्र्याच्या घोषणेकडे आणि एक देश म्हणून तिचा जन्म दर्शवते.",
+      "guardrail": null,
+      "confidence": 0.1176,
+      "timings_ms": {
+        "embed_ms": 11.05,
+        "search_ms": 94.89,
+        "rerank_ms": 2.06,
+        "total_ms": 135.38,
+        "qa_ms": 16.54
+      },
+      "client_ms": 1290.3727000084473,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-994387-p8-native",
+      "query": "अल्फा हेलिक्स कुठे आढळते ज्या प्रथिन संघटनेच्या स्तरावर आहे",
+      "ground_truth": "अल्फा हेलिक्स आणि बीटा शीट्स हे प्रथिनांच्या दुय्यम स्तरावर आढळतात.",
+      "answer": "अल्फा हेलिक्स आणि बीटा शीट्स हे प्रथिनांच्या दुय्यम स्तरावर आढळतात.",
+      "guardrail": null,
+      "confidence": 0.0697,
+      "timings_ms": {
+        "embed_ms": 11.54,
+        "search_ms": 99.34,
+        "rerank_ms": 1.06,
+        "total_ms": 141.19,
+        "qa_ms": 18.53
+      },
+      "client_ms": 1336.4659999933792,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-1163874-p6-native",
+      "query": "हेंडरसनव्हिल एनसी कोणत्या काउंटीमध्ये आहे",
+      "ground_truth": "हेंडरसनविले, एन.सी. हेंडरसन काउंटीमध्ये स्थित आहे.",
+      "answer": "हेंडरसनविले, एनसी: तुम्हाला काय माहिती पाहिजे?",
+      "guardrail": null,
+      "confidence": 0.3093,
+      "timings_ms": {
+        "embed_ms": 11.18,
+        "search_ms": 97.32,
+        "rerank_ms": 1.83,
+        "total_ms": 137.33,
+        "qa_ms": 16.58
+      },
+      "client_ms": 1326.3086999941152,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-427035-p1-native",
+      "query": "पार्किंग ब्रेक म्हणजे ई ब्रेक आहे",
+      "ground_truth": "होय, पार्किंग ब्रेकला ई-ब्रेक असेही म्हणतात.",
+      "answer": "कारमध्ये, पार्किंग ब्रेक, ज्याला हँड ब्रेक, इमर्जन्सी ब्रेक किंवा ई-ब्रेक असेही म्हणतात, हा एक अडकवणारा ब्रेक आहे जो सहसा वाहन स्थिर ठेवण्यासाठी वापरला जातो.",
+      "guardrail": null,
+      "confidence": 0.121,
+      "timings_ms": {
+        "embed_ms": 11.3,
+        "search_ms": 93.32,
+        "rerank_ms": 1.08,
+        "total_ms": 130.91,
+        "qa_ms": 14.8
+      },
+      "client_ms": 1228.644599992549,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-748971-p1-native",
+      "query": "फ्रान्सचे सध्याचे चलन काय आहे",
+      "ground_truth": "युरो",
+      "answer": "फ्रान्सचे चलन युरो आहे.",
+      "guardrail": null,
+      "confidence": 0.5594,
+      "timings_ms": {
+        "embed_ms": 11.24,
+        "search_ms": 95.61,
+        "rerank_ms": 1.05,
+        "total_ms": 131.98,
+        "qa_ms": 13.43
+      },
+      "client_ms": 1332.2626000008313,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-243926-p5-native",
+      "query": "आफ्रिकन गुलामांचा व्यापार किती काळ चालला?",
+      "ground_truth": "400 वर्षे",
+      "answer": "पश्चिम आफ्रिकेतील गुलामांचा व्यापार, त्याच्या वळवळत्या मध्यवर्ती मार्गासह, जवळजवळ 400 वर्षे चालला.",
+      "guardrail": null,
+      "confidence": 0.3219,
+      "timings_ms": {
+        "embed_ms": 11.63,
+        "search_ms": 97.87,
+        "rerank_ms": 2.36,
+        "total_ms": 147.88,
+        "qa_ms": 25.66
+      },
+      "client_ms": 1229.8423000029288,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-230697-p3-native",
+      "query": "कॅम्प हिल पा फिली पासून किती लांब आहे",
+      "ground_truth": "114 मैल किंवा 183 किलोमीटर",
+      "answer": "ते पी.एच.एल.पर्यंतचे एकूण वाहन चालवण्याचे अंतर 114 मैल किंवा 183 किलोमीटर आहे.",
+      "guardrail": null,
+      "confidence": 0.2723,
+      "timings_ms": {
+        "embed_ms": 11.57,
+        "search_ms": 96.56,
+        "rerank_ms": 1.11,
+        "total_ms": 136.16,
+        "qa_ms": 16.07
+      },
+      "client_ms": 1328.1341999972938,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-614844-p1-native",
+      "query": "वुडविल, मिनेसोटा कोणत्या काउंटीमध्ये आहे?",
+      "ground_truth": "वासेका काउंटी",
+      "answer": "वुडव्हिल टाउनशिप, वासेका काउंटी, मिनेसोटा.",
+      "guardrail": null,
+      "confidence": 0.082,
+      "timings_ms": {
+        "embed_ms": 11.27,
+        "search_ms": 93.88,
+        "rerank_ms": 1.1,
+        "total_ms": 134.4,
+        "qa_ms": 17.57
+      },
+      "client_ms": 1330.5030000046827,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-615094-p5-native",
+      "query": "हायटस्टाऊन, एनजे कोणत्या काउंटीमध्ये आहे",
+      "ground_truth": "मर्सर काउंटी",
+      "answer": "हायट्सटाउन हे अमेरिकेच्या न्यू जर्सी राज्यातील मर्सर काउंटीमधील एक नगर आहे.",
+      "guardrail": null,
+      "confidence": 0.2876,
+      "timings_ms": {
+        "embed_ms": 12.2,
+        "search_ms": 99.74,
+        "rerank_ms": 1.52,
+        "total_ms": 140.67,
+        "qa_ms": 16.38
+      },
+      "client_ms": 1228.6519999906886,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-968495-p1-native",
+      "query": "सिंको डी मायो कुठे झाले",
+      "ground_truth": "मेक्सिको.",
+      "answer": "सिंको डी मायो हा 5 मे 1862 रोजी पुएब्ला, मेक्सिको येथे झालेल्या विजयी लढाईचे प्रतीक आहे.",
+      "guardrail": null,
+      "confidence": 0.4126,
+      "timings_ms": {
+        "embed_ms": 11.78,
+        "search_ms": 129.34,
+        "rerank_ms": 1.22,
+        "total_ms": 181.46,
+        "qa_ms": 24.22
+      },
+      "client_ms": 1331.9482000079006,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-937292-p0-native",
+      "query": "ॲपल जेव्हा आयपो सार्वजनिक झाले तेव्हा",
+      "ground_truth": "1980",
+      "answer": "जेव्हा स्टीव्ह जॉब्सने 1980 मध्ये अ‍ॅपलला सार्वजनिक केले, तेव्हा त्यांची कंपनी वैयक्तिक संगणकांच्या विक्रीत टँडी कॉर्पच्या मागे पडली आणि मॅसॅच्युसेट्सच्या नियामकांनी आय.पी.ओ.ला राज्याच्या रहिवाशांसाठी \"खूप जोखमीचा\" मानले.",
+      "guardrail": null,
+      "confidence": 0.095,
+      "timings_ms": {
+        "embed_ms": 10.7,
+        "search_ms": 94.44,
+        "rerank_ms": 1.08,
+        "total_ms": 133.2,
+        "qa_ms": 16.01
+      },
+      "client_ms": 1235.4354999988573,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-42226-p2-native",
+      "query": "सौंदर्यप्रसाधनतज्ज्ञाचा सरासरी वेतन",
+      "ground_truth": "२४,४२१ डॉलर प्रति वर्ष",
+      "answer": "संयुक्त राज्य अमेरिका में सौंदर्य पेशेवर का वेतन लगभग $37,000 प्रति वर्ष है।",
+      "guardrail": null,
+      "confidence": 0.0503,
+      "timings_ms": {
+        "embed_ms": 11.72,
+        "search_ms": 101.04,
+        "rerank_ms": 1.0,
+        "total_ms": 142.72,
+        "qa_ms": 17.91
+      },
+      "client_ms": 1425.1862000091933,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-983229-p7-native",
+      "query": "गॅस सिटी इंडियाना कुठे आहे",
+      "ground_truth": "गॅस सिटी हे इंडियानाच्या ग्रँट काउंटीमधील मिसिसिनेवा नदीच्या काठावरील एक शहर आहे.",
+      "answer": "गॅस सिटी हे इंडियानाच्या ग्रँट काउंटीमधील मिसिसिनेवा नदीच्या काठावरील एक शहर आहे.",
+      "guardrail": null,
+      "confidence": 0.2407,
+      "timings_ms": {
+        "embed_ms": 11.28,
+        "search_ms": 94.38,
+        "rerank_ms": 1.54,
+        "total_ms": 130.73,
+        "qa_ms": 13.5
+      },
+      "client_ms": 1401.398000001791,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-299938-p0-native",
+      "query": "तुम्ही किती आठवडे गर्भवती असताना लिंग निश्चित करू शकता?",
+      "ground_truth": "१६ ते २२ आठवडे.",
+      "answer": "जेव्हा तुम्ही सुमारे 16 ते 22 आठवड्यांचे असता, तेव्हा केलेले अल्ट्रासाऊंड तुमच्या बाळाचे लिंग निश्चित करू शकतात.",
+      "guardrail": null,
+      "confidence": 0.1659,
+      "timings_ms": {
+        "embed_ms": 11.93,
+        "search_ms": 91.54,
+        "rerank_ms": 1.41,
+        "total_ms": 136.29,
+        "qa_ms": 20.77
+      },
+      "client_ms": 1237.716299991007,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-552637-p7-native",
+      "query": "वॉशिंग्टन डी.सी. मधील सर्वसमावेशक रिसॉर्टच्या सर्वात जवळचे विमानतळ कोणते आहे.",
+      "ground_truth": "रोनाल्ड रेगन वॉशिंग्टन राष्ट्रीय विमानतळ",
+      "answer": "वॉशिंग्टन, कोलंबिया जिल्ह्याजवळील प्रमुख विमानतळ: 1 रोनाल्ड रेगन वॉशिंग्टन राष्ट्रीय विमानतळ (डीसीए / केडीसीए) हा सर्वात जवळचा प्रमुख विमानतळ आहे.",
+      "guardrail": null,
+      "confidence": 0.2461,
+      "timings_ms": {
+        "embed_ms": 11.18,
+        "search_ms": 90.77,
+        "rerank_ms": 2.38,
+        "total_ms": 141.85,
+        "qa_ms": 26.63
+      },
+      "client_ms": 1322.1169000025839,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-1037787-p2-native",
+      "query": "कोण आहे रॉबर्ट ब्लेक",
+      "ground_truth": "तो एक अमेरिकन अभिनेता आहे.",
+      "answer": "रॉबर्ट ब्लेकचा संदर्भ असा असू शकतो: 1 रॉबर्ट ब्लेक (अभिनेता) (जन्म 1933), अमेरिकन अभिनेता, टीव्ही मालिका बॅरेटामध्ये अभिनय केला.",
+      "guardrail": null,
+      "confidence": 0.1201,
+      "timings_ms": {
+        "embed_ms": 11.05,
+        "search_ms": 91.6,
+        "rerank_ms": 1.16,
+        "total_ms": 129.05,
+        "qa_ms": 14.98
+      },
+      "client_ms": 1433.2018999994034,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-911385-p6-native",
+      "query": "ज्वालामुखीमुळे कोणत्या प्रकारचे नुकसान होते",
+      "ground_truth": "पळसण, भूस्खलन किंवा भूकंप.",
+      "answer": "ज्वालामुखीच्या विस्फोटाचे अनेक प्रकार - ज्या दरम्यान लाव्हा, टेफ्रा (राख, लॅपिली, ज्वालामुखीचे बॉम्ब आणि ब्लॉक्स) आणि विविध वायू ज्वालामुखीच्या व्हेंट किंवा फिशरमधून बाहेर काढले जातात - ज्वालामुखीशास्त्रज्ञांनी ओळखले आहेत.",
+      "guardrail": null,
+      "confidence": 0.1144,
+      "timings_ms": {
+        "embed_ms": 11.12,
+        "search_ms": 94.25,
+        "rerank_ms": 1.75,
+        "total_ms": 132.77,
+        "qa_ms": 15.05
+      },
+      "client_ms": 1227.3429000051692,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-147286-p1-native",
+      "query": "तंतुमय आणि गोलाकार यांच्यातील फरक",
+      "ground_truth": "तंतुमय प्रथिने आणि गोलाकार प्रथिने आकार, आकृती, विरघळणशीलता, स्वरूप तसेच कार्यामध्ये भिन्न असतात.",
+      "answer": "तंतुमय प्रथिने आणि गोलाकार प्रथिने आकार, आकृती, विरघळणशीलता, स्वरूप तसेच कार्यामध्ये भिन्न असतात.",
+      "guardrail": null,
+      "confidence": 0.182,
+      "timings_ms": {
+        "embed_ms": 11.38,
+        "search_ms": 98.2,
+        "rerank_ms": 1.67,
+        "total_ms": 140.45,
+        "qa_ms": 18.27
+      },
+      "client_ms": 1433.252500006347,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-871306-p6-native",
+      "query": "आमच्याकडे कोणत्या प्रकारचे वेबर गॅस ग्रिल आहेत?",
+      "ground_truth": "वेबर क्यू २०० गॅस ग्रिल जोड्या",
+      "answer": "जर तुमची जागा पूर्ण आकाराच्या गॅस ग्रिलसाठी खूपच अरुंद असेल, किंवा तुम्हाला टेलगेटिंग किंवा कार कॅम्पिंगसाठी पुरेसे कॉम्पॅक्ट हवे असेल, तर $200 वेबर Q 1200 घ्या.",
+      "guardrail": null,
+      "confidence": 0.2054,
+      "timings_ms": {
+        "embed_ms": 11.21,
+        "search_ms": 93.66,
+        "rerank_ms": 2.18,
+        "total_ms": 138.06,
+        "qa_ms": 20.51
+      },
+      "client_ms": 1300.030300000799,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-328810-p0-native",
+      "query": "एन.सी.ए.ए. बास्केटबॉल कोर्ट किती बांधायचा आहे",
+      "ground_truth": "९४ फूट (२८.७ मी.)",
+      "answer": "बास्केटबॉल कोर्ट बांधण्यासाठी खूप जागा लागते, कारण नियमन कोर्ट 94 फूट (28.6 मी) लांब असू शकतात.",
+      "guardrail": null,
+      "confidence": 0.0679,
+      "timings_ms": {
+        "embed_ms": 11.08,
+        "search_ms": 90.6,
+        "rerank_ms": 1.25,
+        "total_ms": 135.34,
+        "qa_ms": 21.75
+      },
+      "client_ms": 1363.4713999927044,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-235456-p9-native",
+      "query": "सौदी अरेबियात किती गरमी होते",
+      "ground_truth": "120 डिग्री फॅरनहाइट",
+      "answer": "हे जगातील काही देशांपैकी एक आहे जिथे उन्हाळ्याच्या काळात तापमान 120 अंश फॅ (50 अंश सेल्सियस) पेक्षा जास्त होते.",
+      "guardrail": null,
+      "confidence": 0.1011,
+      "timings_ms": {
+        "embed_ms": 11.17,
+        "search_ms": 96.79,
+        "rerank_ms": 1.47,
+        "total_ms": 139.06,
+        "qa_ms": 18.77
+      },
+      "client_ms": 1329.7096000023885,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-270170-p5-native",
+      "query": "स्नॅप वाटाणे किती वेळ शिजवायचे",
+      "ground_truth": "२-३ मिनिटे.",
+      "answer": "तुमचे स्नॅप वाटाणे तळत असताना, एका पॅनमध्ये लोणी वितळवा किंवा ऑलिव्ह ऑइल वापरून तुमचे स्नॅप वाटाणे सुमारे 2-3 मिनिटे शिजवा.",
+      "guardrail": null,
+      "confidence": 0.1954,
+      "timings_ms": {
+        "embed_ms": 11.2,
+        "search_ms": 96.3,
+        "rerank_ms": 2.23,
+        "total_ms": 145.2,
+        "qa_ms": 24.97
+      },
+      "client_ms": 1433.5176999884425,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-895616-p7-native",
+      "query": "ब्रंचसाठी कोणत्या आकाराचे नॅपकिन आहेत",
+      "ground_truth": "६ १/२ इंच वर्ग",
+      "answer": "वैयक्तिकृत लंच नॅपकिन्स 6 1/2 इंच चौरसाकार असतात आणि सामान्यत: बुफे टेबलवर किंवा ब्रंच, लंच किंवा रात्रीच्या जेवणासाठी साखरपेरा, लग्नाच्या पार्ट्या, लग्नाच्या तयारी जेवण आणि लग्नाच्या रिसेप्शनसाठी डायनिंग टेबलवर वापरल्या जातात.",
+      "guardrail": null,
+      "confidence": 0.2336,
+      "timings_ms": {
+        "embed_ms": 11.11,
+        "search_ms": 94.31,
+        "rerank_ms": 1.56,
+        "total_ms": 142.49,
+        "qa_ms": 25.3
+      },
+      "client_ms": 1293.894399990677,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-660883-p9-native",
+      "query": "कोणते अन्नपदार्थ दुग्धजन्य उत्पादने आहेत",
+      "ground_truth": "दूध, चीज आणि आइस्क्रीम.",
+      "answer": "दुग्धजन्य उत्पादने किंवा दुग्ध उत्पादने हे सस्तन प्राण्यांच्या दुधापासून, मुख्यतः गायी, पाणम्हशी, बकरी, मेंढ्या, याक, घोडे, उंट आणि घरगुती म्हशींच्या दुधापासून तयार केलेले अन्न आहे.",
+      "guardrail": null,
+      "confidence": 0.0792,
+      "timings_ms": {
+        "embed_ms": 11.44,
+        "search_ms": 102.97,
+        "rerank_ms": 2.22,
+        "total_ms": 149.94,
+        "qa_ms": 22.26
+      },
+      "client_ms": 1368.9325000013923,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-809752-p8-native",
+      "query": "बुलगॉड कोणता आहे",
+      "ground_truth": "द बुलगॉड हा लेखक जोशुआ डॅल यांच्या प्रकाशित कवितांचा सर्वात नवीन भाग आहे.",
+      "answer": "द बुलगॉड: द बुलगॉड हा लेखक जोशुआ डॅल यांच्या प्रकाशित कवितांचा सर्वात नवीन भाग आहे.",
+      "guardrail": null,
+      "confidence": 0.104,
+      "timings_ms": {
+        "embed_ms": 11.56,
+        "search_ms": 94.98,
+        "rerank_ms": 1.62,
+        "total_ms": 132.44,
+        "qa_ms": 14.11
+      },
+      "client_ms": 1228.7175000092248,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-601909-p5-native",
+      "query": "व्रे हे नाव कोणत्या काउंटीमधून आले आहे",
+      "ground_truth": "जुने नॉर्स.",
+      "answer": "हे नाव आयरिश काउंटी क्लेअरशी संबंधित आहे.",
+      "guardrail": null,
+      "confidence": 0.1894,
+      "timings_ms": {
+        "embed_ms": 11.15,
+        "search_ms": 96.53,
+        "rerank_ms": 2.77,
+        "total_ms": 141.7,
+        "qa_ms": 20.7
+      },
+      "client_ms": 1330.4065999982413,
+      "success": true
+    },
+    {
+      "lang": "mr",
+      "id": "mr-303754-p1-native",
+      "query": "वजन कमी करण्यासाठी दररोज किती नारळाचे तेल लागेल.",
+      "ground_truth": "३६-३९ ग्रॅम.",
+      "answer": "एका अभ्यासात, 4 आठवड्यांसाठी दररोज 2 बडचमच (30 मिली) नारळाचे तेल घेणारे लठ्ठ किंवा मोठे लोक त्यांच्या कमरेपासून सरासरी 1.1 इंच (2.87 से.मी.) वजन कमी करतात (5).",
+      "guardrail": null,
+      "confidence": 0.1614,
+      "timings_ms": {
+        "embed_ms": 11.89,
+        "search_ms": 98.99,
+        "rerank_ms": 1.65,
+        "total_ms": 145.75,
+        "qa_ms": 22.32
+      },
+      "client_ms": 2354.02850000537,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-467556-p1-native",
+      "query": "nyu tuition cost",
+      "ground_truth": "$43,746 for the 2014-2015 academic year.",
+      "answer": "$50k per year",
+      "guardrail": null,
+      "confidence": 0.4578,
+      "timings_ms": {
+        "embed_ms": 11.04,
+        "search_ms": 100.58,
+        "rerank_ms": 2.18,
+        "total_ms": 142.53,
+        "qa_ms": 18.24
+      },
+      "client_ms": 1332.486900006188,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-28213-p7-native",
+      "query": "at what age do kids start to hold memories",
+      "ground_truth": "Before the age of 2–4 years.",
+      "answer": "Age 10",
+      "guardrail": null,
+      "confidence": 0.198,
+      "timings_ms": {
+        "embed_ms": 11.06,
+        "search_ms": 91.67,
+        "rerank_ms": 1.5,
+        "total_ms": 127.31,
+        "qa_ms": 12.76
+      },
+      "client_ms": 1338.94469999359,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-604568-p3-native",
+      "query": "what county is columbus city in",
+      "ground_truth": "Bartholomew",
+      "answer": "Columbus ( /kəlʌmbəs/) is a city in and the county seat of Bartholomew County, Indiana, United States.",
+      "guardrail": null,
+      "confidence": 0.7199,
+      "timings_ms": {
+        "embed_ms": 11.18,
+        "search_ms": 94.95,
+        "rerank_ms": 1.6,
+        "total_ms": 134.43,
+        "qa_ms": 16.17
+      },
+      "client_ms": 1219.4371999939904,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-26191-p2-native",
+      "query": "are whiskers on cats used for balance",
+      "ground_truth": "Yes whiskers are used to help balance as well as feelers to help them judge space and help in the dark.",
+      "answer": "A cats tail also helps them balance, my cat had lost his tail do to an …injury and now he uses his whiskers more to help balance.",
+      "guardrail": null,
+      "confidence": 0.1069,
+      "timings_ms": {
+        "embed_ms": 11.38,
+        "search_ms": 95.57,
+        "rerank_ms": 1.6,
+        "total_ms": 133.03,
+        "qa_ms": 14.16
+      },
+      "client_ms": 1229.3146000010893,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-1174759-p3-native",
+      "query": "is the bachelor legal",
+      "ground_truth": "Yes, the bachelor is legal.",
+      "answer": "A bachelor in law and legal studies",
+      "guardrail": null,
+      "confidence": 0.1241,
+      "timings_ms": {
+        "embed_ms": 11.59,
+        "search_ms": 95.27,
+        "rerank_ms": 1.49,
+        "total_ms": 130.7,
+        "qa_ms": 12.32
+      },
+      "client_ms": 1289.345700002741,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-33073-p0-native",
+      "query": "average cost of assisted living in washington state",
+      "ground_truth": "$4,625 per month.",
+      "answer": "According to the 2015 Genworth Financial cost of care survey, the average cost of assisted living in Washington is $4,625 per month.",
+      "guardrail": null,
+      "confidence": 0.5289,
+      "timings_ms": {
+        "embed_ms": 11.16,
+        "search_ms": 96.57,
+        "rerank_ms": 1.37,
+        "total_ms": 132.55,
+        "qa_ms": 12.37
+      },
+      "client_ms": 1372.0705000014277,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-620911-p7-native",
+      "query": "what disability is copd",
+      "ground_truth": "Chronic Obstructive Pulmonary Disease and Social Security Disability COPD, or chronic obstructive pulmonary disease is a series of lung diseases that damages your lungs, blocking airflow and affecting your ability to breathe.",
+      "answer": "Chronic respiratory disorders",
+      "guardrail": null,
+      "confidence": 0.3949,
+      "timings_ms": {
+        "embed_ms": 11.47,
+        "search_ms": 91.35,
+        "rerank_ms": 1.56,
+        "total_ms": 126.87,
+        "qa_ms": 12.49
+      },
+      "client_ms": 1228.4235999977682,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-693333-p6-native",
+      "query": "what is a omurice omelet",
+      "ground_truth": "A contemporary Asian dish consisting of an omelette made with fried rice.",
+      "answer": "With a fluffy omelette covering a bed of savory sweet chicken fried rice",
+      "guardrail": null,
+      "confidence": 0.0913,
+      "timings_ms": {
+        "embed_ms": 11.4,
+        "search_ms": 95.9,
+        "rerank_ms": 1.7,
+        "total_ms": 135.74,
+        "qa_ms": 16.35
+      },
+      "client_ms": 1332.200799995917,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-315061-p0-native",
+      "query": "how much does it cost to change a jeep alternator",
+      "ground_truth": "A Jeep Compass Alternator Replacement is between $377 and $577.",
+      "answer": "Between $377 and $577",
+      "guardrail": null,
+      "confidence": 0.4684,
+      "timings_ms": {
+        "embed_ms": 11.9,
+        "search_ms": 99.68,
+        "rerank_ms": 2.18,
+        "total_ms": 138.64,
+        "qa_ms": 14.59
+      },
+      "client_ms": 1434.8554000025615,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-612569-p1-native",
+      "query": "what county is seminole fl in",
+      "ground_truth": "Pinellas County",
+      "answer": "Seminole is a city in Pinellas County, Florida, United States.",
+      "guardrail": null,
+      "confidence": 0.3806,
+      "timings_ms": {
+        "embed_ms": 11.18,
+        "search_ms": 92.59,
+        "rerank_ms": 1.48,
+        "total_ms": 130.32,
+        "qa_ms": 14.47
+      },
+      "client_ms": 1225.8027999923797,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-32055-p9-native",
+      "query": "average cost dental implant",
+      "ground_truth": "$4250",
+      "answer": "According to DentalImplantCostGuide.com, the average completed dental implant, in the U.S., costs about $4250.",
+      "guardrail": null,
+      "confidence": 0.587,
+      "timings_ms": {
+        "embed_ms": 11.4,
+        "search_ms": 97.7,
+        "rerank_ms": 1.49,
+        "total_ms": 134.49,
+        "qa_ms": 13.63
+      },
+      "client_ms": 1332.3479999962728,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-638438-p4-native",
+      "query": "what does granuloma annulare look like",
+      "ground_truth": "A ring of small red or skin-coloured bumps",
+      "answer": "A ring of small red or skin-coloured bumps",
+      "guardrail": null,
+      "confidence": 0.6144,
+      "timings_ms": {
+        "embed_ms": 12.41,
+        "search_ms": 95.92,
+        "rerank_ms": 1.4,
+        "total_ms": 133.03,
+        "qa_ms": 12.48
+      },
+      "client_ms": 1227.8148000041256,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-516461-p9-native",
+      "query": "the importance of minerals in diet",
+      "ground_truth": "Minerals are incredibly important for health and to prevent chronic disease.",
+      "answer": "Minerals are incredibly important for health and to prevent chronic disease.",
+      "guardrail": null,
+      "confidence": 0.2725,
+      "timings_ms": {
+        "embed_ms": 11.47,
+        "search_ms": 98.41,
+        "rerank_ms": 1.58,
+        "total_ms": 136.14,
+        "qa_ms": 13.76
+      },
+      "client_ms": 1435.58099999791,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-481996-p0-native",
+      "query": "prize money taxable income",
+      "ground_truth": "Prizes are considered taxable income regardless of whether the prize is in the form of cash, trips or merchandise.",
+      "answer": "Regardless of whether the prize is in the form of cash, trips or merchandise",
+      "guardrail": null,
+      "confidence": 0.1136,
+      "timings_ms": {
+        "embed_ms": 11.08,
+        "search_ms": 91.4,
+        "rerank_ms": 2.05,
+        "total_ms": 135.78,
+        "qa_ms": 20.66
+      },
+      "client_ms": 1235.0624000100652,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-610348-p1-native",
+      "query": "what county is nine mile in",
+      "ground_truth": "Onondaga",
+      "answer": "Ninemile Creek is located in Onondaga County near the towns of Camillus.",
+      "guardrail": null,
+      "confidence": 0.4871,
+      "timings_ms": {
+        "embed_ms": 11.17,
+        "search_ms": 92.17,
+        "rerank_ms": 1.76,
+        "total_ms": 132.52,
+        "qa_ms": 16.62
+      },
+      "client_ms": 1220.2225999935763,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-698805-p5-native",
+      "query": "what is a salpingectomies",
+      "ground_truth": "Salpingectomy is the surgical removal of one or both fallopian tubes.",
+      "answer": "The surgical removal of one or both fallopian tubes",
+      "guardrail": null,
+      "confidence": 0.1849,
+      "timings_ms": {
+        "embed_ms": 10.98,
+        "search_ms": 95.02,
+        "rerank_ms": 1.48,
+        "total_ms": 133.88,
+        "qa_ms": 16.38
+      },
+      "client_ms": 1433.3933999878354,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-524762-p0-native",
+      "query": "triglycerides what are they",
+      "ground_truth": "A triglyceride is an ester derived from glycerol and three to four fatty acids.",
+      "answer": "A type of fat found in the blood",
+      "guardrail": null,
+      "confidence": 0.3568,
+      "timings_ms": {
+        "embed_ms": 11.22,
+        "search_ms": 96.15,
+        "rerank_ms": 1.96,
+        "total_ms": 133.65,
+        "qa_ms": 14.16
+      },
+      "client_ms": 1332.5867999956245,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-1174756-p2-native",
+      "query": "is the cheetah an endangered species",
+      "ground_truth": "Yes, Cheetah is considered Endangered species.",
+      "answer": "Cheetahs are considered to be endangered animals in that only 12,400 species are left in more than 20 different African countries",
+      "guardrail": null,
+      "confidence": 0.114,
+      "timings_ms": {
+        "embed_ms": 11.46,
+        "search_ms": 93.08,
+        "rerank_ms": 1.88,
+        "total_ms": 132.71,
+        "qa_ms": 15.73
+      },
+      "client_ms": 1332.0799000066472,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-447502-p3-native",
+      "query": "meaning of conquest",
+      "ground_truth": "Conquest is the act of conquering a country or group of people.",
+      "answer": "The act of conquering a country or group of people",
+      "guardrail": null,
+      "confidence": 0.2697,
+      "timings_ms": {
+        "embed_ms": 11.5,
+        "search_ms": 98.1,
+        "rerank_ms": 1.29,
+        "total_ms": 134.83,
+        "qa_ms": 13.78
+      },
+      "client_ms": 1328.2822000037413,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-573198-p0-native",
+      "query": "what are the risks associated with the use of nuclear energy",
+      "ground_truth": "Nuclear power arise from health effects of radiation. This radiation consists of subatomic particles traveling at or near the velocity of light---186,000 miles per second.ining uranium to fuel nuclear power plants leaves mill tailings, the residues from chemical processing of the ore, which lead to radon exposures to the public.",
+      "answer": "Health effects of radiation",
+      "guardrail": null,
+      "confidence": 0.127,
+      "timings_ms": {
+        "embed_ms": 12.05,
+        "search_ms": 104.12,
+        "rerank_ms": 2.47,
+        "total_ms": 141.01,
+        "qa_ms": 11.81
+      },
+      "client_ms": 1282.844400004251,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-607381-p0-native",
+      "query": "what county is honeoye in",
+      "ground_truth": "New York",
+      "answer": "This Single Family Home is located at County Road 36 in Honeoye, New York.",
+      "guardrail": null,
+      "confidence": 0.2433,
+      "timings_ms": {
+        "embed_ms": 11.23,
+        "search_ms": 104.25,
+        "rerank_ms": 1.82,
+        "total_ms": 145.63,
+        "qa_ms": 17.91
+      },
+      "client_ms": 1379.5185000053607,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-709821-p0-native",
+      "query": "what is als stand for and mean",
+      "ground_truth": "Amyotrophic laterals sclerosis, is a progressive neurodegenerative disease that affects nerve cells in the brain and the spinal cord.",
+      "answer": "ASL is short for As Hell, meaning extremely.n abbreviation that is widely used on Kik, Twitter, Facebook and elsewhere on the internet, but what does ASL mean in slang?",
+      "guardrail": null,
+      "confidence": 0.1267,
+      "timings_ms": {
+        "embed_ms": 11.22,
+        "search_ms": 93.74,
+        "rerank_ms": 1.68,
+        "total_ms": 132.46,
+        "qa_ms": 14.99
+      },
+      "client_ms": 1229.0906999987783,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-475482-p5-native",
+      "query": "pink eye treatment how long",
+      "ground_truth": "Within 24 to 48 hours.",
+      "answer": "Up to 14 days",
+      "guardrail": null,
+      "confidence": 0.0586,
+      "timings_ms": {
+        "embed_ms": 11.6,
+        "search_ms": 102.75,
+        "rerank_ms": 1.74,
+        "total_ms": 143.02,
+        "qa_ms": 16.18
+      },
+      "client_ms": 1329.1333999950439,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-621519-p0-native",
+      "query": "what distinguishes a macronutrient from a micronutrient",
+      "ground_truth": "Macronutrients mainly include carbohydrates, proteins and fats and also water which are required in large quantities and their main function being the release of energy in body.Whereas, micronutrients mainly comprise vitamins and minerals which are required in minute quantities.",
+      "answer": "Because they contain no calories and are required in much smaller amounts.",
+      "guardrail": null,
+      "confidence": 0.1379,
+      "timings_ms": {
+        "embed_ms": 11.84,
+        "search_ms": 95.84,
+        "rerank_ms": 1.8,
+        "total_ms": 134.31,
+        "qa_ms": 14.31
+      },
+      "client_ms": 1231.8740000046091,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-716162-p5-native",
+      "query": "what is an mla writing format",
+      "ground_truth": "It is a very professional way to format a paper, and, even if not required, is a nice, scholarly touch.",
+      "answer": "Provides guidelines to researchers and writers in formatting research papers and other reports",
+      "guardrail": null,
+      "confidence": 0.0745,
+      "timings_ms": {
+        "embed_ms": 11.2,
+        "search_ms": 100.47,
+        "rerank_ms": 1.47,
+        "total_ms": 136.1,
+        "qa_ms": 12.83
+      },
+      "client_ms": 1329.220700004953,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-38032-p4-native",
+      "query": "average january temps in mount pleasant, sc",
+      "ground_truth": "The January low is 39.",
+      "answer": "The January low is 39.",
+      "guardrail": null,
+      "confidence": 0.0614,
+      "timings_ms": {
+        "embed_ms": 11.13,
+        "search_ms": 97.91,
+        "rerank_ms": 1.64,
+        "total_ms": 140.95,
+        "qa_ms": 19.01
+      },
+      "client_ms": 1334.5954999967944,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-645586-p1-native",
+      "query": "what does physical education mean",
+      "ground_truth": "Physical fitness and the ability to perform and enjoy day-to-day physical activities with ease.",
+      "answer": "A course taught in school that focuses on developing physical fitness and the ability to perform and enjoy day-to-day physical activities with ease",
+      "guardrail": null,
+      "confidence": 0.3062,
+      "timings_ms": {
+        "embed_ms": 12.21,
+        "search_ms": 100.62,
+        "rerank_ms": 1.68,
+        "total_ms": 140.41,
+        "qa_ms": 12.92
+      },
+      "client_ms": 1328.2998000067892,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-482341-p9-native",
+      "query": "process theories of motivation suggest that",
+      "ground_truth": "The group of motivational theories that falls under the umbrella category of Process Theories of Motivation is based on the use of our rational thought processes or cognitive processing abilities.",
+      "answer": "Behavior is the result of conscious decision-making processes",
+      "guardrail": null,
+      "confidence": 0.8203,
+      "timings_ms": {
+        "embed_ms": 11.57,
+        "search_ms": 96.68,
+        "rerank_ms": 1.66,
+        "total_ms": 133.73,
+        "qa_ms": 12.6
+      },
+      "client_ms": 1401.312699992559,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-488003-p9-native",
+      "query": "requirements to be able to use virtual machines",
+      "ground_truth": "The virtual machine hardware must be. compatible with Workstation 8 and later virtual machines. n Support for USB 2.0 and 3.0 requires that you configure virtual machine settings to enable USB 2.0 and. 3.0 support and that you have compatible guest operating systems and virtual machine hardware.",
+      "answer": "The host system must meet certain requirements",
+      "guardrail": null,
+      "confidence": 0.1081,
+      "timings_ms": {
+        "embed_ms": 11.57,
+        "search_ms": 96.88,
+        "rerank_ms": 1.75,
+        "total_ms": 135.81,
+        "qa_ms": 14.37
+      },
+      "client_ms": 1362.122200007434,
+      "success": true
+    },
+    {
+      "lang": "en",
+      "id": "en-687403-p7-native",
+      "query": "what is a hyperlink",
+      "ground_truth": "The most essential ingredient of all hypertext systems, including the World Wide Web.",
+      "answer": "A hyperlink site is a COM object that implements the IHlinkSite interface and supplies either the moniker or interface identifier of its hyperlink container.",
+      "guardrail": null,
+      "confidence": 0.3045,
+      "timings_ms": {
+        "embed_ms": 11.38,
+        "search_ms": 90.05,
+        "rerank_ms": 1.62,
+        "total_ms": 126.28,
+        "qa_ms": 13.11
+      },
+      "client_ms": 1228.9979000051972,
+      "success": true
+    }
+  ]
+}
