@@ -8,7 +8,7 @@ import urllib.request
 import urllib.parse
 import os
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 def query_endpoint(query: str):
     data = urllib.parse.urlencode({"query": query}).encode()
@@ -94,7 +94,7 @@ import urllib.parse
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 DATASET_90 = {json.dumps(verified_90, indent=4, ensure_ascii=False)}
 

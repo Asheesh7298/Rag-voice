@@ -8,7 +8,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 with open('data/sample_40_eval.json', 'r', encoding='utf-8') as f:
     sample_40 = json.load(f)[:40]
 
-ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 # Load passages to see exact ground-truth passage text for each query
 passages = []

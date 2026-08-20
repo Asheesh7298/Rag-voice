@@ -20,7 +20,7 @@ except Exception:
 
 before_map = {item['query'].strip(): item for item in before_results}
 
-ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 def run_comparison():
     current_results = []

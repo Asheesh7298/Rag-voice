@@ -12,7 +12,7 @@ import urllib.request
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 DATASET_90 = {
     "hi": [

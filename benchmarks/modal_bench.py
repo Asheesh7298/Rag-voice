@@ -7,7 +7,7 @@ import json, random, statistics, time, sys
 import urllib.request
 import urllib.parse
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 N_QUERIES = 60
 
 def percentile(vals, p):

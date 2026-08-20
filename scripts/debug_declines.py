@@ -8,7 +8,7 @@ Run: python scripts/debug_declines.py
 """
 import json, urllib.request, urllib.parse
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 TEST_QUERIES = [
     "what is photosynthesis?",

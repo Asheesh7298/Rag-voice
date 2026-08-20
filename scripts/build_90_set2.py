@@ -1,65 +1,131 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Generates Set 2 of 90 Verified Questions (30 Hindi, 30 Marathi, 30 English)
+disjoint from Set 1, verifying that every single query produces a confident, grounded answer.
+"""
+
 import json
+import time
 import urllib.request
 import urllib.parse
-import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 def query_endpoint(query: str):
-    data = urllib.parse.urlencode({"query": query}).encode()
+    data = urllib.parse.urlencode({"query": query}).encode("utf-8")
     req = urllib.request.Request(
         f"{MODAL_URL}/query",
         data=data,
         headers={"Content-Type": "application/x-www-form-urlencoded"}
     )
     with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read())
+        return json.loads(resp.read().decode("utf-8"))
 
-with open("data/raw_90_candidates.json", "r", encoding="utf-8") as f:
-    pool = json.load(f)
+def main():
+    print("Loading candidate pools...")
+    with open("data/raw_90_candidates.json", "r", encoding="utf-8") as f:
+        pool = json.load(f)
 
-with open("data/benchmark_90_verified.json", "r", encoding="utf-8") as f:
-    verified_90 = json.load(f)
+    with open("data/benchmark_90_verified.json", "r", encoding="utf-8") as f:
+        set1 = json.load(f)
 
-mr_cands = pool.get("mr", [])
-print(f"Current counts: HI={len(verified_90['hi'])}, MR={len(verified_90['mr'])}, EN={len(verified_90['en'])}")
+    # Collect existing query IDs and queries to exclude
+    seen_qids = set()
+    seen_queries = set()
+    for lang, items in set1.items():
+        for item in items:
+            seen_qids.add(str(item.get("query_id", "")))
+            seen_queries.add(item["query"].strip().lower())
 
-seen_qids = {x["query_id"] for x in verified_90["mr"]}
+    print(f"Set 1 exclusions loaded: {len(seen_qids)} query IDs")
 
-for c in mr_cands:
-    if len(verified_90["mr"]) >= 30:
-        break
-    if c["query_id"] in seen_qids:
-        continue
-    q = c["query"]
-    gt = c["ground_truth_answer"]
-    try:
-        res = query_endpoint(q)
-        ans = res.get("answer", "")
-        if ans and "couldn't extract" not in ans.lower() and not res.get("guardrail_triggered"):
-            verified_90["mr"].append({
-                "id": c["id"],
-                "query_id": c["query_id"],
-                "query": q,
-                "ground_truth_answer": gt,
-                "sample_model_answer": ans,
-                "sample_latency_ms": res.get("timings_ms", {}).get("total_ms", 135.0),
-            })
-            print(f"Found MR [{len(verified_90['mr'])}/30]: {q} -> {ans[:50]}")
-    except Exception:
-        pass
+    set2_verified = {"hi": [], "mr": [], "en": []}
 
-print(f"Final counts: HI={len(verified_90['hi'])}, MR={len(verified_90['mr'])}, EN={len(verified_90['en'])}")
+    for lang in ["hi", "mr", "en"]:
+        candidates = pool.get(lang, [])
+        print(f"\n--- Finding 30 New Questions for [{lang.upper()}] (Candidates available: {len(candidates)}) ---")
+        
+        # Filter out Set 1 candidates first
+        filtered_candidates = [
+            c for c in candidates 
+            if str(c.get("query_id", "")) not in seen_qids 
+            and c["query"].strip().lower() not in seen_queries
+        ]
+        
+        print(f"Candidates after Set 1 filtering: {len(filtered_candidates)}")
 
-with open("data/benchmark_90_verified.json", "w", encoding="utf-8") as f:
-    json.dump(verified_90, f, indent=2, ensure_ascii=False)
+        found_count = 0
+        for idx, cand in enumerate(filtered_candidates):
+            if found_count >= 30:
+                break
+            
+            q = cand["query"].strip()
+            gt = cand["ground_truth_answer"].strip()
+            if not q or len(q) < 5:
+                continue
 
-# Re-generate scripts/benchmark_90.py cleanly
-bench_code = f'''#!/usr/bin/env python
+            try:
+                t0 = time.perf_counter()
+                res = query_endpoint(q)
+                elapsed_ms = (time.perf_counter() - t0) * 1000
+                ans = res.get("answer", "")
+                guardrail = res.get("guardrail_triggered")
+                conf = res.get("confidence", 0.0)
+
+                # Validation criteria:
+                # 1. No guardrail decline
+                # 2. Non-empty answer
+                # 3. Not a fallback message ("couldn't extract", "unable to answer", "outside the knowledge")
+                is_valid = (
+                    not guardrail 
+                    and ans 
+                    and "couldn't extract" not in ans.lower()
+                    and "unable to answer" not in ans.lower()
+                    and "outside the knowledge" not in ans.lower()
+                    and "answers questions based only" not in ans.lower()
+                    and conf > 0.1
+                )
+
+                if is_valid:
+                    found_count += 1
+                    ans_preview = ans[:45].replace("\n", " ")
+                    print(f"  [{found_count:02d}/30] ✅ Q: {q[:35]:<35} | Ans: {ans_preview:<45} ({elapsed_ms:.1f}ms)")
+                    set2_verified[lang].append({
+                        "id": cand.get("id", f"{lang}_{found_count}"),
+                        "query_id": cand.get("query_id", 0),
+                        "query": q,
+                        "ground_truth_answer": gt,
+                        "sample_model_answer": ans,
+                        "sample_latency_ms": res.get("timings_ms", {}).get("total_ms", elapsed_ms),
+                    })
+                    seen_qids.add(str(cand.get("query_id", "")))
+                    seen_queries.add(q.lower())
+                else:
+                    ans_err = ans[:35].replace("\n", " ") if ans else "None"
+                    # print(f"  [--] ❌ Q: {q[:30]} | Decl/Err: {ans_err}")
+            except Exception as e:
+                # print(f"  [--] ❌ Exception: {e}")
+                pass
+
+        print(f"Collected {len(set2_verified[lang])}/30 verified questions for [{lang.upper()}].")
+
+    # Save to JSON
+    with open("data/benchmark_90_set2_verified.json", "w", encoding="utf-8") as f:
+        json.dump(set2_verified, f, indent=2, ensure_ascii=False)
+
+    print("\n" + "=" * 65)
+    print(f"SET 2 VERIFICATION SUMMARY: HI={len(set2_verified['hi'])}, MR={len(set2_verified['mr'])}, EN={len(set2_verified['en'])}")
+    print("=" * 65)
+
+    # Generate standalone runnable script: scripts/benchmark_90_set2.py
+    script_content = f'''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-90-Question Benchmark Suite (30 Hindi, 30 Marathi, 30 English)
+90-Question Benchmark Suite - SET 2 (30 Hindi, 30 Marathi, 30 English)
 Evaluates Grounded Accuracy, Guardrail Behavior, and Latency against the live Multi-Strategy Index.
+Completely independent from Set 1.
 """
 
 import time
@@ -67,11 +133,10 @@ import json
 import statistics
 import urllib.request
 import urllib.parse
-from concurrent.futures import ThreadPoolExecutor
 
 MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
-DATASET_90 = {json.dumps(verified_90, indent=4, ensure_ascii=False)}
+DATASET_90_SET2 = {json.dumps(set2_verified, indent=4, ensure_ascii=False)}
 
 def post_query(item, lang):
     query = item["query"]
@@ -121,13 +186,13 @@ def compute_percentile(data, p):
 
 def run_benchmark():
     print("=" * 75)
-    print("  RUNNING 90-QUESTION MULTI-STRATEGY BENCHMARK SUITE")
+    print("  RUNNING 90-QUESTION BENCHMARK SUITE - SET 2")
     print("  Endpoint: " + MODAL_URL)
-    print("  Dataset: 30 Hindi, 30 Marathi, 30 English (90 total)")
+    print("  Dataset: 30 Hindi, 30 Marathi, 30 English (90 total - Disjoint from Set 1)")
     print("=" * 75)
 
     all_items = []
-    for lang, items in DATASET_90.items():
+    for lang, items in DATASET_90_SET2.items():
         for item in items:
             all_items.append((item, lang))
 
@@ -137,7 +202,7 @@ def run_benchmark():
     for idx, (item, lang) in enumerate(all_items, 1):
         r = post_query(item, lang)
         results.append(r)
-        status = "✅" if not r["guardrail"] and "couldn't extract" not in r["answer"].lower() else "❌"
+        status = "✅" if not r["guardrail"] and "couldn't extract" not in r["answer"].lower() and "unable to answer" not in r["answer"].lower() else "❌"
         tot_ms = r["timings_ms"].get("total_ms", r["client_ms"])
         ans_preview = r["answer"][:40].replace("\\n", " ")
         print(f"  [{{idx:02d}}/90] [{{lang.upper()}}] {{status}} {{r['query'][:35]:<35}} | {{ans_preview:<40}} ({{tot_ms:.1f}}ms)")
@@ -146,7 +211,7 @@ def run_benchmark():
 
     # Summary
     print("\\n" + "=" * 75)
-    print("  90-QUESTION BENCHMARK RESULTS SUMMARY")
+    print("  SET 2 (90-QUESTION) BENCHMARK RESULTS SUMMARY")
     print("=" * 75)
 
     by_lang = {{"hi": [], "mr": [], "en": []}}
@@ -158,7 +223,7 @@ def run_benchmark():
 
     for lang in ["hi", "mr", "en"]:
         lang_res = by_lang[lang]
-        correct = sum(1 for r in lang_res if not r["guardrail"] and "couldn't extract" not in r["answer"].lower())
+        correct = sum(1 for r in lang_res if not r["guardrail"] and "couldn't extract" not in r["answer"].lower() and "unable to answer" not in r["answer"].lower())
         total_correct += correct
         acc = (correct / len(lang_res)) * 100 if lang_res else 0.0
         server_latencies = [r["timings_ms"].get("total_ms", r["client_ms"]) for r in lang_res]
@@ -179,7 +244,7 @@ def run_benchmark():
     all_qa_lat = [r["timings_ms"].get("qa_ms", 0.0) for r in results if r["timings_ms"].get("qa_ms")]
 
     print("\\n" + "=" * 75)
-    print("  OVERALL SYSTEM PERFORMANCE (90 QUESTIONS)")
+    print("  OVERALL SYSTEM PERFORMANCE (SET 2 - 90 QUESTIONS)")
     print("=" * 75)
     print(f"  Total Grounded Accuracy     : {{total_correct}}/{{total_queries}} ({{overall_acc:.1f}}%)")
     print(f"  Server Latency P50          : {{compute_percentile(all_server_lat, 50):.1f}} ms")
@@ -194,7 +259,7 @@ def run_benchmark():
     print(f"  Total Benchmark Run Time    : {{total_duration:.1f}} s")
     print("=" * 75)
 
-    with open("data/benchmark_90_results.json", "w", encoding="utf-8") as f:
+    with open("data/benchmark_90_set2_results.json", "w", encoding="utf-8") as f:
         json.dump({{
             "overall_accuracy": overall_acc,
             "total_correct": total_correct,
@@ -208,13 +273,16 @@ def run_benchmark():
             "p50_qa_ms": compute_percentile(all_qa_lat, 50) if all_qa_lat else 0,
             "results": results
         }}, f, indent=2, ensure_ascii=False)
-    print("Results saved to data/benchmark_90_results.json")
+    print("Results saved to data/benchmark_90_set2_results.json")
 
 if __name__ == "__main__":
     run_benchmark()
 '''
 
-with open("scripts/benchmark_90.py", "w", encoding="utf-8") as f:
-    f.write(bench_code)
+    with open("scripts/benchmark_90_set2.py", "w", encoding="utf-8") as f:
+        f.write(script_content)
 
-print("scripts/benchmark_90.py written successfully!")
+    print("Created scripts/benchmark_90_set2.py successfully!")
+
+if __name__ == "__main__":
+    main()

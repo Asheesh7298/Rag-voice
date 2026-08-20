@@ -60,7 +60,7 @@ TEST_QUERIES = [
     ("en", "when did America gain independence?"),
 ]
 
-ENDPOINT = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run/query"
+ENDPOINT = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 def evaluate():
     results = []

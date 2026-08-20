@@ -19,7 +19,7 @@ from typing import Any
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 # ---------------------------------------------------------------------------
 # EXACTLY 120 QUERIES: 40 HINDI + 40 MARATHI + 40 ENGLISH (ZERO OTHER LANGUAGES)

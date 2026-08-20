@@ -60,7 +60,7 @@ from typing import Any
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-MODAL_URL = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run"
+MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run"
 
 # ---------------------------------------------------------------------------
 # 120 DATASET QUERIES WITH GROUND TRUTH (40 HI + 40 MR + 40 INDIC)
