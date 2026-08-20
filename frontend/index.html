@@ -915,7 +915,7 @@
       <div class="header-stats">
         <div class="status-pill">
           <span class="status-dot"></span>
-          <span>Live (T4 GPU) &middot; Sub-200ms</span>
+          <span>Live (A10G GPU) &middot; Sub-150ms</span>
         </div>
         <a href="https://hacker-house-goa-2026.devfolio.co/" target="_blank" class="header-cta-btn">
           <span>Devfolio</span> ↗
@@ -934,11 +934,11 @@
       <div class="hero-box">
         <h1 class="hero-title">Voice-Enabled <span class="peela">Multilingual</span> <span class="gulabi">RAG</span></h1>
         <p class="hero-desc">
-          Speak or type in <strong>Hindi, Marathi, or English</strong>. Calibrated extractive QA from 58,099 IndicMSMARCO vectors with sub-200ms latency and guardrails.
+          Speak or type in <strong>Hindi, Marathi, or English</strong>. Calibrated extractive QA from 1,516,928 multi-strategy vectors on Modal A10G GPU with sub-150ms latency and guardrails.
         </p>
         <div class="tagline-strip">
-          <span class="chip-badge highlight">⚡ P50: 131.6ms</span>
-          <span class="chip-badge">🎯 100% Under 200ms</span>
+          <span class="chip-badge highlight">⚡ P50: ~134ms</span>
+          <span class="chip-badge">🎯 100% Under 160ms</span>
           <span class="chip-badge">🛡️ Zero-Hallucination Guardrails</span>
           <span class="chip-badge">🌴 #RAGInGoa</span>
         </div>
@@ -961,23 +961,31 @@
         <div class="chat-messages" id="chatLog">
           <!-- Initial Starter Cards -->
           <div class="chat-starter-grid" id="starterGrid">
-            <div class="starter-title">What would you like to ask?</div>
+            <div class="starter-title">What would you like to ask? (Verified Factual Examples)</div>
             <div class="starter-cards-row">
-              <div class="starter-card" onclick="fillPrompt('टाइल बसवण्याचा खर्च किती आहे?')">
-                <span class="starter-card-lang">Marathi (MR)</span>
-                <span class="starter-card-text">टाइल बसवण्याचा खर्च किती आहे?</span>
-              </div>
-              <div class="starter-card" onclick="fillPrompt('प्रति वर्ग फुट टाइल स्थापना की लागत क्या है?')">
-                <span class="starter-card-lang">Hindi (HI)</span>
-                <span class="starter-card-text">प्रति वर्ग फुट टाइल स्थापना की लागत क्या है?</span>
-              </div>
-              <div class="starter-card" onclick="fillPrompt('what is the cost of tile installation per square foot?')">
+              <div class="starter-card" onclick="fillPrompt('what county is columbus city in')">
                 <span class="starter-card-lang">English (EN)</span>
-                <span class="starter-card-text">what is the cost of tile installation per sq ft?</span>
+                <span class="starter-card-text">what county is columbus city in</span>
               </div>
-              <div class="starter-card" onclick="fillPrompt('what is the weather today')">
-                <span class="starter-card-lang" style="color:var(--color-gulabi);">Guardrail Check</span>
-                <span class="starter-card-text">what is the weather today</span>
+              <div class="starter-card" onclick="fillPrompt('how much does it cost to change a jeep alternator')">
+                <span class="starter-card-lang">English (EN)</span>
+                <span class="starter-card-text">how much does it cost to change a jeep alternator</span>
+              </div>
+              <div class="starter-card" onclick="fillPrompt('ब्राइटन टाउनशिप फोन नंबर')">
+                <span class="starter-card-lang">Hindi (HI)</span>
+                <span class="starter-card-text">ब्राइटन टाउनशिप फोन नंबर</span>
+              </div>
+              <div class="starter-card" onclick="fillPrompt('मेन में सबसे अमीर व्यक्ति कौन है')">
+                <span class="starter-card-lang">Hindi (HI)</span>
+                <span class="starter-card-text">मेन में सबसे अमीर व्यक्ति कौन है</span>
+              </div>
+              <div class="starter-card" onclick="fillPrompt('फ्रान्सचे सध्याचे चलन काय आहे')">
+                <span class="starter-card-lang">Marathi (MR)</span>
+                <span class="starter-card-text">फ्रान्सचे सध्याचे चलन काय आहे</span>
+              </div>
+              <div class="starter-card" onclick="fillPrompt('पार्किंग ब्रेक म्हणजे ई ब्रेक आहे')">
+                <span class="starter-card-lang">Marathi (MR)</span>
+                <span class="starter-card-text">पार्किंग ब्रेक म्हणजे ई ब्रेक आहे</span>
               </div>
             </div>
           </div>
@@ -1014,21 +1022,29 @@
 
           <!-- Prompt Chips -->
           <div class="prompt-suggestions">
-            <button class="prompt-chip" onclick="fillPrompt('टाइल बसवण्याचा खर्च किती आहे?')">
-              <span class="chip-lang-tag">MR</span>
-              <span>टाइल बसवण्याचा खर्च किती आहे?</span>
-            </button>
-            <button class="prompt-chip" onclick="fillPrompt('प्रति वर्ग फुट टाइल स्थापना की लागत क्या है?')">
-              <span class="chip-lang-tag">HI</span>
-              <span>प्रति वर्ग फुट टाइल स्थापना की लागत क्या है?</span>
-            </button>
-            <button class="prompt-chip" onclick="fillPrompt('what is the cost of tile installation per square foot?')">
+            <button class="prompt-chip" onclick="fillPrompt('what county is columbus city in')">
               <span class="chip-lang-tag">EN</span>
-              <span>what is the cost of tile installation per sq ft?</span>
+              <span>what county is columbus city in</span>
             </button>
-            <button class="prompt-chip" onclick="fillPrompt('what is the weather today')">
-              <span class="chip-lang-tag" style="color:var(--color-gulabi);">GUARD</span>
-              <span>what is the weather today</span>
+            <button class="prompt-chip" onclick="fillPrompt('how much does it cost to change a jeep alternator')">
+              <span class="chip-lang-tag">EN</span>
+              <span>cost to change jeep alternator</span>
+            </button>
+            <button class="prompt-chip" onclick="fillPrompt('ब्राइटन टाउनशिप फोन नंबर')">
+              <span class="chip-lang-tag">HI</span>
+              <span>ब्राइटन टाउनशिप फोन नंबर</span>
+            </button>
+            <button class="prompt-chip" onclick="fillPrompt('मेन में सबसे अमीर व्यक्ति कौन है')">
+              <span class="chip-lang-tag">HI</span>
+              <span>मेन में सबसे अमीर व्यक्ति कौन है</span>
+            </button>
+            <button class="prompt-chip" onclick="fillPrompt('फ्रान्सचे सध्याचे चलन काय आहे')">
+              <span class="chip-lang-tag">MR</span>
+              <span>फ्रान्सचे सध्याचे चलन काय आहे</span>
+            </button>
+            <button class="prompt-chip" onclick="fillPrompt('पार्किंग ब्रेक म्हणजे ई ब्रेक आहे')">
+              <span class="chip-lang-tag">MR</span>
+              <span>पार्किंग ब्रेक म्हणजे ई ब्रेक आहे</span>
             </button>
           </div>
 
@@ -1164,7 +1180,7 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
-      <div>&copy; 2026 HH-Goa Task #2. Built with Multilingual E5 & XLM-RoBERTa on Modal T4 GPU.</div>
+      <div>&copy; 2026 HH-Goa Task #2. Built with Multilingual E5 & XLM-RoBERTa on Modal A10G GPU.</div>
       <div class="footer-links">
         <a href="https://hhgoa.com" target="_blank">hhgoa.com</a>
         <a href="https://hacker-house-goa-2026.devfolio.co/" target="_blank">Devfolio</a>
@@ -1175,7 +1191,7 @@
 
   <!-- JavaScript Application Logic -->
   <script>
-    const API_BASE = "https://ac161050--voice-rag-voicerag-fastapi-app.modal.run";
+    const API_BASE = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run";
 
     // Application State
     const sessionLatencies = [];

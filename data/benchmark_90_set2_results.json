@@ -1,14 +1,14 @@
 {
-  "overall_accuracy": 100.0,
-  "total_correct": 90,
+  "overall_accuracy": 90.0,
+  "total_correct": 81,
   "total_queries": 90,
-  "p50_total_ms": 132.55,
-  "p70_total_ms": 134.9,
-  "p90_total_ms": 137.79,
-  "p100_total_ms": 150.25,
-  "mean_total_ms": 132.68366666666665,
-  "p50_search_ms": 92.69,
-  "p50_qa_ms": 15.89,
+  "p50_total_ms": 147.2,
+  "p70_total_ms": 151.29,
+  "p90_total_ms": 160.71,
+  "p100_total_ms": 202.97,
+  "mean_total_ms": 148.78088888888888,
+  "p50_search_ms": 102.24,
+  "p50_qa_ms": 18.71,
   "results": [
     {
       "lang": "hi",
@@ -17,15 +17,15 @@
       "ground_truth": "ब्राज़ीलियाई रियल",
       "answer": "पैसे की आपूर्ति के बराबर होती है, जिसे LM वक्र के रूप में जाना जाता है।",
       "guardrail": null,
-      "confidence": 0.3586,
+      "confidence": 0.3584,
       "timings_ms": {
-        "embed_ms": 11.08,
-        "search_ms": 92.79,
-        "rerank_ms": 0.83,
-        "total_ms": 127.49,
-        "qa_ms": 12.47
+        "embed_ms": 11.09,
+        "search_ms": 102.94,
+        "rerank_ms": 2.07,
+        "total_ms": 144.67,
+        "qa_ms": 18.58
       },
-      "client_ms": 1647.5704000040423,
+      "client_ms": 1831.273499999952,
       "success": true
     },
     {
@@ -35,15 +35,15 @@
       "ground_truth": "2,775 डॉलर",
       "answer": "2013/2014 के लिए प्रदान की गई औसत पेल ग्रांट $4,299 थी।",
       "guardrail": null,
-      "confidence": 0.1536,
+      "confidence": 0.3503,
       "timings_ms": {
-        "embed_ms": 11.43,
-        "search_ms": 93.72,
-        "rerank_ms": 1.57,
-        "total_ms": 141.8,
-        "qa_ms": 24.79
+        "embed_ms": 11.5,
+        "search_ms": 99.58,
+        "rerank_ms": 3.73,
+        "total_ms": 153.84,
+        "qa_ms": 28.81
       },
-      "client_ms": 1236.7609000066295,
+      "client_ms": 1262.6597000000856,
       "success": true
     },
     {
@@ -55,13 +55,13 @@
       "guardrail": null,
       "confidence": 0.7382,
       "timings_ms": {
-        "embed_ms": 10.92,
-        "search_ms": 94.48,
-        "rerank_ms": 1.84,
-        "total_ms": 135.94,
-        "qa_ms": 17.92
+        "embed_ms": 11.35,
+        "search_ms": 102.06,
+        "rerank_ms": 4.05,
+        "total_ms": 150.66,
+        "qa_ms": 22.06
       },
-      "client_ms": 1323.8303000107408,
+      "client_ms": 1214.4990000001599,
       "success": true
     },
     {
@@ -69,17 +69,17 @@
       "id": "hi-1017354-p8-native",
       "query": "जिन दार्शनिक ने सामाजिक अनुबंध की अवधारणा विकसित की",
       "ground_truth": "थॉमस हॉबे और रूसो।",
-      "answer": "जॉन लॉक जैसे कई अन्य दार्शनिकों ने अपने काम को प्रभावित करने के लिए अपने सामाजिक अनुबंध का उपयोग किया।",
-      "guardrail": null,
-      "confidence": 0.523,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.69,
-        "search_ms": 93.18,
-        "rerank_ms": 1.76,
-        "total_ms": 131.4,
-        "qa_ms": 14.15
+        "embed_ms": 11.34,
+        "search_ms": 103.52,
+        "rerank_ms": 3.65,
+        "total_ms": 135.87,
+        "qa_ms": 17.12
       },
-      "client_ms": 1230.8321000018623,
+      "client_ms": 1192.8038999999444,
       "success": true
     },
     {
@@ -89,15 +89,15 @@
       "ground_truth": "गाजर",
       "answer": "अंडे की जर्दी, पनीर, साबुत दूध, मक्खन, सुदृढ़ दूध और मार्जरीन भी विटामिन ए के अच्छे स्रोत हैं।",
       "guardrail": null,
-      "confidence": 0.1785,
+      "confidence": 0.1579,
       "timings_ms": {
-        "embed_ms": 11.45,
-        "search_ms": 95.4,
-        "rerank_ms": 2.07,
-        "total_ms": 137.73,
-        "qa_ms": 18.49
+        "embed_ms": 11.35,
+        "search_ms": 99.1,
+        "rerank_ms": 4.54,
+        "total_ms": 147.4,
+        "qa_ms": 22.25
       },
-      "client_ms": 1303.0825999885565,
+      "client_ms": 1547.1747999999934,
       "success": true
     },
     {
@@ -109,13 +109,13 @@
       "guardrail": null,
       "confidence": 0.1488,
       "timings_ms": {
-        "embed_ms": 11.08,
-        "search_ms": 92.8,
-        "rerank_ms": 2.23,
-        "total_ms": 139.57,
-        "qa_ms": 22.81
+        "embed_ms": 11.58,
+        "search_ms": 107.41,
+        "rerank_ms": 3.25,
+        "total_ms": 161.28,
+        "qa_ms": 28.03
       },
-      "client_ms": 1249.2568000016036,
+      "client_ms": 1609.8971999999776,
       "success": true
     },
     {
@@ -123,17 +123,17 @@
       "id": "hi-868082-p6-native",
       "query": "आड़ू के पेड़ों के लिए किस तरह का उर्वरक",
       "ground_truth": "एक अकार्बनिक उर्वरक",
-      "answer": "मार्च में 3 फुट के क्षेत्र में 1 कप 10-10-10 खाद से आड़ू को उर्वरित करें।",
+      "answer": "खाद युक्त आड़ू और अमृतसर के पेड़ों को उर्वरक देना...",
       "guardrail": null,
-      "confidence": 0.1745,
+      "confidence": 0.0653,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 94.96,
-        "rerank_ms": 2.04,
-        "total_ms": 134.45,
-        "qa_ms": 15.52
+        "embed_ms": 11.43,
+        "search_ms": 104.43,
+        "rerank_ms": 4.69,
+        "total_ms": 150.1,
+        "qa_ms": 19.08
       },
-      "client_ms": 1232.412800003658,
+      "client_ms": 1218.582200000128,
       "success": true
     },
     {
@@ -141,17 +141,17 @@
       "id": "hi-908687-p6-native",
       "query": "किस शहर में एलोन विश्वविद्यालय है",
       "ground_truth": "एलोन",
-      "answer": "जुडसन विश्वविद्यालय ईसाई महाविद्यालय एल्गिन, इलिनोइस - जुडसन विश्वविद्यालय अपने वार्षिक संस्थापक दिवस को शुक्रवार, 16 अक्टूबर, 2015 को मनाएगा, जिसमें डॉ.",
+      "answer": "एलोन, उत्तरी कैरोलिना।",
       "guardrail": null,
-      "confidence": 0.2479,
+      "confidence": 0.1374,
       "timings_ms": {
-        "embed_ms": 11.28,
-        "search_ms": 98.3,
-        "rerank_ms": 1.77,
-        "total_ms": 137.79,
-        "qa_ms": 14.97
+        "embed_ms": 11.32,
+        "search_ms": 102.63,
+        "rerank_ms": 3.89,
+        "total_ms": 145.56,
+        "qa_ms": 17.17
       },
-      "client_ms": 1228.451999995741,
+      "client_ms": 1272.1842000000834,
       "success": true
     },
     {
@@ -159,17 +159,17 @@
       "id": "hi-830683-p0-native",
       "query": "एमिली का क्या अर्थ है",
       "ground_truth": "निर्माणकारी और प्रयासरत",
-      "answer": "फ्रेंच में, नाम को एमी के रूप में लिखा जाता है, जिसका अर्थ है प्रिय।",
+      "answer": "जर्मन में एमिली नाम का अर्थ है: रोमन परिवार के नाम एमिलियस से, जिसका अर्थ है 'उद्योगी।' यह पुराने जर्मन अमालबर्गा से भी है, जिसका अर्थ है 'श्रम' और लैटिन एमिलिया।",
       "guardrail": null,
-      "confidence": 0.3152,
+      "confidence": 0.0614,
       "timings_ms": {
-        "embed_ms": 11.34,
-        "search_ms": 96.27,
-        "rerank_ms": 1.01,
-        "total_ms": 139.23,
-        "qa_ms": 20.05
+        "embed_ms": 11.3,
+        "search_ms": 114.46,
+        "rerank_ms": 3.07,
+        "total_ms": 164.07,
+        "qa_ms": 24.12
       },
-      "client_ms": 1327.18950000708,
+      "client_ms": 1547.1772999999303,
       "success": true
     },
     {
@@ -181,13 +181,13 @@
       "guardrail": null,
       "confidence": 0.309,
       "timings_ms": {
-        "embed_ms": 10.98,
-        "search_ms": 95.95,
-        "rerank_ms": 1.71,
-        "total_ms": 134.9,
-        "qa_ms": 15.34
+        "embed_ms": 11.4,
+        "search_ms": 106.77,
+        "rerank_ms": 3.34,
+        "total_ms": 149.3,
+        "qa_ms": 17.16
       },
-      "client_ms": 1331.6981000098167,
+      "client_ms": 1416.7159999999512,
       "success": true
     },
     {
@@ -199,13 +199,13 @@
       "guardrail": null,
       "confidence": 0.2968,
       "timings_ms": {
-        "embed_ms": 11.36,
-        "search_ms": 94.68,
-        "rerank_ms": 5.18,
-        "total_ms": 135.56,
-        "qa_ms": 13.54
+        "embed_ms": 11.22,
+        "search_ms": 104.76,
+        "rerank_ms": 7.1,
+        "total_ms": 148.88,
+        "qa_ms": 14.85
       },
-      "client_ms": 1235.5776999902446,
+      "client_ms": 1265.9743000001527,
       "success": true
     },
     {
@@ -213,17 +213,17 @@
       "id": "hi-595743-p9-native",
       "query": "कौन सा शहर शीत युद्ध का कारण बना",
       "ground_truth": "बर्लिन",
-      "answer": "परमाणु हथियारों के अस्तित्व ने ही शीत युद्ध के विकास को जन्म दिया।",
+      "answer": "बर्लिन हमेशा शीत युद्ध का केंद्रबिंदु रहा था और, ज्यादातर लोगों को याद रहता है, वास्तविक लड़ाई की बहुत करीब से सामने वाली पंक्ति थी।",
       "guardrail": null,
-      "confidence": 0.4239,
+      "confidence": 0.4943,
       "timings_ms": {
-        "embed_ms": 10.82,
-        "search_ms": 95.65,
-        "rerank_ms": 1.79,
-        "total_ms": 130.89,
-        "qa_ms": 12.03
+        "embed_ms": 11.17,
+        "search_ms": 99.41,
+        "rerank_ms": 3.97,
+        "total_ms": 143.76,
+        "qa_ms": 18.47
       },
-      "client_ms": 1219.7751000057906,
+      "client_ms": 1509.4540000000052,
       "success": true
     },
     {
@@ -233,15 +233,15 @@
       "ground_truth": "कोई नहीं",
       "answer": "किंडल फायर पर गूगल ई-बुक्स पढ़ने के लिए इंडीबाउंड रीडर ऐप को साइडलोड करना आवश्यक है (जो नुक, एंड्रॉइड, आईफोन और आईपैड के लिए भी काम करता है - आप ऐप को अपने उपकरण के ऐप स्टोर में पा सकते हैं)।",
       "guardrail": null,
-      "confidence": 0.1098,
+      "confidence": 0.0757,
       "timings_ms": {
-        "embed_ms": 11.09,
-        "search_ms": 93.53,
-        "rerank_ms": 1.71,
-        "total_ms": 133.22,
-        "qa_ms": 15.99
+        "embed_ms": 11.04,
+        "search_ms": 93.91,
+        "rerank_ms": 3.38,
+        "total_ms": 142.37,
+        "qa_ms": 23.18
       },
-      "client_ms": 1331.2264999985928,
+      "client_ms": 1243.7548000000334,
       "success": true
     },
     {
@@ -251,15 +251,15 @@
       "ground_truth": "फ्रांसियम",
       "answer": "क्षारीय धातु: आवर्त सारणी के समूह IA में तत्वों का परिवार।",
       "guardrail": null,
-      "confidence": 0.3805,
+      "confidence": 0.4947,
       "timings_ms": {
-        "embed_ms": 11.76,
-        "search_ms": 90.93,
-        "rerank_ms": 1.8,
-        "total_ms": 131.18,
-        "qa_ms": 16.41
+        "embed_ms": 11.07,
+        "search_ms": 102.24,
+        "rerank_ms": 4.22,
+        "total_ms": 145.11,
+        "qa_ms": 17.32
       },
-      "client_ms": 1226.874800006044,
+      "client_ms": 1182.548499999939,
       "success": true
     },
     {
@@ -267,17 +267,17 @@
       "id": "hi-943592-p1-native",
       "query": "लड़के कब यौवन में पहुँचते हैं",
       "ground_truth": "जब लड़के युवावस्था में प्रवेश करते हैं, तो उनके शरीर में कई शारीरिक परिवर्तन होने लगते हैं जो उनकी उपस्थिति को प्रभावित करते हैं। कई क्षेत्रों में परिवर्तन होने लगता है, जिनमें शामिल हैं: मांसपेशियां: लड़कों में युवावस्था के दौरान अधिक मांसपेशियों का विकास होना शुरू हो जाता है।",
-      "answer": "शुक्राणु उत्पादन की शुरुआत",
-      "guardrail": null,
-      "confidence": 0.1061,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.08,
-        "search_ms": 91.59,
-        "rerank_ms": 1.67,
-        "total_ms": 130.29,
-        "qa_ms": 15.94
+        "embed_ms": 11.12,
+        "search_ms": 98.88,
+        "rerank_ms": 3.55,
+        "total_ms": 129.99,
+        "qa_ms": 16.3
       },
-      "client_ms": 1229.1760000080103,
+      "client_ms": 1211.3742999999886,
       "success": true
     },
     {
@@ -289,13 +289,13 @@
       "guardrail": null,
       "confidence": 0.4016,
       "timings_ms": {
-        "embed_ms": 10.94,
-        "search_ms": 95.06,
-        "rerank_ms": 1.24,
-        "total_ms": 139.1,
-        "qa_ms": 21.12
+        "embed_ms": 11.75,
+        "search_ms": 100.57,
+        "rerank_ms": 2.63,
+        "total_ms": 151.35,
+        "qa_ms": 25.61
       },
-      "client_ms": 1329.876100004185,
+      "client_ms": 1207.3613000000023,
       "success": true
     },
     {
@@ -307,13 +307,13 @@
       "guardrail": null,
       "confidence": 0.1576,
       "timings_ms": {
-        "embed_ms": 11.44,
-        "search_ms": 95.11,
-        "rerank_ms": 1.42,
-        "total_ms": 131.42,
-        "qa_ms": 13.14
+        "embed_ms": 11.69,
+        "search_ms": 97.11,
+        "rerank_ms": 2.7,
+        "total_ms": 136.71,
+        "qa_ms": 14.95
       },
-      "client_ms": 1333.3770000026561,
+      "client_ms": 1201.831699999957,
       "success": true
     },
     {
@@ -325,13 +325,13 @@
       "guardrail": null,
       "confidence": 0.2208,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 92.07,
-        "rerank_ms": 1.02,
-        "total_ms": 129.71,
-        "qa_ms": 15.15
+        "embed_ms": 11.29,
+        "search_ms": 97.44,
+        "rerank_ms": 2.17,
+        "total_ms": 139.76,
+        "qa_ms": 17.98
       },
-      "client_ms": 1331.209800002398,
+      "client_ms": 1189.5795000000362,
       "success": true
     },
     {
@@ -341,15 +341,15 @@
       "ground_truth": "लगभग 4 साल।",
       "answer": "अधिकांश मामलों में, स्नातकोत्तर डिग्री कार्यक्रम को पूरा करने में दो साल लगते हैं, हालांकि इस नियम के कुछ अपवाद हैं।",
       "guardrail": null,
-      "confidence": 0.1721,
+      "confidence": 0.1521,
       "timings_ms": {
-        "embed_ms": 11.31,
-        "search_ms": 91.52,
-        "rerank_ms": 1.61,
-        "total_ms": 128.26,
-        "qa_ms": 13.39
+        "embed_ms": 11.24,
+        "search_ms": 97.17,
+        "rerank_ms": 3.59,
+        "total_ms": 138.91,
+        "qa_ms": 16.63
       },
-      "client_ms": 1431.4782000001287,
+      "client_ms": 1214.2827000000125,
       "success": true
     },
     {
@@ -357,17 +357,17 @@
       "id": "hi-959615-p3-native",
       "query": "किसी को बताया कि कौन सी कंपनी में काम करने के लिए आवेदन कर रहा है?",
       "ground_truth": "2001",
-      "answer": "एक अलग कंपनी",
-      "guardrail": null,
-      "confidence": 0.1309,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 96.64,
-        "rerank_ms": 1.22,
-        "total_ms": 132.91,
-        "qa_ms": 13.87
+        "embed_ms": 11.82,
+        "search_ms": 99.25,
+        "rerank_ms": 2.81,
+        "total_ms": 128.15,
+        "qa_ms": 14.03
       },
-      "client_ms": 1331.1965000029886,
+      "client_ms": 1187.9831999999624,
       "success": true
     },
     {
@@ -377,15 +377,15 @@
       "ground_truth": "वॉल्टन",
       "answer": "डेफुनियाक स्प्रिंग्स संयुक्त राज्य अमेरिका के फ्लोरिडा में वॉलटन काउंटी का एक शहर है।",
       "guardrail": null,
-      "confidence": 0.4563,
+      "confidence": 0.4562,
       "timings_ms": {
-        "embed_ms": 10.98,
-        "search_ms": 93.12,
-        "rerank_ms": 1.31,
-        "total_ms": 130.26,
-        "qa_ms": 14.73
+        "embed_ms": 11.51,
+        "search_ms": 100.98,
+        "rerank_ms": 3.29,
+        "total_ms": 143.22,
+        "qa_ms": 16.93
       },
-      "client_ms": 1330.8120000001509,
+      "client_ms": 1210.3157999999894,
       "success": true
     },
     {
@@ -397,13 +397,13 @@
       "guardrail": null,
       "confidence": 0.9239,
       "timings_ms": {
-        "embed_ms": 11.23,
-        "search_ms": 90.24,
-        "rerank_ms": 1.73,
-        "total_ms": 132.2,
-        "qa_ms": 18.77
+        "embed_ms": 11.22,
+        "search_ms": 96.74,
+        "rerank_ms": 3.18,
+        "total_ms": 144.09,
+        "qa_ms": 22.58
       },
-      "client_ms": 1258.3237000071676,
+      "client_ms": 1202.8897000000143,
       "success": true
     },
     {
@@ -411,17 +411,17 @@
       "id": "hi-525971-p0-native",
       "query": "टाइप 1 मधुमेह जिसे",
       "ground_truth": "मेलिटस प्रकार 1",
-      "answer": "मधुमेह मेलिटस टाइप 1 (जिसे टाइप 1 मधुमेह या टी1डी के रूप में भी जाना जाता है, पूर्व में इंसुलिन-निर्भर मधुमेह या किशोर मधुमेह) मधुमेह मेलिटस का एक रूप है जो अग्न्याशय में इंसुलिन-उत्पादक बीटा कोशिकाओं के स्वप्रतिरक्षी विनाश के परिणामस्वरूप होता है।",
+      "answer": "टाइप 1 मधुमेह एक स्वप्रतिरक्षी रोग है जिसके लिए इंसुलिन के दैनिक उपयोग की आवश्यकता होती है।",
       "guardrail": null,
-      "confidence": 0.1189,
+      "confidence": 0.1377,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 95.93,
-        "rerank_ms": 1.31,
-        "total_ms": 140.77,
-        "qa_ms": 20.93
+        "embed_ms": 11.28,
+        "search_ms": 103.06,
+        "rerank_ms": 2.96,
+        "total_ms": 151.21,
+        "qa_ms": 23.16
       },
-      "client_ms": 1403.579499994521,
+      "client_ms": 1201.3308999999026,
       "success": true
     },
     {
@@ -433,13 +433,13 @@
       "guardrail": null,
       "confidence": 0.4354,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 93.31,
-        "rerank_ms": 1.59,
-        "total_ms": 132.9,
-        "qa_ms": 16.46
+        "embed_ms": 11.54,
+        "search_ms": 106.0,
+        "rerank_ms": 3.48,
+        "total_ms": 150.12,
+        "qa_ms": 18.56
       },
-      "client_ms": 1330.5870000040159,
+      "client_ms": 1274.7148999999354,
       "success": true
     },
     {
@@ -451,13 +451,13 @@
       "guardrail": null,
       "confidence": 0.5592,
       "timings_ms": {
-        "embed_ms": 11.79,
-        "search_ms": 105.97,
-        "rerank_ms": 1.99,
-        "total_ms": 150.25,
-        "qa_ms": 18.57
+        "embed_ms": 10.95,
+        "search_ms": 100.43,
+        "rerank_ms": 3.69,
+        "total_ms": 146.76,
+        "qa_ms": 21.32
       },
-      "client_ms": 1415.1375999936135,
+      "client_ms": 1432.8832000001057,
       "success": true
     },
     {
@@ -467,15 +467,15 @@
       "ground_truth": "20 जून",
       "answer": "यदि आप अमेरिका में रहते हैं, तो गर्मियों का पहला दिन 20 जून होगा।",
       "guardrail": null,
-      "confidence": 0.4691,
+      "confidence": 0.469,
       "timings_ms": {
-        "embed_ms": 11.22,
-        "search_ms": 94.39,
-        "rerank_ms": 1.22,
-        "total_ms": 133.85,
-        "qa_ms": 17.05
+        "embed_ms": 11.4,
+        "search_ms": 100.06,
+        "rerank_ms": 2.96,
+        "total_ms": 144.16,
+        "qa_ms": 18.86
       },
-      "client_ms": 1451.0943999921437,
+      "client_ms": 1332.5207000000319,
       "success": true
     },
     {
@@ -485,15 +485,15 @@
       "ground_truth": "बोटनिस्ट",
       "answer": "जीव विज्ञान का अध्ययन करने वाले वैज्ञानिकों को जीवविज्ञानी के रूप में जाना जाता है।",
       "guardrail": null,
-      "confidence": 0.5662,
+      "confidence": 0.5076,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 90.32,
-        "rerank_ms": 1.97,
-        "total_ms": 135.6,
-        "qa_ms": 21.84
+        "embed_ms": 11.36,
+        "search_ms": 100.64,
+        "rerank_ms": 3.8,
+        "total_ms": 153.23,
+        "qa_ms": 26.14
       },
-      "client_ms": 1226.028499993845,
+      "client_ms": 1337.9526999999598,
       "success": true
     },
     {
@@ -505,13 +505,13 @@
       "guardrail": null,
       "confidence": 0.3893,
       "timings_ms": {
-        "embed_ms": 11.19,
-        "search_ms": 95.13,
-        "rerank_ms": 1.78,
-        "total_ms": 134.91,
-        "qa_ms": 16.55
+        "embed_ms": 10.99,
+        "search_ms": 100.35,
+        "rerank_ms": 3.1,
+        "total_ms": 143.74,
+        "qa_ms": 18.45
       },
-      "client_ms": 1332.6174999965588,
+      "client_ms": 1337.2238000001744,
       "success": true
     },
     {
@@ -519,17 +519,17 @@
       "id": "hi-1020419-p0-native",
       "query": "कौन सा उपचार दर्द के लिए सबसे अच्छा है",
       "ground_truth": "मारिजुआना का प्रकार",
-      "answer": "मेरे डॉक्टर को लगता है कि ट्रामाडोल मेरे कुत्ते के लिए सबसे अच्छा इलाज है, क्योंकि उसे कैंसर है और पूरे शरीर में इसका संचार हो गया है।",
-      "guardrail": null,
-      "confidence": 0.3598,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.03,
-        "search_ms": 92.63,
-        "rerank_ms": 1.92,
-        "total_ms": 130.17,
-        "qa_ms": 13.77
+        "embed_ms": 11.43,
+        "search_ms": 104.47,
+        "rerank_ms": 3.85,
+        "total_ms": 138.73,
+        "qa_ms": 18.71
       },
-      "client_ms": 1229.4242999923881,
+      "client_ms": 1240.626999999904,
       "success": true
     },
     {
@@ -541,13 +541,13 @@
       "guardrail": null,
       "confidence": 0.6773,
       "timings_ms": {
-        "embed_ms": 11.42,
-        "search_ms": 94.36,
-        "rerank_ms": 1.19,
-        "total_ms": 135.58,
-        "qa_ms": 17.93
+        "embed_ms": 11.39,
+        "search_ms": 103.35,
+        "rerank_ms": 2.69,
+        "total_ms": 149.02,
+        "qa_ms": 21.02
       },
-      "client_ms": 1196.3756999903126,
+      "client_ms": 1313.4087999999338,
       "success": true
     },
     {
@@ -559,13 +559,13 @@
       "guardrail": null,
       "confidence": 0.2952,
       "timings_ms": {
-        "embed_ms": 11.83,
-        "search_ms": 91.55,
-        "rerank_ms": 1.38,
-        "total_ms": 137.65,
-        "qa_ms": 22.06
+        "embed_ms": 11.6,
+        "search_ms": 101.78,
+        "rerank_ms": 3.11,
+        "total_ms": 154.17,
+        "qa_ms": 26.62
       },
-      "client_ms": 1463.7482000107411,
+      "client_ms": 1329.590699999926,
       "success": true
     },
     {
@@ -573,17 +573,17 @@
       "id": "mr-807450-p0-native",
       "query": "सरासरी वेतन ताशी किती आहे",
       "ground_truth": "$१०.५८-$२०.४१",
-      "answer": "सरासरी वेतन $543,343 ($261/तास) आहे.",
+      "answer": "डी.जे.चा सरासरी ताशी वेतन $15.93 असतो.",
       "guardrail": null,
-      "confidence": 0.25,
+      "confidence": 0.0585,
       "timings_ms": {
-        "embed_ms": 11.34,
-        "search_ms": 90.76,
-        "rerank_ms": 1.75,
-        "total_ms": 127.96,
-        "qa_ms": 14.11
+        "embed_ms": 10.82,
+        "search_ms": 97.64,
+        "rerank_ms": 4.04,
+        "total_ms": 143.86,
+        "qa_ms": 21.27
       },
-      "client_ms": 1218.4512999956496,
+      "client_ms": 1324.1567000000032,
       "success": true
     },
     {
@@ -591,17 +591,17 @@
       "id": "mr-993067-p2-native",
       "query": "स्मिथविले कुठे आहे",
       "ground_truth": "लॉरेन्स काउंटी",
-      "answer": "स्मिथ हे इंग्लंडमध्ये उगम पावलेले एक इंग्रजी कौटुंबिक नाव (आडनाव) आहे.",
+      "answer": "स्मिथव्हिल हे अमेरिकेच्या अर्कान्सासमधील लॉरेन्स काउंटीतील एक शहर आहे.",
       "guardrail": null,
-      "confidence": 0.4412,
+      "confidence": 0.0988,
       "timings_ms": {
-        "embed_ms": 11.25,
-        "search_ms": 91.13,
-        "rerank_ms": 1.15,
-        "total_ms": 127.99,
-        "qa_ms": 13.92
+        "embed_ms": 10.69,
+        "search_ms": 102.6,
+        "rerank_ms": 2.25,
+        "total_ms": 143.33,
+        "qa_ms": 17.3
       },
-      "client_ms": 1240.2543000061996,
+      "client_ms": 1255.8010999998714,
       "success": true
     },
     {
@@ -609,17 +609,17 @@
       "id": "mr-255418-p0-native",
       "query": "वैद्यकीय कोडर होण्यासाठी किती वेळ लागतो",
       "ground_truth": "१५ महिने",
-      "answer": "सरासरी, तुम्ही तुमच्या आपत्कालीन वैद्यकीय तंत्रज्ञ प्रशिक्षणाला 200 तास लागतील अशी अपेक्षा करू शकता.",
-      "guardrail": null,
-      "confidence": 0.3185,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.3,
-        "search_ms": 92.43,
-        "rerank_ms": 1.87,
-        "total_ms": 129.6,
-        "qa_ms": 13.89
+        "embed_ms": 11.24,
+        "search_ms": 95.83,
+        "rerank_ms": 3.82,
+        "total_ms": 131.99,
+        "qa_ms": 20.91
       },
-      "client_ms": 1329.9166000069818,
+      "client_ms": 1201.9204000000627,
       "success": true
     },
     {
@@ -629,15 +629,15 @@
       "ground_truth": "12 आठवडे",
       "answer": "तुमच्या मांजरीचे लसीकरण रेबीजच्या लसीकरणानुसार आठ किंवा बारा आठवड्यांच्या वयापर्यंत लवकरात लवकर केले जाऊ शकते.",
       "guardrail": null,
-      "confidence": 0.1363,
+      "confidence": 0.1295,
       "timings_ms": {
-        "embed_ms": 11.04,
-        "search_ms": 92.22,
-        "rerank_ms": 2.1,
-        "total_ms": 138.08,
-        "qa_ms": 22.18
+        "embed_ms": 12.11,
+        "search_ms": 98.91,
+        "rerank_ms": 4.27,
+        "total_ms": 152.16,
+        "qa_ms": 25.68
       },
-      "client_ms": 1332.1913000108907,
+      "client_ms": 1481.1554000000342,
       "success": true
     },
     {
@@ -649,13 +649,13 @@
       "guardrail": null,
       "confidence": 0.2405,
       "timings_ms": {
-        "embed_ms": 11.11,
-        "search_ms": 94.68,
-        "rerank_ms": 0.19,
-        "total_ms": 125.69,
-        "qa_ms": 9.67
+        "embed_ms": 10.91,
+        "search_ms": 108.13,
+        "rerank_ms": 2.59,
+        "total_ms": 202.97,
+        "qa_ms": 70.45
       },
-      "client_ms": 1226.9786999968346,
+      "client_ms": 1290.3888000000734,
       "success": true
     },
     {
@@ -665,15 +665,15 @@
       "ground_truth": "आठ तास",
       "answer": "रात्री अनेकदा जागे होणे हे नैसर्गिक आहे, पण खोल झोपेतून जागे होणे आणि त्यामुळे तुम्ही उलट्या उलट्या होणे हे अडचणीचे लक्षण असू शकते.",
       "guardrail": null,
-      "confidence": 0.1131,
+      "confidence": 0.0783,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 90.11,
-        "rerank_ms": 1.79,
-        "total_ms": 131.79,
-        "qa_ms": 18.02
+        "embed_ms": 11.24,
+        "search_ms": 96.82,
+        "rerank_ms": 3.95,
+        "total_ms": 142.08,
+        "qa_ms": 18.89
       },
-      "client_ms": 1331.4365999976872,
+      "client_ms": 1232.7799999998206,
       "success": true
     },
     {
@@ -685,13 +685,13 @@
       "guardrail": null,
       "confidence": 0.2357,
       "timings_ms": {
-        "embed_ms": 10.88,
-        "search_ms": 92.03,
-        "rerank_ms": 2.29,
-        "total_ms": 134.03,
-        "qa_ms": 18.58
+        "embed_ms": 11.29,
+        "search_ms": 93.3,
+        "rerank_ms": 5.24,
+        "total_ms": 143.4,
+        "qa_ms": 22.61
       },
-      "client_ms": 1340.7884999905946,
+      "client_ms": 1524.7925999999552,
       "success": true
     },
     {
@@ -699,17 +699,17 @@
       "id": "mr-315124-p4-native",
       "query": "उपहारगृह रोज रोज स्वच्छ करण्यासाठी किती खर्च येतो?",
       "ground_truth": "२० ते ५० डॉलर प्रति तास",
-      "answer": "डिस्ने स्ट्रॉलर भाड्याने घेण्याची किंमत: एकल स्ट्रॉलर भाड्याने घेण्यासाठी तुम्हाला दररोज $15.00 आणि दुहेरी स्ट्रॉलर भाड्याने घेण्यासाठी दररोज $31.00 खर्च येईल.",
+      "answer": "सामान्यतः, खिडकी स्वच्छ करण्याचा खर्च प्रति पॅन $2-$7 असतो.",
       "guardrail": null,
-      "confidence": 0.1497,
+      "confidence": 0.1349,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 92.19,
-        "rerank_ms": 1.8,
-        "total_ms": 132.54,
-        "qa_ms": 17.52
+        "embed_ms": 11.18,
+        "search_ms": 98.59,
+        "rerank_ms": 4.49,
+        "total_ms": 151.29,
+        "qa_ms": 26.42
       },
-      "client_ms": 1219.410899997456,
+      "client_ms": 1311.8197000001146,
       "success": true
     },
     {
@@ -717,17 +717,17 @@
       "id": "mr-324743-p3-native",
       "query": "मेकॅनिकल इंजिनिअर म्हणून तुम्ही किती पैसे कमावता?",
       "ground_truth": "२०१३ मध्ये $८२,१००.",
-      "answer": "नंतर मध्यम वर्गीय मेकॅनिक म्हणून तुम्ही पन्नास डॉलर प्रति आठवडा कमावता आणि सर्वोत्तम मेकॅनिक म्हणून तुम्ही सत्तर ते एकशे डॉलर प्रति तास कमावले पाहिजे.",
-      "guardrail": null,
-      "confidence": 0.1336,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.36,
-        "search_ms": 89.48,
-        "rerank_ms": 1.46,
-        "total_ms": 133.65,
-        "qa_ms": 21.31
+        "embed_ms": 11.55,
+        "search_ms": 104.68,
+        "rerank_ms": 5.76,
+        "total_ms": 153.93,
+        "qa_ms": 31.77
       },
-      "client_ms": 1231.5421999956015,
+      "client_ms": 1204.7720999999,
       "success": true
     },
     {
@@ -735,17 +735,17 @@
       "id": "mr-1007234-p0-native",
       "query": "कोणती आज्ञा मालकाला वाचन-लेखन परवानगी नियुक्त करण्यासाठी वापरली जाते?",
       "ground_truth": "चमोड",
-      "answer": "खरेदी ऑर्डर म्हणजे विक्रेत्याला खरेदीदाराला माल पुरवण्याची लेखी परवानगी मागणारी विनंती.",
+      "answer": "आज्ञाधारकतेचे उदाहरण म्हणजे कुत्रा आपल्या मालकाचे ऐकणे.",
       "guardrail": null,
-      "confidence": 0.1189,
+      "confidence": 0.2375,
       "timings_ms": {
-        "embed_ms": 11.66,
-        "search_ms": 93.78,
-        "rerank_ms": 1.95,
-        "total_ms": 134.02,
-        "qa_ms": 15.89
+        "embed_ms": 11.63,
+        "search_ms": 101.86,
+        "rerank_ms": 3.9,
+        "total_ms": 145.98,
+        "qa_ms": 17.69
       },
-      "client_ms": 1225.8709000016097,
+      "client_ms": 1272.091600000067,
       "success": true
     },
     {
@@ -757,13 +757,13 @@
       "guardrail": null,
       "confidence": 0.7336,
       "timings_ms": {
-        "embed_ms": 11.74,
-        "search_ms": 90.38,
-        "rerank_ms": 1.19,
-        "total_ms": 127.52,
-        "qa_ms": 13.83
+        "embed_ms": 11.44,
+        "search_ms": 105.05,
+        "rerank_ms": 2.98,
+        "total_ms": 146.94,
+        "qa_ms": 15.96
       },
-      "client_ms": 1225.638500007335,
+      "client_ms": 1329.9951000001329,
       "success": true
     },
     {
@@ -773,15 +773,15 @@
       "ground_truth": "डेरेक जेटर",
       "answer": "टाय कॉबने त्याच्या व्यावसायिक कारकिर्दीत अधिकृतपणे 11 वेळा जिंकून एम.एल.बी.",
       "guardrail": null,
-      "confidence": 0.2544,
+      "confidence": 0.1754,
       "timings_ms": {
-        "embed_ms": 10.68,
-        "search_ms": 89.44,
-        "rerank_ms": 1.62,
-        "total_ms": 127.73,
-        "qa_ms": 15.76
+        "embed_ms": 11.42,
+        "search_ms": 111.31,
+        "rerank_ms": 3.77,
+        "total_ms": 157.19,
+        "qa_ms": 18.71
       },
-      "client_ms": 1228.738699996029,
+      "client_ms": 1248.094700000138,
       "success": true
     },
     {
@@ -791,15 +791,15 @@
       "ground_truth": "तणाव, चिंता किंवा नैराश्य.",
       "answer": "भूक न लागण्याचे कारण विविध कारणांमुळे असू शकते.",
       "guardrail": null,
-      "confidence": 0.1395,
+      "confidence": 0.1478,
       "timings_ms": {
-        "embed_ms": 11.03,
-        "search_ms": 89.91,
-        "rerank_ms": 0.94,
-        "total_ms": 134.23,
-        "qa_ms": 21.8
+        "embed_ms": 11.06,
+        "search_ms": 100.13,
+        "rerank_ms": 2.33,
+        "total_ms": 139.75,
+        "qa_ms": 15.88
       },
-      "client_ms": 1229.919699995662,
+      "client_ms": 1220.5348999998478,
       "success": true
     },
     {
@@ -811,13 +811,13 @@
       "guardrail": null,
       "confidence": 0.1139,
       "timings_ms": {
-        "embed_ms": 11.04,
-        "search_ms": 91.37,
-        "rerank_ms": 1.65,
-        "total_ms": 135.25,
-        "qa_ms": 21.1
+        "embed_ms": 11.7,
+        "search_ms": 109.56,
+        "rerank_ms": 2.82,
+        "total_ms": 159.12,
+        "qa_ms": 23.95
       },
-      "client_ms": 1328.9160999993328,
+      "client_ms": 1240.2775000000474,
       "success": true
     },
     {
@@ -827,15 +827,15 @@
       "ground_truth": "७.००%",
       "answer": "मियामी-डेड काउंटी, फ्लोरिडा विक्री कर 7.00% आहे, ज्यामध्ये 6.00% फ्लोरिडा राज्य विक्री कर आणि 1.00% मियामी-डेड काउंटी स्थानिक विक्री कर यांचा समावेश आहे.",
       "guardrail": null,
-      "confidence": 0.4311,
+      "confidence": 0.2972,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 96.13,
-        "rerank_ms": 1.6,
-        "total_ms": 134.11,
-        "qa_ms": 14.81
+        "embed_ms": 11.41,
+        "search_ms": 108.69,
+        "rerank_ms": 3.23,
+        "total_ms": 160.71,
+        "qa_ms": 25.99
       },
-      "client_ms": 1331.2148999975761,
+      "client_ms": 1262.5459999999293,
       "success": true
     },
     {
@@ -847,13 +847,13 @@
       "guardrail": null,
       "confidence": 0.5099,
       "timings_ms": {
-        "embed_ms": 11.09,
-        "search_ms": 91.63,
-        "rerank_ms": 1.3,
-        "total_ms": 132.0,
-        "qa_ms": 17.91
+        "embed_ms": 11.26,
+        "search_ms": 107.59,
+        "rerank_ms": 2.17,
+        "total_ms": 152.46,
+        "qa_ms": 20.79
       },
-      "client_ms": 1228.7329999962822,
+      "client_ms": 1220.779900000025,
       "success": true
     },
     {
@@ -863,15 +863,15 @@
       "ground_truth": "९४,००० डॉलर्स",
       "answer": "क्रीडा वैद्यकीय व्यावसायिक क्रीडा जखमा झालेल्या लोकांची काळजी घेतात.",
       "guardrail": null,
-      "confidence": 0.2388,
+      "confidence": 0.2389,
       "timings_ms": {
-        "embed_ms": 10.86,
-        "search_ms": 90.68,
-        "rerank_ms": 2.0,
-        "total_ms": 135.14,
-        "qa_ms": 21.08
+        "embed_ms": 11.44,
+        "search_ms": 99.29,
+        "rerank_ms": 4.38,
+        "total_ms": 147.39,
+        "qa_ms": 21.99
       },
-      "client_ms": 1230.822099998477,
+      "client_ms": 1233.8174999999865,
       "success": true
     },
     {
@@ -883,13 +883,13 @@
       "guardrail": null,
       "confidence": 0.2936,
       "timings_ms": {
-        "embed_ms": 10.92,
-        "search_ms": 94.77,
-        "rerank_ms": 1.78,
-        "total_ms": 133.38,
-        "qa_ms": 15.7
+        "embed_ms": 11.9,
+        "search_ms": 102.31,
+        "rerank_ms": 4.53,
+        "total_ms": 147.2,
+        "qa_ms": 18.14
       },
-      "client_ms": 1235.094499992556,
+      "client_ms": 1215.8707999999478,
       "success": true
     },
     {
@@ -901,13 +901,13 @@
       "guardrail": null,
       "confidence": 0.2179,
       "timings_ms": {
-        "embed_ms": 11.01,
-        "search_ms": 95.52,
-        "rerank_ms": 1.4,
-        "total_ms": 133.13,
-        "qa_ms": 14.68
+        "embed_ms": 11.54,
+        "search_ms": 94.92,
+        "rerank_ms": 2.76,
+        "total_ms": 136.42,
+        "qa_ms": 16.68
       },
-      "client_ms": 1423.321299997042,
+      "client_ms": 1259.781299999986,
       "success": true
     },
     {
@@ -919,13 +919,13 @@
       "guardrail": null,
       "confidence": 0.144,
       "timings_ms": {
-        "embed_ms": 11.01,
-        "search_ms": 87.91,
-        "rerank_ms": 1.5,
-        "total_ms": 126.99,
-        "qa_ms": 14.99
+        "embed_ms": 12.2,
+        "search_ms": 104.22,
+        "rerank_ms": 3.45,
+        "total_ms": 148.15,
+        "qa_ms": 16.9
       },
-      "client_ms": 1227.222100002109,
+      "client_ms": 1258.1416000000445,
       "success": true
     },
     {
@@ -933,17 +933,17 @@
       "id": "mr_22",
       "query": "एका प्रभावी नागरिकाने काय करावे लागते",
       "ground_truth": "उत्तर नाही.",
-      "answer": "चांगल्या नागरिकाकडून अपेक्षित असलेली पहिली आणि सर्वात महत्वाची गुणवत्ता म्हणजे देशभक्ती.",
-      "guardrail": null,
-      "confidence": 0.4027,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 10.9,
-        "search_ms": 95.14,
-        "rerank_ms": 1.34,
-        "total_ms": 130.54,
-        "qa_ms": 13.12
+        "embed_ms": 11.73,
+        "search_ms": 109.24,
+        "rerank_ms": 6.04,
+        "total_ms": 143.43,
+        "qa_ms": 16.24
       },
-      "client_ms": 1537.3296000034316,
+      "client_ms": 1244.1917000001013,
       "success": true
     },
     {
@@ -951,17 +951,17 @@
       "id": "mr_23",
       "query": "काय पात्र खाती मानली जातात",
       "ground_truth": "उत्तर नाही.",
-      "answer": "मला वाटते की त्यांना कॅडेट मानले जाते.",
+      "answer": "मेरी जे सांगते ते पात्र आहे.",
       "guardrail": null,
-      "confidence": 0.2158,
+      "confidence": 0.065,
       "timings_ms": {
-        "embed_ms": 10.69,
-        "search_ms": 93.07,
-        "rerank_ms": 0.77,
-        "total_ms": 126.66,
-        "qa_ms": 12.03
+        "embed_ms": 11.53,
+        "search_ms": 104.46,
+        "rerank_ms": 1.54,
+        "total_ms": 144.95,
+        "qa_ms": 16.81
       },
-      "client_ms": 1227.4698999972316,
+      "client_ms": 1200.743599999896,
       "success": true
     },
     {
@@ -969,17 +969,17 @@
       "id": "mr_24",
       "query": "डिस्ने मॅजिक शिपमध्ये किती प्रवासी बसू शकतात",
       "ground_truth": "२,४०० प्रवासी",
-      "answer": "या प्रकारच्या लिमोजमध्ये सहसा सहा ते आठ लोक बसू शकतात, ताणण्याच्या प्रमाणावर अवलंबून.",
-      "guardrail": null,
-      "confidence": 0.2805,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 10.74,
-        "search_ms": 91.53,
-        "rerank_ms": 1.17,
-        "total_ms": 130.64,
-        "qa_ms": 16.4
+        "embed_ms": 11.5,
+        "search_ms": 104.52,
+        "rerank_ms": 3.02,
+        "total_ms": 138.32,
+        "qa_ms": 19.04
       },
-      "client_ms": 1379.9777000094764,
+      "client_ms": 1195.157300000119,
       "success": true
     },
     {
@@ -991,13 +991,13 @@
       "guardrail": null,
       "confidence": 0.2795,
       "timings_ms": {
-        "embed_ms": 10.76,
-        "search_ms": 90.88,
-        "rerank_ms": 1.02,
-        "total_ms": 135.55,
-        "qa_ms": 22.99
+        "embed_ms": 11.13,
+        "search_ms": 119.44,
+        "rerank_ms": 4.27,
+        "total_ms": 173.9,
+        "qa_ms": 28.31
       },
-      "client_ms": 1385.5890999984695,
+      "client_ms": 1262.4344000000747,
       "success": true
     },
     {
@@ -1005,17 +1005,17 @@
       "id": "mr_26",
       "query": "शाळेचे सरासरी सचिव दरवर्षी किती कमावतात",
       "ground_truth": "३२,७९० डॉलर्स",
-      "answer": "शालेय सचिवाचा सरासरी वेतन 16,486 पौंड इतका असतो.",
+      "answer": "ही सरासरी वार्षिक किंमत 6.8% ने वाढली आहे.",
       "guardrail": null,
-      "confidence": 0.1589,
+      "confidence": 0.4672,
       "timings_ms": {
-        "embed_ms": 10.91,
-        "search_ms": 88.79,
-        "rerank_ms": 1.68,
-        "total_ms": 127.58,
-        "qa_ms": 15.53
+        "embed_ms": 12.09,
+        "search_ms": 102.89,
+        "rerank_ms": 4.02,
+        "total_ms": 155.54,
+        "qa_ms": 25.58
       },
-      "client_ms": 1229.8159999918425,
+      "client_ms": 1344.7850999998536,
       "success": true
     },
     {
@@ -1023,17 +1023,17 @@
       "id": "mr_27",
       "query": "तात्पुरत्या कामासाठी काय करावे",
       "ground_truth": "उत्तर नाही.",
-      "answer": "काही नोकऱ्या तुम्हाला दुसरी सापडेपर्यंत तात्पुरत्या असू शकतात.",
-      "guardrail": null,
-      "confidence": 0.0653,
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "guardrail": "low_qa_confidence",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 90.39,
-        "rerank_ms": 1.01,
-        "total_ms": 127.1,
-        "qa_ms": 13.77
+        "embed_ms": 12.09,
+        "search_ms": 108.65,
+        "rerank_ms": 2.87,
+        "total_ms": 139.43,
+        "qa_ms": 15.61
       },
-      "client_ms": 1223.8262000028044,
+      "client_ms": 1367.0412999999826,
       "success": true
     },
     {
@@ -1045,13 +1045,13 @@
       "guardrail": null,
       "confidence": 0.1073,
       "timings_ms": {
-        "embed_ms": 11.58,
-        "search_ms": 92.69,
-        "rerank_ms": 1.91,
-        "total_ms": 135.45,
-        "qa_ms": 18.63
+        "embed_ms": 11.57,
+        "search_ms": 104.55,
+        "rerank_ms": 4.43,
+        "total_ms": 154.47,
+        "qa_ms": 22.84
       },
-      "client_ms": 1435.834599993541,
+      "client_ms": 1703.6562999999205,
       "success": true
     },
     {
@@ -1061,15 +1061,15 @@
       "ground_truth": "इलिनॉय",
       "answer": "हे नवीन दुकान माद्रिदच्या बाहेरील माजादाहोंडा शॉपिंग सेंटरमध्ये आहे, ज्यात आधीच शहरात आणखी 6 स्टोअर्स आहेत.",
       "guardrail": null,
-      "confidence": 0.1389,
+      "confidence": 0.1384,
       "timings_ms": {
-        "embed_ms": 12.45,
-        "search_ms": 92.71,
-        "rerank_ms": 1.8,
-        "total_ms": 136.24,
-        "qa_ms": 18.93
+        "embed_ms": 11.31,
+        "search_ms": 100.6,
+        "rerank_ms": 4.12,
+        "total_ms": 158.94,
+        "qa_ms": 31.61
       },
-      "client_ms": 1332.160499994643,
+      "client_ms": 1637.201799999957,
       "success": true
     },
     {
@@ -1079,15 +1079,15 @@
       "ground_truth": "अमेरिकन अभिनेत्री.",
       "answer": "केट मुलग्रू सध्या अविवाहित आहे.",
       "guardrail": null,
-      "confidence": 0.086,
+      "confidence": 0.0593,
       "timings_ms": {
-        "embed_ms": 11.13,
-        "search_ms": 92.94,
-        "rerank_ms": 1.19,
-        "total_ms": 132.55,
-        "qa_ms": 16.59
+        "embed_ms": 11.73,
+        "search_ms": 121.68,
+        "rerank_ms": 2.46,
+        "total_ms": 162.81,
+        "qa_ms": 15.52
       },
-      "client_ms": 1225.1895999943372,
+      "client_ms": 1279.0107000000717,
       "success": true
     },
     {
@@ -1095,17 +1095,17 @@
       "id": "en-637779-p3-native",
       "query": "what does folic acid do",
       "ground_truth": "Crucial for proper brain function and plays an important role in mental and emotional health.",
-      "answer": "To prevent miscarriage",
+      "answer": "Folic acid is the form found in vitamin supplements and fortified foods.",
       "guardrail": null,
-      "confidence": 0.254,
+      "confidence": 0.0778,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 94.69,
-        "rerank_ms": 1.41,
-        "total_ms": 130.63,
-        "qa_ms": 13.12
+        "embed_ms": 11.09,
+        "search_ms": 102.87,
+        "rerank_ms": 3.23,
+        "total_ms": 144.01,
+        "qa_ms": 16.08
       },
-      "client_ms": 1332.7950999955647,
+      "client_ms": 1219.5683999998437,
       "success": true
     },
     {
@@ -1115,15 +1115,15 @@
       "ground_truth": "$10,000 to $30,000",
       "answer": "£6,700",
       "guardrail": null,
-      "confidence": 0.4163,
+      "confidence": 0.4706,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 91.49,
-        "rerank_ms": 2.18,
-        "total_ms": 135.66,
-        "qa_ms": 20.91
+        "embed_ms": 11.64,
+        "search_ms": 104.21,
+        "rerank_ms": 4.79,
+        "total_ms": 155.09,
+        "qa_ms": 23.83
       },
-      "client_ms": 1432.742100005271,
+      "client_ms": 1392.17450000001,
       "success": true
     },
     {
@@ -1135,13 +1135,13 @@
       "guardrail": null,
       "confidence": 0.6106,
       "timings_ms": {
-        "embed_ms": 11.01,
-        "search_ms": 94.22,
-        "rerank_ms": 1.42,
-        "total_ms": 136.0,
-        "qa_ms": 18.76
+        "embed_ms": 11.46,
+        "search_ms": 109.51,
+        "rerank_ms": 3.42,
+        "total_ms": 163.45,
+        "qa_ms": 28.04
       },
-      "client_ms": 1334.7999999969034,
+      "client_ms": 1368.2512000000315,
       "success": true
     },
     {
@@ -1153,13 +1153,13 @@
       "guardrail": null,
       "confidence": 0.5185,
       "timings_ms": {
-        "embed_ms": 11.29,
-        "search_ms": 90.98,
-        "rerank_ms": 1.66,
-        "total_ms": 127.78,
-        "qa_ms": 14.06
+        "embed_ms": 11.87,
+        "search_ms": 112.01,
+        "rerank_ms": 3.3,
+        "total_ms": 163.55,
+        "qa_ms": 17.14
       },
-      "client_ms": 1430.3781999915373,
+      "client_ms": 1261.233200000106,
       "success": true
     },
     {
@@ -1167,17 +1167,17 @@
       "id": "en-627219-p9-native",
       "query": "what do zebras eat food",
       "ground_truth": "Plain grass, shrubs, herbs, twigs, leaves, roots and bark from trees.",
-      "answer": "Zebras in zoos eat pallets specially made for herbivores, which supply them with more nutrients than hay.",
+      "answer": "They do occasionally eat other things",
       "guardrail": null,
-      "confidence": 0.1614,
+      "confidence": 0.1695,
       "timings_ms": {
-        "embed_ms": 11.16,
-        "search_ms": 90.14,
-        "rerank_ms": 1.45,
-        "total_ms": 126.49,
-        "qa_ms": 13.59
+        "embed_ms": 11.22,
+        "search_ms": 101.18,
+        "rerank_ms": 3.56,
+        "total_ms": 143.02,
+        "qa_ms": 15.92
       },
-      "client_ms": 1228.5409000032814,
+      "client_ms": 1219.2817000000105,
       "success": true
     },
     {
@@ -1187,15 +1187,15 @@
       "ground_truth": "TEE-gwan",
       "answer": "Easier to drive than pronounce",
       "guardrail": null,
-      "confidence": 0.1148,
+      "confidence": 0.1049,
       "timings_ms": {
-        "embed_ms": 11.21,
-        "search_ms": 93.42,
-        "rerank_ms": 1.79,
-        "total_ms": 131.55,
-        "qa_ms": 15.14
+        "embed_ms": 11.75,
+        "search_ms": 111.35,
+        "rerank_ms": 3.34,
+        "total_ms": 155.64,
+        "qa_ms": 17.27
       },
-      "client_ms": 1432.7011999994284,
+      "client_ms": 1271.1386000000857,
       "success": true
     },
     {
@@ -1207,13 +1207,13 @@
       "guardrail": null,
       "confidence": 0.1689,
       "timings_ms": {
-        "embed_ms": 11.7,
-        "search_ms": 89.88,
-        "rerank_ms": 1.73,
-        "total_ms": 127.89,
-        "qa_ms": 14.32
+        "embed_ms": 11.48,
+        "search_ms": 116.8,
+        "rerank_ms": 3.77,
+        "total_ms": 159.17,
+        "qa_ms": 16.21
       },
-      "client_ms": 1332.3525000014342,
+      "client_ms": 1330.4553000000396,
       "success": true
     },
     {
@@ -1225,13 +1225,13 @@
       "guardrail": null,
       "confidence": 0.2217,
       "timings_ms": {
-        "embed_ms": 10.97,
-        "search_ms": 93.06,
-        "rerank_ms": 1.66,
-        "total_ms": 134.09,
-        "qa_ms": 17.76
+        "embed_ms": 11.28,
+        "search_ms": 104.62,
+        "rerank_ms": 2.94,
+        "total_ms": 151.28,
+        "qa_ms": 21.3
       },
-      "client_ms": 1226.189399996656,
+      "client_ms": 1333.0697999999757,
       "success": true
     },
     {
@@ -1239,17 +1239,17 @@
       "id": "en-614045-p6-native",
       "query": "what county is van nuys ca",
       "ground_truth": "Los Angeles",
-      "answer": "Napa is the county seat of Napa County, California.",
+      "answer": "A new Los Angeles County services building is under construction on the southwest corner of Van Nuys Blvd.",
       "guardrail": null,
-      "confidence": 0.2429,
+      "confidence": 0.4173,
       "timings_ms": {
-        "embed_ms": 11.0,
-        "search_ms": 89.52,
-        "rerank_ms": 1.5,
-        "total_ms": 126.52,
-        "qa_ms": 14.0
+        "embed_ms": 11.55,
+        "search_ms": 119.89,
+        "rerank_ms": 3.42,
+        "total_ms": 163.11,
+        "qa_ms": 17.61
       },
-      "client_ms": 1330.8774000033736,
+      "client_ms": 1535.7737000001634,
       "success": true
     },
     {
@@ -1261,13 +1261,13 @@
       "guardrail": null,
       "confidence": 0.2818,
       "timings_ms": {
-        "embed_ms": 11.26,
-        "search_ms": 95.52,
-        "rerank_ms": 1.91,
-        "total_ms": 137.18,
-        "qa_ms": 18.0
+        "embed_ms": 11.79,
+        "search_ms": 103.39,
+        "rerank_ms": 4.02,
+        "total_ms": 151.14,
+        "qa_ms": 21.05
       },
-      "client_ms": 1434.0114999940852,
+      "client_ms": 1333.4578999999849,
       "success": true
     },
     {
@@ -1275,17 +1275,17 @@
       "id": "en-571722-p9-native",
       "query": "what are the most common geriatric illness",
       "ground_truth": "Heart disease, stroke, cancer, and diabetes.",
-      "answer": "Most older adults with common geriatric health conditions live in the community rather than in nursing homes",
+      "answer": "Disability",
       "guardrail": null,
-      "confidence": 0.1649,
+      "confidence": 0.1775,
       "timings_ms": {
-        "embed_ms": 11.09,
-        "search_ms": 92.34,
-        "rerank_ms": 1.76,
-        "total_ms": 127.88,
-        "qa_ms": 12.66
+        "embed_ms": 11.31,
+        "search_ms": 129.71,
+        "rerank_ms": 4.12,
+        "total_ms": 170.34,
+        "qa_ms": 14.42
       },
-      "client_ms": 1330.6353999942075,
+      "client_ms": 1328.6424999998871,
       "success": true
     },
     {
@@ -1293,17 +1293,17 @@
       "id": "en-700343-p2-native",
       "query": "what is a slip for",
       "ground_truth": "The common implement for moving dirt when doing such things as digging ponds or making fills where large volumes of dirt were needed.",
-      "answer": "Plural slips) 1 A twig or shoot; a cutting. a slip from a vine",
+      "answer": "Moving dirt",
       "guardrail": null,
-      "confidence": 0.2724,
+      "confidence": 0.1412,
       "timings_ms": {
-        "embed_ms": 11.43,
-        "search_ms": 89.56,
-        "rerank_ms": 1.48,
-        "total_ms": 126.11,
-        "qa_ms": 13.54
+        "embed_ms": 11.04,
+        "search_ms": 101.76,
+        "rerank_ms": 2.36,
+        "total_ms": 140.2,
+        "qa_ms": 14.44
       },
-      "client_ms": 1331.5831000072649,
+      "client_ms": 1330.0544000001082,
       "success": true
     },
     {
@@ -1313,15 +1313,15 @@
       "ground_truth": "An abnormal accumulation of body fat, usually 20% or more over an individual's ideal body weight.",
       "answer": "Body mass index",
       "guardrail": null,
-      "confidence": 0.1408,
+      "confidence": 0.1046,
       "timings_ms": {
-        "embed_ms": 11.1,
-        "search_ms": 92.52,
-        "rerank_ms": 2.09,
-        "total_ms": 133.98,
-        "qa_ms": 17.96
+        "embed_ms": 11.35,
+        "search_ms": 101.67,
+        "rerank_ms": 4.43,
+        "total_ms": 147.34,
+        "qa_ms": 19.11
       },
-      "client_ms": 1333.33200000925,
+      "client_ms": 1330.932999999959,
       "success": true
     },
     {
@@ -1331,15 +1331,15 @@
       "ground_truth": "No.",
       "answer": "He's still alive and well",
       "guardrail": null,
-      "confidence": 0.8237,
+      "confidence": 0.9472,
       "timings_ms": {
-        "embed_ms": 10.89,
-        "search_ms": 91.22,
-        "rerank_ms": 2.25,
-        "total_ms": 132.7,
-        "qa_ms": 18.4
+        "embed_ms": 10.96,
+        "search_ms": 98.83,
+        "rerank_ms": 3.26,
+        "total_ms": 145.79,
+        "qa_ms": 22.17
       },
-      "client_ms": 1433.5009000060381,
+      "client_ms": 1432.9126000000088,
       "success": true
     },
     {
@@ -1351,13 +1351,13 @@
       "guardrail": null,
       "confidence": 0.3209,
       "timings_ms": {
-        "embed_ms": 11.13,
-        "search_ms": 88.91,
-        "rerank_ms": 1.89,
-        "total_ms": 131.98,
-        "qa_ms": 19.42
+        "embed_ms": 11.07,
+        "search_ms": 100.84,
+        "rerank_ms": 3.9,
+        "total_ms": 148.68,
+        "qa_ms": 22.54
       },
-      "client_ms": 1228.8515000109328,
+      "client_ms": 1331.6357999999582,
       "success": true
     },
     {
@@ -1367,15 +1367,15 @@
       "ground_truth": "At least 20 million people worldwide.",
       "answer": "Between 2 and 20%",
       "guardrail": null,
-      "confidence": 0.2252,
+      "confidence": 0.1553,
       "timings_ms": {
-        "embed_ms": 11.47,
-        "search_ms": 94.5,
-        "rerank_ms": 1.49,
-        "total_ms": 129.78,
-        "qa_ms": 12.44
+        "embed_ms": 11.21,
+        "search_ms": 99.1,
+        "rerank_ms": 3.31,
+        "total_ms": 138.46,
+        "qa_ms": 14.24
       },
-      "client_ms": 1231.9430999923497,
+      "client_ms": 1331.1195999999654,
       "success": true
     },
     {
@@ -1387,13 +1387,13 @@
       "guardrail": null,
       "confidence": 0.2836,
       "timings_ms": {
-        "embed_ms": 10.79,
-        "search_ms": 91.64,
-        "rerank_ms": 1.53,
-        "total_ms": 133.05,
-        "qa_ms": 18.41
+        "embed_ms": 11.19,
+        "search_ms": 96.84,
+        "rerank_ms": 3.57,
+        "total_ms": 143.84,
+        "qa_ms": 22.05
       },
-      "client_ms": 1221.05819999706,
+      "client_ms": 1330.1452999999128,
       "success": true
     },
     {
@@ -1405,13 +1405,13 @@
       "guardrail": null,
       "confidence": 0.3301,
       "timings_ms": {
-        "embed_ms": 11.15,
-        "search_ms": 93.43,
-        "rerank_ms": 1.41,
-        "total_ms": 130.49,
-        "qa_ms": 13.6
+        "embed_ms": 11.03,
+        "search_ms": 97.92,
+        "rerank_ms": 3.7,
+        "total_ms": 139.11,
+        "qa_ms": 15.49
       },
-      "client_ms": 1434.301899993443,
+      "client_ms": 1331.9194999999127,
       "success": true
     },
     {
@@ -1423,13 +1423,13 @@
       "guardrail": null,
       "confidence": 0.1889,
       "timings_ms": {
-        "embed_ms": 10.7,
-        "search_ms": 89.72,
-        "rerank_ms": 1.81,
-        "total_ms": 125.51,
-        "qa_ms": 13.35
+        "embed_ms": 11.53,
+        "search_ms": 100.14,
+        "rerank_ms": 3.47,
+        "total_ms": 140.62,
+        "qa_ms": 14.76
       },
-      "client_ms": 1228.9588000130607,
+      "client_ms": 1433.5441999999148,
       "success": true
     },
     {
@@ -1441,13 +1441,13 @@
       "guardrail": null,
       "confidence": 0.2854,
       "timings_ms": {
-        "embed_ms": 11.17,
-        "search_ms": 89.48,
-        "rerank_ms": 1.36,
-        "total_ms": 126.01,
-        "qa_ms": 13.96
+        "embed_ms": 11.18,
+        "search_ms": 104.56,
+        "rerank_ms": 3.2,
+        "total_ms": 145.72,
+        "qa_ms": 15.96
       },
-      "client_ms": 1330.590099998517,
+      "client_ms": 1330.5591000000732,
       "success": true
     },
     {
@@ -1455,17 +1455,17 @@
       "id": "en-1174738-p1-native",
       "query": "is the mitochondria a organelle or a function",
       "ground_truth": "They are made of two membranes. The outer membrane covers the organelle and contains it like a skin. The inner membrane folds over many times and creates layered structures called cristae.",
-      "answer": "Round tube-like",
+      "answer": "Organelle",
       "guardrail": null,
-      "confidence": 0.2404,
+      "confidence": 0.2429,
       "timings_ms": {
-        "embed_ms": 10.82,
-        "search_ms": 93.76,
-        "rerank_ms": 1.66,
-        "total_ms": 132.35,
-        "qa_ms": 16.04
+        "embed_ms": 11.32,
+        "search_ms": 103.02,
+        "rerank_ms": 3.66,
+        "total_ms": 146.41,
+        "qa_ms": 18.37
       },
-      "client_ms": 1330.2554999972926,
+      "client_ms": 1433.429100000012,
       "success": true
     },
     {
@@ -1477,13 +1477,13 @@
       "guardrail": null,
       "confidence": 0.1907,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 93.73,
-        "rerank_ms": 1.5,
-        "total_ms": 130.44,
-        "qa_ms": 14.2
+        "embed_ms": 11.18,
+        "search_ms": 101.29,
+        "rerank_ms": 2.76,
+        "total_ms": 141.58,
+        "qa_ms": 15.82
       },
-      "client_ms": 1535.654199993587,
+      "client_ms": 1262.0255000001634,
       "success": true
     },
     {
@@ -1495,13 +1495,13 @@
       "guardrail": null,
       "confidence": 0.5041,
       "timings_ms": {
-        "embed_ms": 11.21,
-        "search_ms": 101.14,
-        "rerank_ms": 2.47,
-        "total_ms": 144.22,
-        "qa_ms": 18.72
+        "embed_ms": 11.36,
+        "search_ms": 101.95,
+        "rerank_ms": 4.79,
+        "total_ms": 151.12,
+        "qa_ms": 22.42
       },
-      "client_ms": 1292.9861000011442,
+      "client_ms": 1400.6259999998747,
       "success": true
     },
     {
@@ -1513,13 +1513,13 @@
       "guardrail": null,
       "confidence": 0.2721,
       "timings_ms": {
-        "embed_ms": 13.71,
-        "search_ms": 102.58,
-        "rerank_ms": 1.83,
-        "total_ms": 144.92,
-        "qa_ms": 15.86
+        "embed_ms": 11.41,
+        "search_ms": 100.45,
+        "rerank_ms": 3.54,
+        "total_ms": 144.46,
+        "qa_ms": 17.94
       },
-      "client_ms": 1377.330000002985,
+      "client_ms": 2764.8291000000427,
       "success": true
     },
     {
@@ -1531,13 +1531,13 @@
       "guardrail": null,
       "confidence": 0.297,
       "timings_ms": {
-        "embed_ms": 11.75,
-        "search_ms": 97.95,
-        "rerank_ms": 1.72,
-        "total_ms": 136.53,
-        "qa_ms": 14.74
+        "embed_ms": 11.12,
+        "search_ms": 101.57,
+        "rerank_ms": 3.59,
+        "total_ms": 142.84,
+        "qa_ms": 16.41
       },
-      "client_ms": 1424.908900007722,
+      "client_ms": 1330.9573999999884,
       "success": true
     },
     {
@@ -1549,13 +1549,13 @@
       "guardrail": null,
       "confidence": 0.1216,
       "timings_ms": {
-        "embed_ms": 11.02,
-        "search_ms": 87.25,
-        "rerank_ms": 1.68,
-        "total_ms": 122.18,
-        "qa_ms": 12.17
+        "embed_ms": 11.24,
+        "search_ms": 99.47,
+        "rerank_ms": 3.7,
+        "total_ms": 139.3,
+        "qa_ms": 14.07
       },
-      "client_ms": 1329.1245000000345,
+      "client_ms": 1331.0807000000295,
       "success": true
     },
     {
@@ -1563,17 +1563,17 @@
       "id": "en-537824-p2-native",
       "query": "vitamin e how much to take daily?",
       "ground_truth": "8 mg for women and 10 mg for men.",
-      "answer": "You should take 15 to 33 mg of vitamin E per day.",
+      "answer": "The recommended daily allowance of vitamin E used to be 8 mg for women and 10 mg for men.",
       "guardrail": null,
-      "confidence": 0.8447,
+      "confidence": 0.3438,
       "timings_ms": {
-        "embed_ms": 11.02,
-        "search_ms": 89.14,
-        "rerank_ms": 1.64,
-        "total_ms": 129.24,
-        "qa_ms": 16.8
+        "embed_ms": 10.88,
+        "search_ms": 100.74,
+        "rerank_ms": 3.49,
+        "total_ms": 148.92,
+        "qa_ms": 22.89
       },
-      "client_ms": 1331.2295000068843,
+      "client_ms": 1387.9171999999471,
       "success": true
     },
     {
@@ -1585,13 +1585,13 @@
       "guardrail": null,
       "confidence": 0.1191,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 88.32,
-        "rerank_ms": 2.2,
-        "total_ms": 133.93,
-        "qa_ms": 21.46
+        "embed_ms": 11.37,
+        "search_ms": 103.52,
+        "rerank_ms": 4.72,
+        "total_ms": 154.11,
+        "qa_ms": 23.37
       },
-      "client_ms": 1211.5667000034591,
+      "client_ms": 1376.9371000000774,
       "success": true
     },
     {
@@ -1599,17 +1599,17 @@
       "id": "en-513958-p5-native",
       "query": "the ________ nerves regulate essential involuntary body functions",
       "ground_truth": "Sympathetic",
-      "answer": "The autonomic nervous system, also known as the involuntary nervous system, regulates those facets in the body that occur automatically, such as breathing, blood pressure, digestion, heart beat, bladder function and narrowing or widening of the blood vessels.",
+      "answer": "The autonomic nervous system is the portion that controls all of the involuntary functions of the body.",
       "guardrail": null,
-      "confidence": 0.3029,
+      "confidence": 0.2449,
       "timings_ms": {
-        "embed_ms": 10.86,
-        "search_ms": 89.75,
-        "rerank_ms": 1.9,
-        "total_ms": 127.02,
-        "qa_ms": 14.26
+        "embed_ms": 12.27,
+        "search_ms": 109.13,
+        "rerank_ms": 4.42,
+        "total_ms": 158.87,
+        "qa_ms": 21.51
       },
-      "client_ms": 1261.5913000045111,
+      "client_ms": 1433.8459000000512,
       "success": true
     },
     {
@@ -1621,13 +1621,13 @@
       "guardrail": null,
       "confidence": 0.2508,
       "timings_ms": {
-        "embed_ms": 10.8,
-        "search_ms": 94.07,
-        "rerank_ms": 1.67,
-        "total_ms": 135.3,
-        "qa_ms": 18.35
+        "embed_ms": 11.03,
+        "search_ms": 106.85,
+        "rerank_ms": 3.7,
+        "total_ms": 148.81,
+        "qa_ms": 16.69
       },
-      "client_ms": 1316.4018000097713,
+      "client_ms": 1330.1133999998456,
       "success": true
     }
   ]
