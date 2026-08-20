@@ -40,6 +40,7 @@ image = (
         "AutoModelForQuestionAnswering.from_pretrained('deepset/xlm-roberta-base-squad2').save_pretrained('/models/qa-model')"
         "\""
     )
+    .add_local_dir("frontend", remote_path="/root/frontend")
 )
 
 volume = modal.Volume.from_name("voice-rag-index", create_if_missing=True)
@@ -917,14 +918,31 @@ class VoiceRAG:
     @modal.asgi_app()
     def fastapi_app(self):
         from fastapi import FastAPI, UploadFile, File, Form, Request
+        from fastapi.responses import HTMLResponse
         from fastapi.middleware.cors import CORSMiddleware
-        import torch, time
+        import torch, time, os
 
-        api = FastAPI(title="Voice RAG — Indic MSMARCO (Extractive QA)")
+        api = FastAPI(title="VoxLore — Multilingual Voice RAG")
         api.add_middleware(
             CORSMiddleware, allow_origins=["*"],
             allow_methods=["*"], allow_headers=["*"]
         )
+
+        @api.get("/", response_class=HTMLResponse)
+        @api.get("/index.html", response_class=HTMLResponse)
+        def index():
+            candidate_paths = [
+                "/root/frontend/index.html",
+                "frontend/index.html",
+                "/frontend/index.html",
+                "index.html",
+                "/root/index.html"
+            ]
+            for p in candidate_paths:
+                if os.path.exists(p):
+                    with open(p, "r", encoding="utf-8") as f:
+                        return HTMLResponse(content=f.read())
+            return HTMLResponse(content="<h1>VoxLore Live Backend</h1>")
 
         @api.get("/debug-index")
         def debug_index():

@@ -1,0 +1,9 @@
+venv/
+archive/
+.git/
+*.faiss
+*.jsonl
+*.pt
+*.bin
+*.log
+__pycache__/
