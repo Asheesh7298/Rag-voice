@@ -1,100 +1,55 @@
-# 🎙️ Video Presentation Voiceover Script (Synchronized with presentation.html)
+# 🎙️ 90-Second Video Presentation Script (Fast & Punchy)
 
-This script is designed for recording your screen while walking through [`presentation.html`](file:///c:/Users/ashee/Desktop/voice-rag/presentation.html).
+Designed for recording your screen walkthrough of [`presentation.html`](file:///c:/Users/ashee/Desktop/voice-rag/presentation.html) in exactly **1.5 minutes (90 seconds)**.
 
 ---
 
-## ⏱️ Video Overview & Timeline (2:15 Total Duration)
+## ⏱️ Timeline & Screen Actions (90 Seconds Total)
 
-| Timestamp | Section on Screen | Focus Topic |
+| Timestamp | Screen Section | Topic |
 | :--- | :--- | :--- |
-| **0:00 – 0:30** | Top Header & 4 KPI Cards | Project Introduction & Massive Scale (13.02M Vectors) |
-| **0:30 – 1:05** | Section 1: End-to-End System Architecture | 5-Stage Ingestion, Search, and Grounded QA Pipeline |
-| **1:05 – 1:30** | Section 2: Request Lifecycle & Waterfall | Sub-Millisecond Timeline & Low-Latency Execution |
-| **1:30 – 1:55** | Section 3: Modal A100 GPU Memory Layout | FP16 Tensor-Core Direct VRAM & Binary Offset Index |
-| **1:55 – 2:15** | Section 4: Live Benchmark Results & Conclusion | 87.8% Groundedness Rate, P50=90.7ms, and Closing |
+| **0:00 – 0:20** | Top Header & 4 KPI Cards | Introduction & Massive 13.02M Vector Scale |
+| **0:20 – 0:45** | Section 1 & 2: Architecture & Sequence | A100 GPU Tensor-Core Search (24ms) & Extractive QA |
+| **0:45 – 1:10** | Section 3: VRAM Memory Layout | 7-Stage Guardrails & Zero Hallucination |
+| **1:10 – 1:30** | Section 4: Live Benchmark Results | 180 Questions Evaluated (P50 = 90.7ms) & Closing |
 
 ---
 
-## 🎬 Word-for-Word Recording Script
+## 🎬 Word-for-Word Voiceover Script (~195 words)
+
+### 📍 [0:00 – 0:20] Intro & Scale
+**🖥️ Action:** *Start at the top of `presentation.html`. Highlight the 4 KPI cards.*
+
+> *"Welcome to **VoxLore** — an ultra-low latency, voice-enabled Multilingual RAG system for **Hindi, Marathi, and English**.*
+> 
+> *VoxLore indexes the full MSMARCO and MSMARCO-XI datasets, scaling across **13,020,220 multi-strategy vectors** while delivering real-time responses in **under 95 milliseconds**."*
 
 ---
 
-### 📍 [0:00 – 0:30] Introduction & Scale
-**🖥️ Screen Action:** *Start at the top of `presentation.html`. Hover over the 4 glowing KPI cards (13.02M Vectors, 24.1 ms Dense Search, 90.7 ms P50 Latency, 87.8% Benchmark Groundedness Rate).*
+### 📍 [0:20 – 0:45] Architecture & A100 Acceleration
+**🖥️ Action:** *Scroll down to the Section 1 Architecture & Section 2 Sequence diagrams.*
 
-> **Voiceover:**
-> 
-> *"Hello everyone, and welcome to the presentation of **VoxLore** — an ultra-low latency, voice-enabled Multilingual Retrieval-Augmented Generation system engineered for **Hindi, Marathi, and English**.*
-> 
-> *While standard RAG implementations often rely on small document samples, VoxLore scales across **13,020,220 multi-strategy vectors** indexed directly from MSMARCO and MSMARCO-XI.*
-> 
-> *Despite this massive scale, our system achieves an average server response time of **under 95 milliseconds**, fully meeting conversational voice SLAs."*
+> *"To achieve conversational speed over 13 million vectors:
+> 1. Queries are embedded using **Multilingual-E5-Base** on GPU in 13 milliseconds.
+> 2. A direct **PyTorch Tensor-Core matrix scan** on a Modal **A100 GPU** searches all 13.02 million vectors in just **24.1 milliseconds**.
+> 3. Candidates are refined with **BM25**, and **XLM-RoBERTa** extracts the exact factual answer."*
 
 ---
 
-### 📍 [0:30 – 1:05] Section 1: End-to-End System Architecture
-**🖥️ Screen Action:** *Scroll down smoothly to **1. End-to-End System Architecture** and follow the flow diagram from top to bottom.*
+### 📍 [0:45 – 1:10] Memory Layout & Guardrails
+**🖥️ Action:** *Scroll to Section 3: Hardware Memory Layout table.*
 
-> **Voiceover:**
+> *"Our entire vector index is stored as an **18.63 GB FP16 binary array** in A100 VRAM, backed by a **104 MB binary offset index** in host RAM for sub-millisecond lookups.
 > 
-> *"Let’s look at the end-to-end architecture.*
-> 
-> *When a user speaks or types a query in Hindi, Marathi, or English:
-> 1. First, **Pre-Retrieval Guardrails** intercept unsafe prompts and real-time out-of-scope questions in less than 0.1 milliseconds.
-> 2. Next, the query is embedded using **Multilingual-E5-Base** on the GPU in approximately **13 milliseconds**.
-> 3. Then comes our core breakthrough: a direct **PyTorch Tensor-Core matrix scan across all 13.02 million vectors**, retrieving the top candidate chunks in just **24.1 milliseconds**.
-> 4. These candidates are refined through a **BM25 lexical and morphological root matcher** for cross-lingual precision.
-> 5. Finally, **XLM-RoBERTa** performs batched extractive QA, passing strict span confidence and script-matching guardrails to deliver a strictly grounded answer."*
+> To guarantee reliability, our **7-stage guardrail defense** intercepts unsafe queries and strictly declines unanswerable questions to eliminate hallucinations."*
 
 ---
 
-### 📍 [1:05 – 1:30] Section 2: Request Lifecycle & Latency Waterfall
-**🖥️ Screen Action:** *Scroll to **2. Request Lifecycle & Latency Waterfall** sequence diagram.*
+### 📍 [1:10 – 1:30] Benchmark Results & Closing
+**🖥️ Action:** *Scroll to Section 4: Live Benchmark Results table.*
 
-> **Voiceover:**
+> *"Across **180 live benchmark queries** spanning Hindi, Marathi, and English:
+> - Our system achieved an **87.8% grounded retrieval rate**.
+> - With a **P50 latency of 90.7 ms** and worst-case **148.8 ms** — strictly meeting our sub-150ms voice SLA.
 > 
-> *"Here in the sequence execution diagram, you can see the precise millisecond breakdown of a live request.*
-> 
-> *From the moment the FastAPI endpoint receives the payload:
-> - Query embedding takes **13.3 ms**.
-> - The 13-million vector dense scan takes **24.1 ms**.
-> - Metadata lookup and hybrid rerank take **3.2 ms**.
-> - And extractive answer reading takes **18.5 ms**.
-> 
-> The entire backend round-trip completes in approximately **61 milliseconds**, allowing audio synthesis and voice playback to begin almost instantaneously."*
-
----
-
-### 📍 [1:30 – 1:55] Section 3: Hardware & Memory Allocation
-**🖥️ Screen Action:** *Scroll to **3. Modal A100 GPU Memory Allocation** table.*
-
-> **Voiceover:**
-> 
-> *"To eliminate network filesystem bottlenecks and avoid out-of-memory errors, we engineered a custom memory architecture on a **Modal NVIDIA A100 GPU**:
-> - All **13.02 million vectors** are compressed into an **18.63 GB contiguous FP16 binary array** loaded directly into A100 VRAM, utilizing its 1,555 GB/s memory bandwidth.
-> - Metadata lookups are accelerated by a **104 MB binary offset index** in host RAM that resolves candidate texts in sub-millisecond time.
-> - This leaves a comfortable 19 GB VRAM buffer, guaranteeing zero crash loops and sustained throughput under high concurrency."*
-
----
-
-### 📍 [1:55 – 2:15] Section 4: Benchmark Results & Closing
-**🖥️ Screen Action:** *Scroll to **4. Measured Live Benchmark Performance** table. Point out the sub-100ms latency across Hindi, Marathi, and English.*
-
-> **Voiceover:**
-> 
-> *"We rigorously validated our pipeline across **180 real benchmark questions** across all three languages on the live endpoint:
-> - **Hindi** achieved an 86.7% grounded rate and a P50 latency of **90.7 ms**.
-> - **Marathi** clocked in at **82.5 ms**.
-> - And **English** achieved **100.5 ms** with a 93.3% grounded rate.
-> - Overall, the system delivered an **87.8% groundedness rate** with a worst-case latency of **148.8 ms** — strictly under our 150 ms ceiling.
-> 
-> In summary, VoxLore delivers true enterprise-grade scale with real-time conversational speed. Thank you for watching, and we invite you to explore our open-source codebase on GitHub!"*
-
----
-
-## 💡 Quick Tips for Recording:
-
-1. **Browser Setup**: Open [`presentation.html`](file:///c:/Users/ashee/Desktop/voice-rag/presentation.html) in full screen (`F11` on Chrome/Edge) for a distraction-free presentation view.
-2. **Pacing**: Speak at a steady, confident pace (~130 words per minute).
-3. **Cursor Movement**: Use smooth mouse movements to highlight the diagram boxes and table rows as you mention them.
+> VoxLore delivers massive scale with instant conversational responsiveness. Thank you!"*
