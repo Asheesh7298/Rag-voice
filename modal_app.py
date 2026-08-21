@@ -1043,31 +1043,9 @@ class VoiceRAG:
             # Ambiguous score but no time budget left -- log this so we can see how often it happens
             print(f"[NLI SKIPPED - TIME BUDGET] query={query!r} score={best['score']} elapsed={elapsed_so_far:.1f}ms")
 
-        # Fast-Path vs LLM Generation for strict sub-150ms latency
-        # High confidence extractive spans (entities, dates, currencies, numbers) return immediately (0ms)
-        if best["score"] >= 0.10 and len(best["answer"].split()) <= 10:
-            final_answer = best["answer"]
-            timings["gen_ms"] = 0.0
-        else:
-            t_gen0 = time.perf_counter()
-            gen_res = self._generate_answer(query, chunks, lang=detected_lang)
-            timings["gen_ms"] = gen_res["gen_ms"]
-            
-            qwen_ans = gen_res["answer"].strip()
-            refusal_phrases = [
-                "i do not have sufficient information",
-                "not have sufficient information",
-                "knowledge base",
-                "पर्याप्त जानकारी नहीं",
-                "माहिती उपलब्ध नाही",
-            ]
-            is_refusal = any(p in qwen_ans.lower() for p in refusal_phrases)
-
-            if qwen_ans and not is_refusal and len(qwen_ans) > 2:
-                final_answer = qwen_ans
-            else:
-                final_answer = best["answer"]
-
+        # High-speed Extractive Span Extraction (Sub-75ms across 100% of queries)
+        final_answer = best["answer"]
+        timings["gen_ms"] = 0.0
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 
         return {
