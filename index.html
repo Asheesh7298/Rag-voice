@@ -1102,7 +1102,7 @@
       <div class="warmup-logo-wrap">
         <div class="warmup-logo-avatar">V</div>
         <div class="warmup-logo-title">VoxLore</div>
-        <div class="warmup-logo-sub">Multilingual Voice RAG · 1.51M Vectors</div>
+        <div class="warmup-logo-sub">Multilingual Voice RAG · 4.3M Vectors</div>
       </div>
 
       <div class="warmup-progress-box">
@@ -1126,7 +1126,7 @@
         </div>
         <div id="step3" class="warmup-step">
           <span class="step-icon">⏳</span>
-          <span class="step-text">Ingesting 1.51M FAISS HNSW Vector Index</span>
+          <span class="step-text">Ingesting 4.3M GPU Tensor Vector Index</span>
         </div>
       </div>
 
@@ -1149,7 +1149,7 @@
             <div class="user-avatar-circle">V</div>
             <div class="user-text-info">
               <span class="user-app-name">VoxLore</span>
-              <span class="user-app-sub">1.51M Vectors · Modal A10G</span>
+              <span class="user-app-sub">4.3M Vectors · Modal A10G</span>
             </div>
           </div>
 
@@ -1173,7 +1173,7 @@
       <div id="coldStartBanner" class="cold-start-banner">
         <div class="cold-start-left">
           <div id="coldStartSpinner" class="cold-start-spinner"></div>
-          <span id="coldStartText">🔄 Waking up Modal A10G GPU &amp; loading 1.51M vector index... (~15s cold start)</span>
+          <span id="coldStartText">🔄 Waking up Modal A10G GPU &amp; loading 4.3M vector index... (~15s cold start)</span>
         </div>
         <span style="cursor:pointer; opacity:0.6;" onclick="document.getElementById('coldStartBanner').style.display='none'">✕</span>
       </div>
@@ -1350,7 +1350,7 @@
           if (step2) { step2.className = "warmup-step done"; step2.querySelector(".step-icon").textContent = "✅"; }
           if (step3) { step3.className = "warmup-step active"; step3.querySelector(".step-icon").textContent = "🔄"; }
           if (progressFill) progressFill.style.width = `${Math.min(92, 45 + (warmupSeconds - 8) * 6)}%`;
-          if (mainStatus) mainStatus.textContent = "⚡ Ingesting 1.51M FAISS HNSW Vector Index...";
+          if (mainStatus) mainStatus.textContent = "⚡ Ingesting 4.3M GPU Tensor Vector Index...";
         }
       }, 1000);
     }
@@ -1578,7 +1578,7 @@
             <div class="stage-metric-labels">
               <div class="stage-name-wrap">
                 <span>3. Dense Vector Search</span>
-                <span class="stage-tech-tag">FAISS HNSW · 1.51M Vectors</span>
+                <span class="stage-tech-tag">GPU Tensor Cores · 4.3M Vectors</span>
               </div>
               <span class="stage-metric-val">${search.toFixed(1)} ms</span>
             </div>
@@ -1656,8 +1656,8 @@
       const temp = document.createElement("div");
       temp.className = "message-bubble-row assistant";
       const loadingMsg = !isServerWarm 
-        ? "🔄 Waking up Modal A10G GPU &amp; loading 1.51M vectors... (Cold start ~15s)"
-        : "⚡ Retrieving across 1,516,928 vectors &amp; extracting answer on GPU...";
+        ? "🔄 Waking up Modal A10G GPU &amp; loading 4.3M vectors... (Cold start ~15s)"
+        : "⚡ Retrieving across 4,296,931 vectors &amp; extracting answer on GPU...";
       temp.innerHTML = `
         <div class="assistant-bubble-card" style="color:${!isServerWarm ? 'var(--purple-dark)' : 'var(--text-muted)'}; font-weight:${!isServerWarm ? '600' : '400'};">
           ${loadingMsg}
