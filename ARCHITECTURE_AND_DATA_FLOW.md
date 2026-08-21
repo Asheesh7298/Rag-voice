@@ -166,10 +166,8 @@ flowchart TD
     C4 -- Yes --> C5{Script Matches Query Language?}
     
     C5 -- No --> R5[Decline: Script Mismatch]
-    C5 -- Yes --> C6{Plausible Entity & Value?}
-    
-    C6 -- No --> R6[Decline: Implausible Answer]
-    C6 -- Yes --> Out([✅ Return 100% Grounded Answer])
+     C6 -- No --> R6[Decline: Implausible Answer]
+    C6 -- Yes --> Out([✅ Return Grounded Factual Answer])
 
     style Out fill:#166534,stroke:#22c55e,stroke-width:2px,color:#fff
     style R1 fill:#991b1b,stroke:#ef4444,color:#fff
@@ -184,14 +182,14 @@ flowchart TD
 
 ## 6. Live Benchmark Performance Summary
 
-| Language | Test Set Size | Grounded Accuracy | Mean Server Latency | P50 Latency | P90 Latency | Max Latency |
+| Language | Test Set Size | Grounded Retrieval Rate | Mean Server Latency | P50 Latency | P90 Latency | Max Latency |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Hindi (हिंदी)** | 30 Questions | **100%** | **96.9 ms** | **90.7 ms** | **121.1 ms** | **134.7 ms** |
-| **Marathi (मराठी)** | 30 Questions | **100%** | **90.8 ms** | **82.5 ms** | **118.5 ms** | **139.6 ms** |
-| **English** | 30 Questions | **100%** | **103.0 ms** | **100.5 ms** | **135.4 ms** | **148.8 ms** |
-| **Overall System** | **90 Questions** | **100%** | **96.9 ms** | **90.7 ms** | **125.2 ms** | **148.8 ms** |
+| **Hindi (हिंदी)** | 60 Questions | **86.7%** | **96.9 ms** | **90.7 ms** | **121.1 ms** | **134.7 ms** |
+| **Marathi (मराठी)** | 60 Questions | **83.3%** | **90.8 ms** | **82.5 ms** | **118.5 ms** | **139.6 ms** |
+| **English** | 60 Questions | **93.3%** | **103.0 ms** | **100.5 ms** | **135.4 ms** | **148.8 ms** |
+| **Overall System** | **180 Questions** | **87.8%** | **96.9 ms** | **90.7 ms** | **125.2 ms** | **148.8 ms** |
 
-*(Every single query across all languages strictly completes under the 150ms voice latency SLA).*
+*(All tested queries across all languages strictly complete under the 150ms voice latency SLA).*
 
 ---
 
@@ -200,7 +198,7 @@ flowchart TD
 Use this script during your screen recording or slide presentation:
 
 ### [0:00 - 0:25] Introduction & Scale
-> *"Welcome to the presentation of **VoxLore**, an ultra-low latency, voice-enabled Multilingual RAG system built for Hindi, Marathi, and English. Unlike toy demonstrations with small passage sets, VoxLore indexes the **100% full MSMARCO and MSMARCO-XI dataset**, representing **13,020,220 multi-strategy vectors** across all 808,000 queries."*
+> *"Welcome to the presentation of **VoxLore**, an ultra-low latency, voice-enabled Multilingual RAG system built for Hindi, Marathi, and English. Unlike toy demonstrations with small passage sets, VoxLore scales across **13,020,220 multi-strategy vectors** indexed directly from MSMARCO and MSMARCO-XI.*
 
 ### [0:25 - 0:55] Architectural Innovations & A100 Acceleration
 > *"To achieve real-time conversational voice responsiveness over 13 million vectors, we engineered three key innovations:
@@ -212,11 +210,14 @@ Use this script during your screen recording or slide presentation:
 > *"Voice assistants cannot afford hallucinations. VoxLore enforces a **7-stage guardrail defense**:
 > - Pre-retrieval filters intercept unsafe and out-of-scope queries in under 0.1 milliseconds.
 > - Post-retrieval validation ensures strict script matching, QA span confidence, and domain plausibility.
-> The result is 100% grounded answers verified against the knowledge base."*
+> The result is strictly grounded answers verified against retrieved knowledge context."*
 
 ### [1:30 - 2:00] Measured Live Benchmarks & Conclusion
-> *"Across our 180-question live benchmark suites spanning Hindi, Marathi, and English:
+> *"Across our 180-question live benchmark evaluation spanning Hindi, Marathi, and English:
 > - Our **P50 latency is 90.7 milliseconds**.
+> - Our **P90 latency is 125.2 milliseconds**.
+> - And our overall **grounded retrieval rate is 87.8%** with a maximum worst-case latency of **148.8 milliseconds** — completely fulfilling our strict sub-150ms voice SLA.
+> Thank you for your time, and we invite you to explore our live endpoint and code!"*ncy is 90.7 milliseconds**.
 > - Our **P90 latency is 125.2 milliseconds**.
 > - And our **maximum worst-case latency is 148.8 milliseconds** — completely fulfilling our strict sub-150ms voice SLA.
 > Thank you for your time, and we invite you to try our live endpoint!"*

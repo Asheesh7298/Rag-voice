@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 90-Question Benchmark Suite 2 (30 Hindi, 30 Marathi, 30 English)
-Evaluates 100% Grounded Factual QA on the 13.02M Vector Multi-Strategy Index.
+Evaluates Grounded Multilingual QA on the 13.02M Vector Multi-Strategy Index.
 """
 
 import time

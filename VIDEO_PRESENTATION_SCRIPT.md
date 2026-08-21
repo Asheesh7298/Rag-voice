@@ -12,7 +12,7 @@ This script is designed for recording your screen while walking through [`presen
 | **0:30 – 1:05** | Section 1: End-to-End System Architecture | 5-Stage Ingestion, Search, and Grounded QA Pipeline |
 | **1:05 – 1:30** | Section 2: Request Lifecycle & Waterfall | Sub-Millisecond Timeline & Low-Latency Execution |
 | **1:30 – 1:55** | Section 3: Modal A100 GPU Memory Layout | FP16 Tensor-Core Direct VRAM & Binary Offset Index |
-| **1:55 – 2:15** | Section 4: Live Benchmark Results & Conclusion | 100% Grounded Accuracy, P50=90.7ms, and Closing |
+| **1:55 – 2:15** | Section 4: Live Benchmark Results & Conclusion | 87.8% Groundedness Rate, P50=90.7ms, and Closing |
 
 ---
 
@@ -21,13 +21,13 @@ This script is designed for recording your screen while walking through [`presen
 ---
 
 ### 📍 [0:00 – 0:30] Introduction & Scale
-**🖥️ Screen Action:** *Start at the top of `presentation.html`. Hover over the 4 glowing KPI cards (13.02M Vectors, 24.1 ms Dense Search, 90.7 ms P50 Latency, 100% Grounded Accuracy).*
+**🖥️ Screen Action:** *Start at the top of `presentation.html`. Hover over the 4 glowing KPI cards (13.02M Vectors, 24.1 ms Dense Search, 90.7 ms P50 Latency, 87.8% Benchmark Groundedness Rate).*
 
 > **Voiceover:**
 > 
 > *"Hello everyone, and welcome to the presentation of **VoxLore** — an ultra-low latency, voice-enabled Multilingual Retrieval-Augmented Generation system engineered for **Hindi, Marathi, and English**.*
 > 
-> *While standard RAG implementations often rely on small document samples, VoxLore indexes the **100% full MSMARCO and MSMARCO-XI dataset**, representing **13,020,220 multi-strategy vectors** across 808,000 source queries.*
+> *While standard RAG implementations often rely on small document samples, VoxLore scales across **13,020,220 multi-strategy vectors** indexed directly from MSMARCO and MSMARCO-XI.*
 > 
 > *Despite this massive scale, our system achieves an average server response time of **under 95 milliseconds**, fully meeting conversational voice SLAs."*
 
@@ -45,7 +45,7 @@ This script is designed for recording your screen while walking through [`presen
 > 2. Next, the query is embedded using **Multilingual-E5-Base** on the GPU in approximately **13 milliseconds**.
 > 3. Then comes our core breakthrough: a direct **PyTorch Tensor-Core matrix scan across all 13.02 million vectors**, retrieving the top candidate chunks in just **24.1 milliseconds**.
 > 4. These candidates are refined through a **BM25 lexical and morphological root matcher** for cross-lingual precision.
-> 5. Finally, **XLM-RoBERTa** performs batched extractive QA, passing strict span confidence and script-matching guardrails to deliver a 100% grounded answer with zero hallucination."*
+> 5. Finally, **XLM-RoBERTa** performs batched extractive QA, passing strict span confidence and script-matching guardrails to deliver a strictly grounded answer."*
 
 ---
 
@@ -84,10 +84,10 @@ This script is designed for recording your screen while walking through [`presen
 > **Voiceover:**
 > 
 > *"We rigorously validated our pipeline across **180 real benchmark questions** across all three languages on the live endpoint:
-> - **Hindi** achieved a P50 latency of **90.7 ms**.
+> - **Hindi** achieved an 86.7% grounded rate and a P50 latency of **90.7 ms**.
 > - **Marathi** clocked in at **82.5 ms**.
-> - And **English** achieved **100.5 ms**.
-> - Across all 180 questions, we achieved **100% verified grounded accuracy** with a worst-case latency of **148.8 ms** — strictly under our 150 ms ceiling.
+> - And **English** achieved **100.5 ms** with a 93.3% grounded rate.
+> - Overall, the system delivered an **87.8% groundedness rate** with a worst-case latency of **148.8 ms** — strictly under our 150 ms ceiling.
 > 
 > In summary, VoxLore delivers true enterprise-grade scale with real-time conversational speed. Thank you for watching, and we invite you to explore our open-source codebase on GitHub!"*
 

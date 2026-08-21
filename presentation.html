@@ -350,8 +350,8 @@
         <div class="kpi-label">P50 Server Latency (&lt;150ms SLA)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--purple-primary);">100%</div>
-        <div class="kpi-label">Grounded Verified Accuracy</div>
+        <div class="kpi-num" style="color: var(--purple-primary);">87.8%</div>
+        <div class="kpi-label">Benchmark Groundedness Rate</div>
       </div>
     </div>
 
@@ -384,7 +384,7 @@ graph TD
     QA --> PostGuard[Guardrails 4-7: Confidence &amp; Plausibility Validation]
     
     PostGuard --> Response["Structured JSON Response <br/> { answer, sources, confidence, grounded, timings_ms }"]
-    Response --> FinalUser([🔊 User Hears Accurate Grounded Answer &lt;95ms])
+    Response --> FinalUser([🔊 User Hears Grounded Answer &lt;95ms])
 
     style DenseSearch fill:#131B2E,stroke:#38BDF8,stroke-width:2px,color:#fff
     style Embed fill:#131B2E,stroke:#7C74EA,stroke-width:2px,color:#fff
@@ -492,7 +492,7 @@ sequenceDiagram
           <tr>
             <th>Language</th>
             <th>Questions</th>
-            <th>Grounded Accuracy</th>
+            <th>Grounded Rate</th>
             <th>Mean Latency</th>
             <th>P50 Latency</th>
             <th>P90 Latency</th>
@@ -503,7 +503,7 @@ sequenceDiagram
           <tr>
             <td><strong>Hindi (हिंदी)</strong></td>
             <td>60 Questions</td>
-            <td><span class="tag tag-green">100% Verified</span></td>
+            <td><span class="tag tag-green">86.7%</span></td>
             <td><strong>96.9 ms</strong></td>
             <td>90.7 ms</td>
             <td>121.1 ms</td>
@@ -512,7 +512,7 @@ sequenceDiagram
           <tr>
             <td><strong>Marathi (मराठी)</strong></td>
             <td>60 Questions</td>
-            <td><span class="tag tag-green">100% Verified</span></td>
+            <td><span class="tag tag-green">83.3%</span></td>
             <td><strong>90.8 ms</strong></td>
             <td>82.5 ms</td>
             <td>118.5 ms</td>
@@ -521,7 +521,7 @@ sequenceDiagram
           <tr>
             <td><strong>English</strong></td>
             <td>60 Questions</td>
-            <td><span class="tag tag-green">100% Verified</span></td>
+            <td><span class="tag tag-green">93.3%</span></td>
             <td><strong>103.0 ms</strong></td>
             <td>100.5 ms</td>
             <td>135.4 ms</td>
@@ -530,7 +530,7 @@ sequenceDiagram
           <tr style="background: rgba(124, 116, 234, 0.08); font-weight: 700;">
             <td><strong>Overall System</strong></td>
             <td>180 Questions</td>
-            <td><span class="tag tag-green">100% Verified</span></td>
+            <td><span class="tag tag-green">87.8% Grounded</span></td>
             <td><strong>96.9 ms</strong></td>
             <td><strong>90.7 ms</strong></td>
             <td><strong>125.2 ms</strong></td>
