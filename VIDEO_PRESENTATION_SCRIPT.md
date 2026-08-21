@@ -1,55 +1,83 @@
-# 🎙️ 90-Second Video Presentation Script (Fast & Punchy)
+# 🎙️ Video Presentation & Live Demo Script (1.5 – 2 Minutes)
 
-Designed for recording your screen walkthrough of [`presentation.html`](file:///c:/Users/ashee/Desktop/voice-rag/presentation.html) in exactly **1.5 minutes (90 seconds)**.
+This script combines the **Architecture Presentation** ([`presentation.html`](file:///c:/Users/ashee/Desktop/voice-rag/presentation.html)) with a **Live Interactive Demo** of the web application ([`index.html`](file:///c:/Users/ashee/Desktop/voice-rag/index.html)).
 
 ---
 
-## ⏱️ Timeline & Screen Actions (90 Seconds Total)
+## ⏱️ Video Overview & Timeline
 
-| Timestamp | Screen Section | Topic |
+| Timestamp | Screen Action | Focus Topic |
 | :--- | :--- | :--- |
-| **0:00 – 0:20** | Top Header & 4 KPI Cards | Introduction & Massive 13.02M Vector Scale |
-| **0:20 – 0:45** | Section 1 & 2: Architecture & Sequence | A100 GPU Tensor-Core Search (24ms) & Extractive QA |
-| **0:45 – 1:10** | Section 3: VRAM Memory Layout | 7-Stage Guardrails & Zero Hallucination |
-| **1:10 – 1:30** | Section 4: Live Benchmark Results | 180 Questions Evaluated (P50 = 90.7ms) & Closing |
+| **0:00 – 0:20** | `presentation.html` (Top KPIs) | Introduction & 13.02M Vector Scale |
+| **0:20 – 0:40** | `presentation.html` (Architecture) | A100 GPU Tensor-Core Search (24ms) & 7-Stage Guardrails |
+| **0:40 – 1:10** | `index.html` (Live Web UI) | **LIVE DEMO**: Voice / Text Query & Sub-100ms Audio Response |
+| **1:10 – 1:30** | `presentation.html` (Benchmarks) | 180-Question Benchmark Results (P50 = 90.7ms) & Closing |
 
 ---
 
-## 🎬 Word-for-Word Voiceover Script (~195 words)
+## 🎬 Word-for-Word Voiceover Script
 
-### 📍 [0:00 – 0:20] Intro & Scale
-**🖥️ Action:** *Start at the top of `presentation.html`. Highlight the 4 KPI cards.*
+---
 
-> *"Welcome to **VoxLore** — an ultra-low latency, voice-enabled Multilingual RAG system for **Hindi, Marathi, and English**.*
+### 📍 [0:00 – 0:20] Part 1: Intro & Scale
+**🖥️ Action:** *Start on `presentation.html`. Highlight the 4 KPI cards (13.02M Vectors, 24.1 ms GPU Search, 90.7 ms P50 Latency).*
+
+> **Voiceover:**
+> 
+> *"Welcome to **VoxLore** — an ultra-low latency, voice-enabled Multilingual RAG system built for **Hindi, Marathi, and English**.*
 > 
 > *VoxLore indexes the full MSMARCO and MSMARCO-XI datasets, scaling across **13,020,220 multi-strategy vectors** while delivering real-time responses in **under 95 milliseconds**."*
 
 ---
 
-### 📍 [0:20 – 0:45] Architecture & A100 Acceleration
-**🖥️ Action:** *Scroll down to the Section 1 Architecture & Section 2 Sequence diagrams.*
+### 📍 [0:20 – 0:40] Part 2: Architecture & Guardrails
+**🖥️ Action:** *Scroll down to the Section 1 Architecture diagram on `presentation.html`.*
 
-> *"To achieve conversational speed over 13 million vectors:
+> **Voiceover:**
+> 
+> *"To achieve real-time speed over 13 million vectors:
 > 1. Queries are embedded using **Multilingual-E5-Base** on GPU in 13 milliseconds.
 > 2. A direct **PyTorch Tensor-Core matrix scan** on a Modal **A100 GPU** searches all 13.02 million vectors in just **24.1 milliseconds**.
-> 3. Candidates are refined with **BM25**, and **XLM-RoBERTa** extracts the exact factual answer."*
+> 3. **XLM-RoBERTa** extracts the exact factual answer, passing our **7-stage guardrail defense** to prevent hallucinations."*
 
 ---
 
-### 📍 [0:45 – 1:10] Memory Layout & Guardrails
-**🖥️ Action:** *Scroll to Section 3: Hardware Memory Layout table.*
+### 📍 [0:40 – 1:10] Part 3: 🚀 LIVE PRODUCT DEMO
+**🖥️ Action:** *Click the top button **"← Back to Voice Assistant"** to switch to `index.html`.*
+1. *Click on a quick example chip (e.g. `[ENGLISH] Columbus County` or `[HINDI] ब्राइटन फोन`).*
+2. *Point to the latency pill **`⚡ 83.6 ms Breakdown ↗`**.*
+3. *Click **`🔊 Listen`** to hear the instant audio synthesis, then click **`⏹ Stop`**.*
 
-> *"Our entire vector index is stored as an **18.63 GB FP16 binary array** in A100 VRAM, backed by a **104 MB binary offset index** in host RAM for sub-millisecond lookups.
+> **Voiceover:**
 > 
-> To guarantee reliability, our **7-stage guardrail defense** intercepts unsafe queries and strictly declines unanswerable questions to eliminate hallucinations."*
+> *"Let’s see it in action on our live application.*
+> 
+> *When we submit a query — like asking about Columbus County — VoxLore searches 13 million vectors and extracts the exact answer in just **83.6 milliseconds**!*
+> 
+> *We can instantly listen to the grounded answer:*
+> *(Click `🔊 Listen` → audio plays)*
+> 
+> *...and pause or toggle audio controls on demand with zero latency."*
 
 ---
 
-### 📍 [1:10 – 1:30] Benchmark Results & Closing
-**🖥️ Action:** *Scroll to Section 4: Live Benchmark Results table.*
+### 📍 [1:10 – 1:30] Part 4: Benchmark Results & Closing
+**🖥️ Action:** *Switch back to `presentation.html` and scroll to Section 4: Live Benchmark Results table.*
 
-> *"Across **180 live benchmark queries** spanning Hindi, Marathi, and English:
-> - Our system achieved an **87.8% grounded retrieval rate**.
+> **Voiceover:**
+> 
+> *"We rigorously validated VoxLore across **180 real benchmark queries** across Hindi, Marathi, and English:
+> - Achieving an **87.8% grounded retrieval rate**.
 > - With a **P50 latency of 90.7 ms** and worst-case **148.8 ms** — strictly meeting our sub-150ms voice SLA.
 > 
 > VoxLore delivers massive scale with instant conversational responsiveness. Thank you!"*
+
+---
+
+## 💡 Quick Tips for Seamless Recording:
+
+1. **Browser Tabs**: Have two tabs open in Chrome/Edge:
+   - **Tab 1**: [`presentation.html`](file:///c:/Users/ashee/Desktop/voice-rag/presentation.html)
+   - **Tab 2**: [`index.html`](file:///c:/Users/ashee/Desktop/voice-rag/index.html)
+2. **Smooth Tab Switching**: At the `0:40` mark, click the button in the header or switch tabs with `Ctrl + Tab`.
+3. **Audio Check**: Ensure your screen recorder is capturing both your microphone and desktop audio so the assistant's voice synthesis is heard clearly during the demo!
