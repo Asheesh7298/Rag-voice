@@ -304,6 +304,14 @@ def run_suite():
     for item in DATASET_EN:
         all_questions.append(("EN", item["query"]))
 
+    total_q = len(all_questions)
+
+    print("=" * 80)
+    print(f"  RUNNING {total_q}-QUESTION BENCHMARK SUITE 3")
+    print("  Endpoint: https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run")
+    print(f"  Dataset: {len(DATASET_HI)} Hindi, {len(DATASET_MR)} Marathi, {len(DATASET_EN)} English ({total_q} total)")
+    print("=" * 80)
+
     latencies_by_lang = {"HI": [], "MR": [], "EN": []}
     all_latencies = []
 
@@ -327,11 +335,11 @@ def run_suite():
                 # Clean single-line printout without tick or cross emojis
                 q_display = (query[:38] + "..") if len(query) > 40 else query.ljust(40)
                 ans_display = (answer[:45] + "..") if len(answer) > 47 else answer.ljust(47)
-                print(f"  [{idx:02d}/90] [{lang}] {q_display} | {ans_display} ({t_server:.1f}ms)")
+                print(f"  [{idx:02d}/{total_q}] [{lang}] {q_display} | {ans_display} ({t_server:.1f}ms)")
         except Exception as e:
             e2e_ms = round((time.perf_counter() - t0) * 1000, 1)
             q_display = (query[:38] + "..") if len(query) > 40 else query.ljust(40)
-            print(f"  [{idx:02d}/90] [{lang}] {q_display} | ERROR: {str(e)[:40]} ({e2e_ms:.1f}ms)")
+            print(f"  [{idx:02d}/{total_q}] [{lang}] {q_display} | ERROR: {str(e)[:40]} ({e2e_ms:.1f}ms)")
 
     total_time_s = round(time.perf_counter() - t_start_total, 1)
 
@@ -347,7 +355,7 @@ def run_suite():
             p50 = round(statistics.median(lats), 1)
             p90 = round(lats_sorted[int(len(lats_sorted) * 0.90)], 1)
             p100 = round(max(lats), 1)
-            print(f"  --- Language: {lang} (30 Questions) ---")
+            print(f"  --- Language: {lang} ({len(lats)} Questions) ---")
             print(f"      Server Latency Mean : {mean_lat} ms (P50: {p50} ms | P90: {p90} ms | Max: {p100} ms)")
 
     if all_latencies:
@@ -357,9 +365,9 @@ def run_suite():
         p90_all = round(all_sorted[int(len(all_sorted) * 0.90)], 1)
         p100_all = round(max(all_latencies), 1)
         print("\n" + "=" * 80)
-        print("  OVERALL SYSTEM PERFORMANCE (90 QUESTIONS)")
+        print(f"  OVERALL SYSTEM PERFORMANCE ({total_q} QUESTIONS)")
         print("=" * 80)
-        print(f"  Total Questions Processed : {len(all_latencies)} / 90")
+        print(f"  Total Questions Processed : {len(all_latencies)} / {total_q}")
         print(f"  Server Latency Mean       : {mean_all} ms")
         print(f"  Server Latency P50        : {p50_all} ms")
         print(f"  Server Latency P90        : {p90_all} ms")
