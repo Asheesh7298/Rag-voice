@@ -107,6 +107,34 @@ python scripts/benchmark_suite_2.py
 
 ---
 
+## ⚖️ Judges' Evaluation Guide (`rag-local-eval-loop`)
+
+This repository is pre-configured to support both **Branch A (Native Python)** and **Branch B (HTTP Service)** for the official judge evaluation harness:
+
+### Option A: Native Python Evaluation (Direct In-Process)
+The repository provides `app/embedder.py`, `app/generator.py`, and `main.py` out of the box:
+```powershell
+# Default auto-discovery works automatically, or set explicitly:
+$env:EVAL_EMBEDDER_MODULE = "main"
+$env:EVAL_GENERATOR_MODULE = "main"
+
+# Run the evaluation loop:
+.\run.ps1 --num-answerable 50 --num-unanswerable 50
+```
+
+### Option B: HTTP Service Evaluation (Live Modal Endpoint)
+The repository provides `eval_http_config.json` configured for our live endpoint:
+```powershell
+$env:EVAL_EMBEDDER_MODULE = "eval.http_target"
+$env:EVAL_GENERATOR_MODULE = "eval.http_target"
+$env:EVAL_HTTP_CONFIG = "eval_http_config.json"
+
+# Run the evaluation loop:
+.\run.ps1 --num-answerable 50 --num-unanswerable 50
+```
+
+---
+
 ## 🚀 Deployment & Local Setup
 
 ### 1. Installation

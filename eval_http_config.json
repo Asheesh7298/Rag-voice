@@ -1,0 +1,22 @@
+{
+  "name": "voxlore_modal_http",
+  "endpoint": "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  "request_mapping": {
+    "query": "{query}"
+  },
+  "response_mapping": {
+    "answer": "answer",
+    "sources": "sources",
+    "confidence": "confidence",
+    "grounded": "grounded",
+    "latency_ms": "timings_ms.total_ms"
+  },
+  "embed_endpoint": {
+    "url": "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query",
+    "method": "POST"
+  }
+}
