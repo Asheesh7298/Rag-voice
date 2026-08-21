@@ -114,3 +114,9 @@ python scripts/benchmark_90_set2.py
 ## Engineering process archive
 
 `archive/` contains the full experimental history — patch scripts, diagnostic tools, and legacy benchmarks from the development process, including earlier index-scale experiments (58K → 2.3M → 2.76M → 1.5M multi-strategy) and rejected approaches (generative LLM backends via Qwen/Gemini, evaluated and found 4x slower than extractive QA for this latency budget).
+
+## Team
+
+- Asheesh Kumar
+- Khushi Saraswat
+- Aditya Chaudhary
