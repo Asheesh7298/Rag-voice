@@ -1,0 +1,638 @@
+{
+  "hi": [
+    {
+      "query": "ब्राइटन टाउनशिप फोन नंबर",
+      "answer": "The read operation timed out",
+      "grounded": false,
+      "latency_ms": 0
+    },
+    {
+      "query": "सबसे बड़ा उड़ने वाला सरीसृप अब तक",
+      "answer": "The read operation timed out",
+      "grounded": false,
+      "latency_ms": 0
+    },
+    {
+      "query": "सैंटेंडर स्पेन के बारे में क्या प्रसिद्ध है",
+      "answer": "एक प्रसिद्ध अवकाश स्थल",
+      "grounded": true,
+      "latency_ms": 8630.5
+    },
+    {
+      "query": "फ्लोरिडा में गोल्फ कार्ट चलाने की उम्र क्या है",
+      "answer": "14 वर्ष",
+      "grounded": true,
+      "latency_ms": 1062.3
+    },
+    {
+      "query": "कौन सी थोक परिवहन प्रक्रिया सामग्री को कोशिकाओं में ले जाती है",
+      "answer": "एक्सोसाइटोसिस",
+      "grounded": true,
+      "latency_ms": 1065.4
+    },
+    {
+      "query": "एक भर्ती किए गए ट्रक चालक कितना कमाते हैं",
+      "answer": "400 डॉलर",
+      "grounded": true,
+      "latency_ms": 1070.3
+    },
+    {
+      "query": "श्रोणि तल की मांसपेशियाँ कहाँ स्थित हैं",
+      "answer": "आपके पैरों के बीच",
+      "grounded": true,
+      "latency_ms": 1039.7
+    },
+    {
+      "query": "कौन सी काउंटी पिट्सफोर्ड, न्यूयॉर्क में है",
+      "answer": "मोनरो",
+      "grounded": true,
+      "latency_ms": 1028.8
+    },
+    {
+      "query": "कौन से उपपरमाण्विक कण होते हैं",
+      "answer": "प्रोटॉन और न्यूट्रॉन",
+      "grounded": true,
+      "latency_ms": 1049.0
+    },
+    {
+      "query": "टैटू लगवाने के बाद पानी में जाने से पहले कितना इंतजार करना चाहिए",
+      "answer": "कम से कम 48 घंटे",
+      "grounded": true,
+      "latency_ms": 1049.1
+    },
+    {
+      "query": "रमजान मुबारक क्या है",
+      "answer": "बधाई",
+      "grounded": true,
+      "latency_ms": 1039.1
+    },
+    {
+      "query": "कौन सी काउंटी में गोल्ड रिवर सीए स्थित है",
+      "answer": "सैक्रामेंटो",
+      "grounded": true,
+      "latency_ms": 1049.7
+    },
+    {
+      "query": "कोपर शहर से हॉलीवुड कितना दूर है",
+      "answer": "11 मील या 18 किमी",
+      "grounded": true,
+      "latency_ms": 1077.4
+    },
+    {
+      "query": "आप किस उम्र के हो सकते हैं जीसी टेक्सास",
+      "answer": "किसी भी उम्र",
+      "grounded": true,
+      "latency_ms": 1074.7
+    },
+    {
+      "query": "दिल्ली कैलिफोर्निया कौन सी काउंटी में है",
+      "answer": "मर्सिड",
+      "grounded": true,
+      "latency_ms": 1062.4
+    },
+    {
+      "query": "मीठे पानी में एन.एच.3 का स्तर क्या है",
+      "answer": "0.02 पी.पी.एम.",
+      "grounded": true,
+      "latency_ms": 1098.9
+    },
+    {
+      "query": "ब्राज़ील में मुद्रा को क्या कहते हैं",
+      "answer": "ब्राजील की मुद्रा को वास्तविक",
+      "grounded": true,
+      "latency_ms": 1032.7
+    },
+    {
+      "query": "कौन से खाद्य पदार्थ विटामिन ए के अच्छे स्रोत हैं",
+      "answer": "शकरकंद और गोमांस का जिगर",
+      "grounded": true,
+      "latency_ms": 1053.6
+    },
+    {
+      "query": "आड़ू के पेड़ों के लिए किस तरह का उर्वरक चाहिए",
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "grounded": false,
+      "latency_ms": 1071.2
+    },
+    {
+      "query": "किस शहर में एलोन विश्वविद्यालय है",
+      "answer": "एलोन",
+      "grounded": true,
+      "latency_ms": 1043.3
+    },
+    {
+      "query": "एमिली नाम का क्या अर्थ है",
+      "answer": "प्रतिद्वंद्वी",
+      "grounded": true,
+      "latency_ms": 1044.5
+    },
+    {
+      "query": "केप टोरोकिना कहाँ स्थित है",
+      "answer": "दक्षिण-पश्चिमी तट",
+      "grounded": true,
+      "latency_ms": 1057.1
+    },
+    {
+      "query": "सोया का क्या अर्थ है",
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "grounded": false,
+      "latency_ms": 1043.4
+    },
+    {
+      "query": "आवर्त सारणी में कौन सा तत्व सबसे अधिक प्रतिक्रियाशील है",
+      "answer": "फ्रांसियम",
+      "grounded": true,
+      "latency_ms": 1103.5
+    },
+    {
+      "query": "लड़के कब यौवन में पहुँचते हैं",
+      "answer": "12 से 16 वर्ष की आयु के बीच",
+      "grounded": true,
+      "latency_ms": 1071.4
+    },
+    {
+      "query": "मेन में सबसे अमीर व्यक्ति कौन है",
+      "answer": "लियोन गोर्मन",
+      "grounded": true,
+      "latency_ms": 1084.7
+    },
+    {
+      "query": "क्रिस मैथ्यू कितने लंबे हैं",
+      "answer": "6 फीट 3 इंच",
+      "grounded": true,
+      "latency_ms": 1035.2
+    },
+    {
+      "query": "बाल पूरी तरह से सूखने में कितना समय लगता है",
+      "answer": "2 घंटे",
+      "grounded": true,
+      "latency_ms": 1054.0
+    },
+    {
+      "query": "एक वैज्ञानिक जो जीव विज्ञान का अध्ययन करता है उसे क्या कहते हैं",
+      "answer": "आनुवंशिकीविद्",
+      "grounded": true,
+      "latency_ms": 1349.6
+    },
+    {
+      "query": "किस शो में क्रिस टाइटस थे",
+      "answer": "फॉक्स",
+      "grounded": true,
+      "latency_ms": 1019.6
+    },
+    {
+      "query": "अंडकोष के दर्द के लिए कौन सा उपचार सबसे अच्छा है",
+      "answer": "दर्द के कारण का उपचार",
+      "grounded": true,
+      "latency_ms": 1071.2
+    },
+    {
+      "query": "जॉन जैक्स रूसो किस सिद्धांत के दार्शनिक थे",
+      "answer": "ज्ञानोदय",
+      "grounded": true,
+      "latency_ms": 1019.3
+    },
+    {
+      "query": "मधुमेह मेलिटस टाइप 1 क्या है",
+      "answer": "टाइप 1 मधुमेह",
+      "grounded": true,
+      "latency_ms": 1073.1
+    },
+    {
+      "query": "ऑक्सीकोडोन और लोर्टैब में कौन अधिक मजबूत है",
+      "answer": "हाइड्रोकोडोन से 50%",
+      "grounded": true,
+      "latency_ms": 1049.8
+    },
+    {
+      "query": "डेफ़ुनियाक स्प्रिंग्स किस काउंटी में है",
+      "answer": "वॉलटन काउंटी",
+      "grounded": true,
+      "latency_ms": 1027.5
+    }
+  ],
+  "mr": [
+    {
+      "query": "फ्रान्सचे सध्याचे चलन काय आहे",
+      "answer": "युरो",
+      "grounded": true,
+      "latency_ms": 1032.7
+    },
+    {
+      "query": "पृथ्वी किती जुनी आहे",
+      "answer": "अंदाजे 4.5 अब्ज वर्षे",
+      "grounded": true,
+      "latency_ms": 1061.1
+    },
+    {
+      "query": "यकृताच्या कर्करोगाला काय म्हणतात",
+      "answer": "हेपॅटोसाइट्स",
+      "grounded": true,
+      "latency_ms": 1334.3
+    },
+    {
+      "query": "जगातील सर्वात उंच इमारत किती फूट आहे",
+      "answer": "बुर्ज खलिफा",
+      "grounded": true,
+      "latency_ms": 1034.7
+    },
+    {
+      "query": "अल्फा हेलिक्स कुठे आढळते",
+      "answer": "प्रथिनांच्या दुय्यम स्तरावर",
+      "grounded": true,
+      "latency_ms": 1088.2
+    },
+    {
+      "query": "हेंडरसनव्हिल एनसी कोणत्या काउंटीमध्ये आहे",
+      "answer": "सुम्नर",
+      "grounded": true,
+      "latency_ms": 1306.0
+    },
+    {
+      "query": "पार्किंग ब्रेक म्हणजे काय",
+      "answer": "वाहन पार्क केल्यावर ते निश्चल ठेवणे",
+      "grounded": true,
+      "latency_ms": 1353.8
+    },
+    {
+      "query": "आफ्रिकन गुलामांचा व्यापार किती काळ चालला",
+      "answer": "जवळजवळ 400 वर्षे",
+      "grounded": true,
+      "latency_ms": 1325.4
+    },
+    {
+      "query": "कॅम्प हिल पा फिली पासून किती लांब आहे",
+      "answer": "2 मैल",
+      "grounded": true,
+      "latency_ms": 1076.5
+    },
+    {
+      "query": "सिंको डी मायो कुठे झाले",
+      "answer": "पुएब्ला, मेक्सिको",
+      "grounded": true,
+      "latency_ms": 1048.4
+    },
+    {
+      "query": "स्टीव्ह जॉब्सने ॲपल सार्वजनिक कधी केले",
+      "answer": "अनावरण",
+      "grounded": true,
+      "latency_ms": 1069.7
+    },
+    {
+      "query": "गॅस सिटी इंडियाना कोणत्या काउंटीमध्ये आहे",
+      "answer": "ग्रँट काउंटी",
+      "grounded": true,
+      "latency_ms": 1021.3
+    },
+    {
+      "query": "किती आठवडे गर्भवती असताना लिंग कळते",
+      "answer": "16 ते 20 आठवड्यांच्या दरम्यान",
+      "grounded": true,
+      "latency_ms": 1317.3
+    },
+    {
+      "query": "वॉशिंग्टन डी.सी. मधील सर्वात जवळचा विमानतळ कोणता",
+      "answer": "रोनाल्ड रेगन वॉशिंग्टन राष्ट्रीय विमानतळ",
+      "grounded": true,
+      "latency_ms": 1027.1
+    },
+    {
+      "query": "रॉबर्ट ब्लेक कोण आहेत",
+      "answer": "1 रॉबर्ट ब्लेक (अभिनेता)",
+      "grounded": true,
+      "latency_ms": 1042.3
+    },
+    {
+      "query": "ज्वालामुखीच्या राखेमुळे कोणते नुकसान होते",
+      "answer": "डोळे आणि फुफ्फुसांना नुकसान",
+      "grounded": true,
+      "latency_ms": 1072.0
+    },
+    {
+      "query": "तंतुमय आणि गोलाकार प्रथिने यातील फरक",
+      "answer": "भिन्न",
+      "grounded": true,
+      "latency_ms": 1078.8
+    },
+    {
+      "query": "एन.सी.ए.ए. बास्केटबॉल कोर्टचा आकार",
+      "answer": "94 गुणा 50 फीट",
+      "grounded": true,
+      "latency_ms": 1062.2
+    },
+    {
+      "query": "सौदी अरेबियात संध्याकाळी तापमान कसे असते",
+      "answer": "आरामदायक",
+      "grounded": true,
+      "latency_ms": 1072.6
+    },
+    {
+      "query": "स्नॅप वाटाणे कसे शिजवायचे",
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "grounded": false,
+      "latency_ms": 1036.4
+    },
+    {
+      "query": "दुग्धजन्य उत्पादने कोणती आहेत",
+      "answer": "दूध आणि दही",
+      "grounded": true,
+      "latency_ms": 1376.4
+    },
+    {
+      "query": "द बुलगॉड पुस्तक कोणी लिहिले",
+      "answer": "जोशुआ डॉल",
+      "grounded": true,
+      "latency_ms": 1063.9
+    },
+    {
+      "query": "व्रे नाव कोणत्या नदीवरून आले",
+      "answer": "मदीना",
+      "grounded": true,
+      "latency_ms": 1046.2
+    },
+    {
+      "query": "सरासरी ताशी वेतन किती आहे",
+      "answer": "30 डॉलर",
+      "grounded": true,
+      "latency_ms": 1058.1
+    },
+    {
+      "query": "मांजरीवर रेबीज लस किती काळ काम करते",
+      "answer": "7 वर्षांपेक्षा जास्त",
+      "grounded": true,
+      "latency_ms": 1064.3
+    },
+    {
+      "query": "प्रौढांना किती तास झोप आवश्यक आहे",
+      "answer": "7.5 ते 8.5",
+      "grounded": true,
+      "latency_ms": 1077.7
+    },
+    {
+      "query": "कोणत्या खाद्यपदार्थात जीवनसत्व डी असते",
+      "answer": "दूधात खरोखरच जीवनसत्व डी असते का? दूध",
+      "grounded": true,
+      "latency_ms": 1289.7
+    },
+    {
+      "query": "मेकॅनिकल इंजिनिअर सरासरी किती कमावतात",
+      "answer": "$73,840",
+      "grounded": true,
+      "latency_ms": 1326.8
+    },
+    {
+      "query": "एलेक बाल्डविनची पत्नी कोण आहे",
+      "answer": "हिलारिया थॉमस",
+      "grounded": true,
+      "latency_ms": 1029.2
+    },
+    {
+      "query": "भूक न लागण्याचे कारण काय असू शकते",
+      "answer": "विविध कारणांमुळे",
+      "grounded": true,
+      "latency_ms": 1084.4
+    },
+    {
+      "query": "आठवड्यातून एक दिवस उपवास करणे",
+      "answer": "24 घंटे",
+      "grounded": true,
+      "latency_ms": 1062.8
+    },
+    {
+      "query": "कार पेंटच्या कामाचा खर्च किती",
+      "answer": "$2,400 ते $7,500",
+      "grounded": true,
+      "latency_ms": 1339.0
+    },
+    {
+      "query": "ग्वाम बेट कुठे आहे",
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "grounded": false,
+      "latency_ms": 1020.7
+    },
+    {
+      "query": "शाळेचे सचिव दरवर्षी किती कमावतात",
+      "answer": "$111,724",
+      "grounded": true,
+      "latency_ms": 1068.1
+    },
+    {
+      "query": "हॉलमार्क गोल्ड क्राउन स्टोअर्स कुठे आहेत",
+      "answer": "उत्तर कॅरोलिना",
+      "grounded": true,
+      "latency_ms": 1079.6
+    }
+  ],
+  "en": [
+    {
+      "query": "what county is columbus city in",
+      "answer": "Franklin County",
+      "grounded": true,
+      "latency_ms": 1066.2
+    },
+    {
+      "query": "what does folic acid protect against",
+      "answer": "Serious birth defects",
+      "grounded": true,
+      "latency_ms": 1108.4
+    },
+    {
+      "query": "siriusxm cost per month internet only",
+      "answer": "$14.99",
+      "grounded": true,
+      "latency_ms": 1044.0
+    },
+    {
+      "query": "how to pronounce tiguan",
+      "answer": "Couldn't extract a confident answer from the retrieved context.",
+      "grounded": false,
+      "latency_ms": 1065.2
+    },
+    {
+      "query": "what county is van nuys ca in",
+      "answer": "Los angeles",
+      "grounded": true,
+      "latency_ms": 1029.1
+    },
+    {
+      "query": "what is an x ray photon",
+      "answer": "Electromagnetic rays produced in the x-ray tube head when electrons from the cathode filament strike the anode target",
+      "grounded": true,
+      "latency_ms": 1078.4
+    },
+    {
+      "query": "what are the common geriatric digestive issues",
+      "answer": "Both acid reflux and heartburn",
+      "grounded": true,
+      "latency_ms": 1051.5
+    },
+    {
+      "query": "what is a slip coin",
+      "answer": "If you bought something and paid for it with a fake coin, you gave the seller",
+      "grounded": true,
+      "latency_ms": 1096.4
+    },
+    {
+      "query": "what is the medical definition of obesity metric",
+      "answer": "Excess body fat has accumulated to the extent that it has an adverse effect on health.",
+      "grounded": true,
+      "latency_ms": 1094.2
+    },
+    {
+      "query": "is julia kim still alive",
+      "answer": "She's still alive and well",
+      "grounded": true,
+      "latency_ms": 1044.0
+    },
+    {
+      "query": "what is a hill-sachs lesion",
+      "answer": "A fracture in the head of the humerus bone",
+      "grounded": true,
+      "latency_ms": 1044.1
+    },
+    {
+      "query": "meaning of the arabic name nayla",
+      "answer": "The meaning of Naila is successful",
+      "grounded": true,
+      "latency_ms": 1038.5
+    },
+    {
+      "query": "average cost of wedding dinner",
+      "answer": "Between $1198 - $1414",
+      "grounded": true,
+      "latency_ms": 1033.1
+    },
+    {
+      "query": "what is a values clarification process",
+      "answer": "A self-assessment process that enables you to discover the content and strength of your own system of values",
+      "grounded": true,
+      "latency_ms": 1097.9
+    },
+    {
+      "query": "is the mitochondria an organelle",
+      "answer": "Round tube-like",
+      "grounded": true,
+      "latency_ms": 1077.1
+    },
+    {
+      "query": "webster definition of theft",
+      "answer": "Unauthorized taking of property from another with the intent to permanently deprive them of it",
+      "grounded": true,
+      "latency_ms": 1038.3
+    },
+    {
+      "query": "what active ingredients are in midrin",
+      "answer": "Menthol (35–45%) and menthone (10–30%).",
+      "grounded": true,
+      "latency_ms": 1055.9
+    },
+    {
+      "query": "what county in florida is alligator point in",
+      "answer": "Broward County",
+      "grounded": true,
+      "latency_ms": 1077.4
+    },
+    {
+      "query": "what does homophone mean in english",
+      "answer": "A word that is pronounced the same as another word",
+      "grounded": true,
+      "latency_ms": 1093.5
+    },
+    {
+      "query": "recommended daily intake of vitamin e",
+      "answer": "15 milligrams per day",
+      "grounded": true,
+      "latency_ms": 1056.8
+    },
+    {
+      "query": "what is abo incompatibility in newborns",
+      "answer": "Relatively common type of hemolytic disease",
+      "grounded": true,
+      "latency_ms": 1042.2
+    },
+    {
+      "query": "what nerves regulate the autonomic system",
+      "answer": "Peripheral nerves",
+      "grounded": true,
+      "latency_ms": 1078.1
+    },
+    {
+      "query": "what is the name of st patricks parade in new york",
+      "answer": "Patrick’s Day parade",
+      "grounded": true,
+      "latency_ms": 1120.0
+    },
+    {
+      "query": "what is an omurice omelet made with",
+      "answer": "Fried rice",
+      "grounded": true,
+      "latency_ms": 1031.1
+    },
+    {
+      "query": "are whiskers on cats used for balance",
+      "answer": "A cats tail",
+      "grounded": true,
+      "latency_ms": 1051.4
+    },
+    {
+      "query": "average cost of assisted living in 2015",
+      "answer": "$3,750 per month",
+      "grounded": true,
+      "latency_ms": 1054.8
+    },
+    {
+      "query": "what disability classification is copd",
+      "answer": "Chronic obstructive pulmonary disease",
+      "grounded": true,
+      "latency_ms": 1049.4
+    },
+    {
+      "query": "what county is seminole fl in",
+      "answer": "Sanford",
+      "grounded": true,
+      "latency_ms": 1051.9
+    },
+    {
+      "query": "what does granuloma annulare look like",
+      "answer": "A ring of small red or skin-coloured bumps",
+      "grounded": true,
+      "latency_ms": 1018.8
+    },
+    {
+      "query": "what minerals are important in diet",
+      "answer": "Phosphorus",
+      "grounded": true,
+      "latency_ms": 1073.2
+    },
+    {
+      "query": "is prize money taxable income",
+      "answer": "Regardless of whether the prize is in the form of cash, trips or merchandise",
+      "grounded": true,
+      "latency_ms": 1035.7
+    },
+    {
+      "query": "what county is ninemile creek located in",
+      "answer": "Onondaga County",
+      "grounded": true,
+      "latency_ms": 1029.2
+    },
+    {
+      "query": "what is a salpingectomy surgery",
+      "answer": "To remove one or both of your fallopian tubes",
+      "grounded": true,
+      "latency_ms": 1048.0
+    },
+    {
+      "query": "what are triglycerides in blood",
+      "answer": "A type of fat",
+      "grounded": true,
+      "latency_ms": 1078.1
+    },
+    {
+      "query": "are cheetahs an endangered species",
+      "answer": "Today cheetahs are an endangered species",
+      "grounded": true,
+      "latency_ms": 1061.7
+    }
+  ]
+}
