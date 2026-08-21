@@ -356,9 +356,9 @@ for s_idx in range(3):
     suites.append({"hi": s_hi, "mr": s_mr, "en": s_en})
 
 def generate_suite_code(suite_data, suite_num):
-    hi_items = json.dumps(suite_data["hi"], ensure_ascii=False, indent=4)
-    mr_items = json.dumps(suite_data["mr"], ensure_ascii=False, indent=4)
-    en_items = json.dumps(suite_data["en"], ensure_ascii=False, indent=4)
+    hi_items = json.dumps(suite_data["hi"], ensure_ascii=False, indent=4).replace(': true', ': True').replace(': false', ': False')
+    mr_items = json.dumps(suite_data["mr"], ensure_ascii=False, indent=4).replace(': true', ': True').replace(': false', ': False')
+    en_items = json.dumps(suite_data["en"], ensure_ascii=False, indent=4).replace(': true', ': True').replace(': false', ': False')
     
     code = f'''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
