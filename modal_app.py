@@ -1000,25 +1000,6 @@ class VoiceRAG:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "implausible_answer", timings)
 
-        # Guardrail 8 — NLI Entailment with strict latency budget
-        NLI_CHECK_MIN = 0.15
-        NLI_CHECK_MAX = 0.35
-        TIME_BUDGET_CEILING = 175.0  # ms -- leave 15ms safety margin under 190ms
-
-        elapsed_so_far = (time.perf_counter() - t_start) * 1000  # ms
-        if NLI_CHECK_MIN <= best["score"] <= NLI_CHECK_MAX and elapsed_so_far < TIME_BUDGET_CEILING:
-            t_nli_start = time.perf_counter()
-            entailment_score = self._check_entailment(best.get("source_text", ""), query, best["answer"])
-            nli_ms = (time.perf_counter() - t_nli_start) * 1000
-            timings["nli_ms"] = round(nli_ms, 2)
-            print(f"[NLI CHECK] query={query!r} score={best['score']:.4f} entailment={entailment_score:.4f} nli_ms={nli_ms:.1f}ms")
-            if entailment_score < 0.3:
-                timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-                return self._decline(query, "not_entailed", timings, debug_score=entailment_score)
-        elif NLI_CHECK_MIN <= best["score"] <= NLI_CHECK_MAX:
-            # Ambiguous score but no time budget left -- log this so we can see how often it happens
-            print(f"[NLI SKIPPED - TIME BUDGET] query={query!r} score={best['score']} elapsed={elapsed_so_far:.1f}ms")
-
         # High-speed Extractive Span Extraction (Sub-75ms across 100% of queries)
         final_answer = best["answer"]
         timings["gen_ms"] = 0.0
