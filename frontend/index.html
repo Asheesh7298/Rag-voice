@@ -1148,10 +1148,15 @@
         </div>
       </div>
 
+      <div style="background: rgba(124, 116, 234, 0.1); border: 1px solid rgba(124, 116, 234, 0.3); border-radius: 12px; padding: 10px 14px; margin: 12px 0 14px; font-size: 11.5px; color: var(--text-dark); line-height: 1.5; text-align: center;">
+        <span style="color: var(--purple-dark); font-weight: 700;">⏱️ Please wait 1–2 minutes (One-Time Process):</span><br/>
+        <span style="color: var(--text-muted);">The Modal A100 GPU is allocating 18.6 GB VRAM and mounting 13.02M vectors. Once loaded, all voice &amp; text queries run in <strong>&lt; 95 ms</strong>!</span>
+      </div>
+
       <div class="warmup-checklist">
         <div id="step1" class="warmup-step active">
           <span class="step-icon">🔄</span>
-          <span class="step-text">Booting Serverless A10G GPU Container</span>
+          <span class="step-text">Booting Serverless A100 GPU Container</span>
         </div>
         <div id="step2" class="warmup-step">
           <span class="step-icon">⏳</span>
@@ -1159,7 +1164,7 @@
         </div>
         <div id="step3" class="warmup-step">
           <span class="step-icon">⏳</span>
-          <span class="step-text">Ingesting 13.0M GPU Tensor Vector Index</span>
+          <span class="step-text">Ingesting 13.02M GPU Tensor Vector Index (18.6 GB FP16)</span>
         </div>
       </div>
 
@@ -1209,7 +1214,7 @@
       <div id="coldStartBanner" class="cold-start-banner">
         <div class="cold-start-left">
           <div id="coldStartSpinner" class="cold-start-spinner"></div>
-          <span id="coldStartText">🔄 Waking up Modal A100 GPU &amp; loading 13.02M vector index... (~14s cold start)</span>
+          <span id="coldStartText">🔄 One-time setup: Waking up Modal A100 GPU &amp; loading 13.02M vectors into VRAM (~1-2 mins initial cold start)...</span>
         </div>
         <span style="cursor:pointer; opacity:0.6;" onclick="document.getElementById('coldStartBanner').style.display='none'">✕</span>
       </div>
@@ -1765,7 +1770,7 @@
       const temp = document.createElement("div");
       temp.className = "message-bubble-row assistant";
       const loadingMsg = !isServerWarm 
-        ? "🔄 Waking up Modal A100 GPU &amp; loading 13.02M vectors... (Cold start ~14s)"
+        ? "🔄 One-time initial setup: Waking up Modal A100 GPU &amp; loading 13.02M vectors into VRAM (~1-2 mins)... Please wait!"
         : "⚡ Retrieving across 13,020,220 vectors &amp; extracting grounded answer...";
       temp.innerHTML = `
         <div class="assistant-bubble-card" style="color:${!isServerWarm ? 'var(--purple-dark)' : 'var(--text-muted)'}; font-weight:${!isServerWarm ? '600' : '400'};">
