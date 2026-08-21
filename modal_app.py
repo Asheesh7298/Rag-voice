@@ -327,19 +327,9 @@ class VoiceRAG:
         if answer and answer[0].islower():
             answer = answer[0].upper() + answer[1:]
 
-        # 5. Expand extracted answer spans to the full informative sentence
-        words = answer.split()
-        if len(words) <= 12 and source_text and answer in source_text:
-            sentences = re.split(r'(?<=[।.!?])\s+', source_text)
-            for sent in sentences:
-                if answer in sent and 3 <= len(sent.split()) <= 45:
-                    answer = sent.strip()
-                    break
-
-        # 6. If English query but answer is entirely non-ASCII Indic script,
-        #    keep it as-is (the passage language determines answer language —
-        #    we can't transliterate without a model)
-        return answer.strip()
+        # 5. Clean trailing punctuation
+        answer = re.sub(r'[,;:\-–—\s]+$', '', answer).strip()
+        return answer
 
     def _extract_best_answer(self, question: str, chunks: list) -> dict:
         """
@@ -873,10 +863,9 @@ class VoiceRAG:
         return q_lang == a_lang
 
     def _is_plausible_answer(self, query: str, answer: str, source_text: str = "") -> bool:
-        """Plausibility validation: rejects hallucinated values, wrong unit formats, etc."""
+        """Plausibility validation: rejects hallucinated values, empty strings, etc."""
         import re
         ans_lower = answer.lower()
-        q_lower = query.lower()
 
         # Reject answers that are purely non-informative phrases
         generic_rejects = [
@@ -885,19 +874,6 @@ class VoiceRAG:
         ]
         if any(g == ans_lower.strip() for g in generic_rejects):
             return False
-
-        # Reject answers that are unrealistically large numbers (>100,000 without unit qualifier)
-        has_unit_qualifier = any(u in ans_lower for u in ("per", "each", "/", "प्रति", "दर", "चौरस", "sq", "sq ft", "square"))
-        num_tokens = re.findall(r'[\d,.]+', answer)
-        for token in num_tokens:
-            clean = re.sub(r'[^\d.]', '', token)
-            if clean:
-                try:
-                    val = float(clean)
-                    if val > 100000 and not has_unit_qualifier:
-                        return False
-                except ValueError:
-                    continue
 
         return True
 
