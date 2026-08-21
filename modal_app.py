@@ -138,12 +138,23 @@ class VoiceRAG:
         self.embed_model.encode(["warmup"], normalize_embeddings=True)
         print("✅ Embedding model ready")
 
-        # ── FAISS index (Fully loaded in RAM from local disk) ──
-        print("Loading FAISS index into RAM...")
+        # ── FAISS index (Loaded & Transferred to A10G GPU Tensor Memory) ──
+        print("Loading FAISS index into RAM and GPU Tensor memory...")
         self.faiss_index = faiss.read_index(local_index_path)
-        if hasattr(self.faiss_index, "hnsw"):
-            self.faiss_index.hnsw.efSearch = 24
         print(f"FAISS index loaded: {self.faiss_index.ntotal:,} vectors")
+        self.gpu_vectors = None
+        self.gpu_vector_err = None
+        if device == 0:
+            try:
+                import numpy as np
+                raw_bytes = faiss.vector_to_array(self.faiss_index.codes)
+                raw_vecs = raw_bytes.view(np.float32).reshape(self.faiss_index.ntotal, self.faiss_index.d)
+                self.gpu_vectors = torch.from_numpy(raw_vecs).cuda().half()
+                print(f"✅ Transferred {self.faiss_index.ntotal:,} vectors to A10G Tensor Core memory (FP16: {self.gpu_vectors.element_size() * self.gpu_vectors.nelement() / (1024**3):.2f} GB)")
+            except Exception as e:
+                import traceback
+                self.gpu_vector_err = f"{e}\n{traceback.format_exc()}"
+                print(f"Fallback to CPU FAISS search: {self.gpu_vector_err}")
 
         # ── Fast In-Memory Metadata Store ──
         print("Loading metadata store into RAM...")
@@ -182,8 +193,8 @@ class VoiceRAG:
         self.MIN_RETRIEVAL_SCORE      = float(os.getenv("MIN_RETRIEVAL_SCORE", "0.65"))
         self.MIN_QA_SCORE             = float(os.getenv("MIN_QA_SCORE", "0.0005"))
         self.MIN_ANSWER_RELEVANCE     = float(os.getenv("MIN_ANSWER_RELEVANCE", "0.20"))
-        self.TOP_K                    = int(os.getenv("TOP_K", "10"))
-        self.RERANK_TOP_N             = int(os.getenv("RERANK_TOP_N", "50"))
+        self.TOP_K                    = int(os.getenv("TOP_K", "8"))
+        self.RERANK_TOP_N             = int(os.getenv("RERANK_TOP_N", "35"))
         self.SARVAM_KEY               = os.getenv("SARVAM_API_KEY", "")
         self.SARVAM_URL               = os.getenv("SARVAM_STT_URL", "https://api.sarvam.ai/speech-to-text")
 
@@ -493,17 +504,28 @@ class VoiceRAG:
         return {lang_filter}
 
     def _search(self, query_vec, k: int, lang_filter: str | list | None = None):
-        import numpy as np
+        import torch, numpy as np
         qv = query_vec.astype("float32").reshape(1, -1)
-        # Re-normalize query vector before inner product search
         norm = np.linalg.norm(qv)
         if norm > 0:
             qv = qv / norm
-        scores, ids = self.faiss_index.search(qv, k)
-        
+
+        if getattr(self, "gpu_vectors", None) is not None:
+            with torch.no_grad():
+                qv_t = torch.from_numpy(qv).cuda().half()
+                sims = torch.matmul(self.gpu_vectors, qv_t.T).squeeze(1)
+                top_scores, top_ids = torch.topk(sims, k=min(k, len(self.metadata)))
+                scores_list = top_scores.float().cpu().numpy().tolist()
+                ids_list = top_ids.cpu().numpy().tolist()
+        else:
+            scores, ids = self.faiss_index.search(qv, k)
+            scores_list = scores[0].tolist()
+            ids_list = ids[0].tolist()
+
         allowed_langs = self._resolve_lang_filter(lang_filter)
         results = []
-        for score, idx in zip(scores[0], ids[0]):
+        for score, idx in zip(scores_list, ids_list):
+            idx = int(idx)
             if idx < 0 or idx >= len(self.metadata):
                 continue
             meta = self.metadata[idx]
@@ -511,8 +533,6 @@ class VoiceRAG:
                 continue
             results.append((meta, float(score)))
 
-        # With full 3-lang index (hi, mr, en), every language should have matches.
-        # Don't fall back to all_results — that causes cross-language contamination.
         return results
 
     def _filter_stopwords(self, tokens: list) -> list:
@@ -911,13 +931,14 @@ class VoiceRAG:
             return self._decline(query, "low_qa_confidence", timings, debug_score=best["score"])
 
         # Guardrail 5 — Query-answer semantic relevance
-        # Catch cases where QA confidently extracts from an irrelevant passage
-        import numpy as np
-        answer_vec = self.embed_model.encode([best["answer"]], normalize_embeddings=True)[0]
-        relevance = float(np.dot(query_vec_cached.astype(np.float32), answer_vec.astype(np.float32)))
-        if relevance < self.MIN_ANSWER_RELEVANCE:
-            timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "low_answer_relevance", timings, debug_score=relevance)
+        # Fast path: Skip re-embedding if QA score is high or lexical overlap is strong
+        if best["score"] < 0.35 and self._token_overlap(query, best["answer"]) < 0.20:
+            import numpy as np
+            answer_vec = self.embed_model.encode([best["answer"]], normalize_embeddings=True)[0]
+            relevance = float(np.dot(query_vec_cached.astype(np.float32), answer_vec.astype(np.float32)))
+            if relevance < self.MIN_ANSWER_RELEVANCE:
+                timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+                return self._decline(query, "low_answer_relevance", timings, debug_score=relevance)
 
         # Guardrail 6 — Script match
         if not self._scripts_match(query, best["answer"]):
@@ -1027,6 +1048,8 @@ class VoiceRAG:
                 "n_metadata": n_meta,
                 "n_vectors": n_vecs,
                 "match": n_meta == n_vecs,
+                "gpu_vectors_active": getattr(self, "gpu_vectors", None) is not None,
+                "gpu_vector_err": getattr(self, "gpu_vector_err", None),
                 "metric_type": self.faiss_index.metric_type,
                 "test_scores": scores[0].tolist(),
                 "test_ids": ids[0].tolist(),
