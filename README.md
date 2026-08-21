@@ -29,12 +29,12 @@ Voice/Text input
 
 **Methodology:** measured across **180 real test queries** (two independent 90-question sets, 30 Hindi + 30 Marathi + 30 English each, disjoint questions), against the live production endpoint. Reported latency is the full retrieval + extraction + verification pipeline (embed → FAISS search → rerank → QA → guardrails), **excluding STT**, since STT is an external network call to a third-party API and is reported separately.
 
-| Percentile | Latency |
-|---|---|
-| P50 | 143.5 ms |
-| P70 | 152.0 ms |
-| P90 | 162.5 ms |
-| **P100** | **183.1 ms** |
+| Percentile | Latency      |
+| ---------- | ------------ |
+| P50        | 143.5 ms     |
+| P70        | 152.0 ms     |
+| P90        | 162.5 ms     |
+| **P100**   | **183.1 ms** |
 
 All 180 queries completed under the 200ms target, including worst-case.
 
@@ -52,11 +52,11 @@ STT (Sarvam, network call): typically 500–800ms round trip, reported separatel
 
 Rather than a single naive fixed-size chunker, every source passage is processed through **three complementary chunking strategies**, each tagged with `chunk_strategy` metadata for retrieval-time filtering and ablation:
 
-| Strategy | Description | Measured chunks/passage |
-|---|---|---|
-| `passage_native` | One chunk per passage, exact boundaries. Metadata-aware (`source_passage_id`, `query_id`, `is_selected`, `lang`). | 1.00x |
-| `fixed_overlap` | 60-token sliding windows, 15-token overlap. Script-agnostic (whitespace tokenization works identically across Hindi/Marathi/English). | 1.41x |
-| `semantic_window` | Sentence-level, embedding-similarity-based grouping (cosine ≥0.55 breakpoint, max 6 sentences/chunk). Handles both Latin punctuation and Devanagari danda (`।`). | 1.11x |
+| Strategy          | Description                                                                                                                                                      | Measured chunks/passage |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `passage_native`  | One chunk per passage, exact boundaries. Metadata-aware (`source_passage_id`, `query_id`, `is_selected`, `lang`).                                                | 1.00x                   |
+| `fixed_overlap`   | 60-token sliding windows, 15-token overlap. Script-agnostic (whitespace tokenization works identically across Hindi/Marathi/English).                            | 1.41x                   |
+| `semantic_window` | Sentence-level, embedding-similarity-based grouping (cosine ≥0.55 breakpoint, max 6 sentences/chunk). Handles both Latin punctuation and Devanagari danda (`।`). | 1.11x                   |
 
 Combined measured multiplier: **3.52x chunks per source passage** — measured on a 5,000-passage sample, not assumed, before calculating the final per-language passage allocation needed to hit the target index scale.
 
@@ -83,6 +83,7 @@ We report **87.8% grounded-answer rate** (158/180) across the two 90-question be
 ## Harness
 
 The pipeline is a structured state machine (`modal_app.py`, `VoiceRAG` class), not a single prompt-in/text-out call:
+
 - Explicit per-stage timing instrumentation on every request
 - Retry logic on STT network calls (`tenacity`)
 - Structured JSON I/O at every stage
@@ -100,10 +101,118 @@ modal deploy modal_app.py
 ```
 
 Benchmark against the live endpoint:
+
 ```bash
 python scripts/benchmark_90.py
 python scripts/benchmark_90_set2.py
 ```
+
+## API
+
+Base URL: `https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run`
+
+| Method | Route          | Purpose                                                |
+| ------ | -------------- | ------------------------------------------------------ |
+| `GET`  | `/`            | Serves the web UI                                      |
+| `GET`  | `/health`      | Status, index size, loaded models, supported languages |
+| `POST` | `/query`       | Text question → grounded answer                        |
+| `POST` | `/voice-query` | Audio file → transcript + grounded answer              |
+| `GET`  | `/debug-index` | Index diagnostics                                      |
+| `GET`  | `/debug-qa`    | Run extractive QA against a supplied query + context   |
+
+```bash
+BASE=https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run
+```
+
+### GET /health
+
+```bash
+curl $BASE/health
+```
+
+Returns index size, GPU availability, the loaded QA and embedding models, and the
+list of supported languages.
+
+### POST /query
+
+Accepts either a form field or a JSON body:
+
+```bash
+curl -X POST $BASE/query -F "query=हिरलूम टमाटर क्या है"
+
+curl -X POST $BASE/query \
+     -H "Content-Type: application/json" \
+     -d '{"query": "what is an heirloom tomato"}'
+```
+
+### POST /voice-query
+
+Multipart upload. `language_code` is optional — omit it to auto-detect.
+
+```bash
+curl -X POST $BASE/voice-query \
+     -F "file=@question.wav" \
+     -F "language_code=hi"
+```
+
+The response is identical to `/query`, plus the STT `transcript` and an
+additional `stt_ms` entry in `timings_ms`.
+
+### Response
+
+`sources` contains up to `TOP_K` retrieved chunks (default 10; one shown here).
+
+```json
+{
+  "query": "हिरलूम टमाटर क्या है",
+  "transcript": null,
+  "answer": "एक पुरानी किस्म जो खुले परागण से उगाई जाती है",
+  "sources": [
+    {
+      "text": "हिरलूम टमाटर एक पुरानी किस्म है ...",
+      "score": 0.82,
+      "lang": "hi",
+      "lang_name": "Hindi",
+      "strategy": "passage_native"
+    }
+  ],
+  "confidence": 0.41,
+  "grounded": true,
+  "guardrail_triggered": null,
+  "timings_ms": {
+    "embed_ms": 8.1,
+    "search_ms": 99.5,
+    "rerank_ms": 17.6,
+    "qa_ms": 18.0,
+    "total_ms": 143.2
+  },
+  "lang_detected": "hi"
+}
+```
+
+`nli_ms` appears only when the entailment check actually ran — it is skipped
+unless QA confidence falls in the ambiguous 0.15–0.35 band and the request is
+still inside its latency budget.
+
+### Declines
+
+When a guardrail fires, `grounded` is `false`, `confidence` is `0.0`, `sources`
+is empty, and `guardrail_triggered` names the reason:
+
+| Code                       | Meaning                                       |
+| -------------------------- | --------------------------------------------- |
+| `unsafe_input`             | Harmful request, refused before any retrieval |
+| `out_of_scope`             | Real-time or current-events question          |
+| `off_topic`                | No corpus match above the score threshold     |
+| `low_retrieval_confidence` | Retrieval scores too weak                     |
+| `low_qa_confidence`        | No confident answer span found                |
+| `low_answer_relevance`     | Extracted answer unrelated to the question    |
+| `script_mismatch`          | Answer script differs from the query script   |
+| `implausible_answer`       | Failed the domain plausibility check          |
+| `not_entailed`             | NLI entailment verification failed            |
+| `stt_failed`               | Audio could not be transcribed                |
+
+Note: errors return HTTP 200 with an `error` key rather than a 4xx/5xx status.
 
 ## Known limitations
 
