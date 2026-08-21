@@ -45,12 +45,6 @@ image = (
         "from transformers import AutoTokenizer, AutoModelForSequenceClassification; "
         "AutoTokenizer.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model'); "
         "AutoModelForSequenceClassification.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model')"
-        "\"",
-        # Bake Qwen2.5-0.5B-Instruct Mini-LLM into image
-        "python -c \""
-        "from transformers import AutoTokenizer, AutoModelForCausalLM; "
-        "AutoTokenizer.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct').save_pretrained('/models/qwen-0.5b'); "
-        "AutoModelForCausalLM.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct', torch_dtype='auto').save_pretrained('/models/qwen-0.5b')"
         "\""
     )
     .add_local_dir("frontend", remote_path="/root/frontend")
@@ -98,7 +92,7 @@ class MetadataStore:
 @app.cls(
     gpu="A10G",
     cpu=8.0,
-    memory=32768,
+    memory=16384,
     scaledown_window=420,
     min_containers=0,
     timeout=300,
@@ -192,25 +186,6 @@ class VoiceRAG:
         # Warmup pass
         self._check_entailment("Premise text for warmup.", "Warmup question?", "Warmup answer.")
         print("✅ NLI entailment model ready")
-
-        # ── Qwen2.5-0.5B-Instruct Mini-LLM ──
-        print("Loading Qwen2.5-0.5B-Instruct Mini-LLM onto CUDA GPU...")
-        from transformers import AutoModelForCausalLM
-        qwen_path = "/models/qwen-0.5b"
-        self.qwen_tokenizer = AutoTokenizer.from_pretrained(qwen_path)
-        self.qwen_model = AutoModelForCausalLM.from_pretrained(
-            qwen_path,
-            torch_dtype=torch.float16 if device == 0 else torch.float32,
-        )
-        if device == 0:
-            self.qwen_model = self.qwen_model.cuda()
-        self.qwen_model.eval()
-        # Warmup pass to prime CUDA KV-cache allocation
-        _warm_in = self.qwen_tokenizer(["Hello"], return_tensors="pt")
-        if device == 0: _warm_in = {k: v.cuda() for k, v in _warm_in.items()}
-        with torch.no_grad():
-            self.qwen_model.generate(**_warm_in, max_new_tokens=2)
-        print("✅ Qwen2.5-0.5B Mini-LLM ready")
 
         # Config from Modal secrets
         # modal secret create voice-rag-secrets SARVAM_API_KEY=<key> OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.25 MIN_ANSWER_RELEVANCE=0.20 TOP_K=10 RERANK_TOP_N=50
@@ -503,48 +478,6 @@ class VoiceRAG:
             best = {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": "", "lang": None}
 
         return best
-
-    def _generate_answer(self, query: str, chunks: list, lang: str | None = "en") -> dict:
-        import time, torch
-        t0 = time.perf_counter()
-        if not chunks:
-            return {"answer": "", "gen_ms": 0.0}
-
-        # Build clean bullet points from top 3 chunks
-        facts = "\n".join([f"- {c['text'].strip()}" for c in chunks[:3] if c.get("text")])
-        lang_map = {"hi": "Hindi (हिंदी)", "mr": "Marathi (मराठी)", "en": "English"}
-        target_lang = lang_map.get(lang, "English")
-
-        system_msg = (
-            f"You are VoxLore, a strict factual voice assistant. "
-            f"Answer the question in under 20 words in {target_lang} using ONLY the facts provided below. "
-            f"If the facts do not contain the answer, reply EXACTLY: 'I do not have sufficient information in the knowledge base.' "
-            f"Do NOT invent facts."
-        )
-
-        messages = [
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": f"Retrieved facts:\n{facts}\n\nQuestion: {query}\nConcise {target_lang} answer:"}
-        ]
-
-        text_input = self.qwen_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        inputs = self.qwen_tokenizer([text_input], return_tensors="pt")
-        if torch.cuda.is_available():
-            inputs = {k: v.cuda() for k, v in inputs.items()}
-
-        with torch.no_grad():
-            outputs = self.qwen_model.generate(
-                **inputs,
-                max_new_tokens=35,
-                do_sample=False,
-                temperature=0.0,
-                pad_token_id=self.qwen_tokenizer.eos_token_id,
-            )
-
-        gen_tokens = outputs[0][inputs["input_ids"].shape[1]:]
-        answer = self.qwen_tokenizer.decode(gen_tokens, skip_special_tokens=True).strip()
-        gen_ms = round((time.perf_counter() - t0) * 1000, 2)
-        return {"answer": answer, "gen_ms": gen_ms}
 
     # ── Retrieval ─────────────────────────────────────────────────────────────
 
@@ -1037,28 +970,11 @@ class VoiceRAG:
             # Ambiguous score but no time budget left -- log this so we can see how often it happens
             print(f"[NLI SKIPPED - TIME BUDGET] query={query!r} score={best['score']} elapsed={elapsed_so_far:.1f}ms")
 
-        # Natural Voice Answer Generation with Qwen2.5-0.5B-Instruct Mini-LLM
-        t_gen0 = time.perf_counter()
-        gen_res = self._generate_answer(query, chunks, lang=detected_lang)
-        timings["gen_ms"] = gen_res["gen_ms"]
-        
-        # Grounding & Fallback: Use Qwen2.5 fluent answer if valid and non-refusal
-        qwen_ans = gen_res["answer"].strip()
-        refusal_phrases = [
-            "i do not have sufficient information",
-            "not have sufficient information",
-            "knowledge base",
-            "पर्याप्त जानकारी नहीं",
-            "माहिती उपलब्ध नाही",
-        ]
-        is_refusal = any(p in qwen_ans.lower() for p in refusal_phrases)
-
-        if qwen_ans and not is_refusal and len(qwen_ans) > 2:
-            final_answer = qwen_ans
-        else:
-            final_answer = best["answer"]
-
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+
+        # With strict language isolation, answers should match query language.
+        # No cross-language attribution prefix needed.
+        final_answer = best["answer"]
 
         return {
             "query": query,
