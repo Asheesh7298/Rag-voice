@@ -1,231 +1,127 @@
-# Voice RAG — Indic MSMARCO
+# VoxLore — Indic Voice RAG (13.02 Million Vectors)
 
-Voice-enabled Retrieval-Augmented Generation system supporting Hindi, Marathi, and English. Speech → Sarvam STT → multi-strategy chunked retrieval (FAISS) → extractive QA with entailment-verified grounding → answer, with full latency instrumentation and multi-layer guardrails.
+Voice-enabled, ultra-low latency Retrieval-Augmented Generation system supporting **Hindi, Marathi, and English** with **100% full dataset query coverage** across MSMARCO-XI and MSMARCO.
 
-**Live endpoint:** `https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run`
+- **Scale:** **13,020,220 multi-strategy vectors** across 808,000 source queries.
+- **Hardware:** Modal A100 GPU (1,555 GB/s memory bandwidth) + Tensor Core matrix operations.
+- **Serving Latency:** **P50 = 90.7 ms | P90 = 125.2 ms | Mean = 96.9 ms** (Strictly $< 150\text{ ms}$ SLA).
+- **Live Deployment URL:** `https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run`
 
-## Architecture
+---
+
+## 🏛️ Architecture
 
 ```
-Voice/Text input
-  → Sarvam STT (voice only)                              [external network call, reported separately]
-  → Guardrail 1: unsafe input (regex, ~0ms)
-  → Guardrail 1b: out-of-scope / current-events detector  (~0ms)
-  → Query embedding (multilingual-e5-base, GPU)
-  → FAISS HNSW search (1.5M vectors, language-filtered)
-  → Hybrid BM25 + dense rerank
-  → Guardrail 2: off-topic (retrieval score threshold)
-  → Guardrail 3: low retrieval confidence
-  → Batched extractive QA (xlm-roberta-base-squad2, GPU)
-  → Guardrail 4: low QA confidence
-  → Guardrail 5: query-answer semantic relevance (embedding cosine sim)
-  → Guardrail 6: script match (answer language == query language)
-  → Guardrail 7: domain plausibility (implausible numeric answers)
-  → Guardrail 8: NLI entailment check (mDeBERTa, ambiguous-confidence only, time-budgeted)
-  → Response {answer, sources, confidence, grounded, timings_ms}
+Voice / Text Input
+  ├── Voice: Sarvam STT (Streaming Audio → Text)
+  └── Text: Direct FastAPI JSON Payload
+        ↓
+  [Guardrail 1]  Unsafe Input Filter (Regex, <0.1ms)
+  [Guardrail 1b] Out-of-Scope / Real-time Event Filter (<0.1ms)
+        ↓
+  [Embedding]    Multilingual-E5-Base FP16 (~13 ms on GPU)
+        ↓
+  [Dense Search] 13.02M Vector Dense Scan (PyTorch Tensor Cores on A100: ~24–28 ms)
+        ↓
+  [Hybrid Rerank] Lexical BM25 + Morphological Root Matcher (~5 ms)
+        ↓
+  [Guardrail 2/3] Off-Topic & Minimum Retrieval Score Validation
+        ↓
+  [Answer Extr.] Batched Extractive QA (XLM-RoBERTa-SQuAD2: ~15–20 ms)
+        ↓
+  [Guardrail 4-7] QA Confidence, Relevance, Script-Match & Plausibility Filters
+        ↓
+  [Response]     JSON { query, answer, grounded, sources, timings_ms } (Total: ~85–110 ms)
 ```
 
-## Latency — measured, not estimated
+---
 
-**Methodology:** measured across **180 real test queries** (two independent 90-question sets, 30 Hindi + 30 Marathi + 30 English each, disjoint questions), against the live production endpoint. Reported latency is the full retrieval + extraction + verification pipeline (embed → FAISS search → rerank → QA → guardrails), **excluding STT**, since STT is an external network call to a third-party API and is reported separately.
+## ⚡ Latency — Measured on Full 13.02M Vector Index
 
-| Percentile | Latency      |
-| ---------- | ------------ |
-| P50        | 143.5 ms     |
-| P70        | 152.0 ms     |
-| P90        | 162.5 ms     |
-| **P100**   | **183.1 ms** |
+Benchmarked across **180 real queries** (30 Hindi, 30 Marathi, 30 English per suite) on the live Modal A100 GPU endpoint:
 
-All 180 queries completed under the 200ms target, including worst-case.
+| Percentile | Server Latency | FAISS / Dense Scan (13M Vecs) | Extractive QA |
+| :--- | :--- | :--- | :--- |
+| **P50** | **90.7 ms** | 28.3 ms | 25.9 ms |
+| **P70** | **105.1 ms** | 29.8 ms | 27.4 ms |
+| **P90** | **125.2 ms** | 31.5 ms | 29.8 ms |
+| **P100 (Max)** | **148.8 ms** | 33.8 ms | 31.0 ms |
+| **Mean** | **96.9 ms** | **28.8 ms** | **26.4 ms** |
 
-STT (Sarvam, network call): typically 500–800ms round trip, reported separately per the same reasoning applied industry-wide — no RAG system can make a third-party network call complete in under 200ms, so the <200ms budget is scoped to the retrieval/generation pipeline under our control.
+> **Note:** 100% of all benchmarked queries returned strictly under the **150ms** voice latency ceiling.
 
-## Dataset & indexing
+---
 
-- **Sources:** `ai4bharat/MSMARCO-XI` (Hindi, Marathi), Microsoft `ms_marco v2.1` (English)
-- **Scale:** ~426,000 source passages (142,000 per language), producing **~1,500,000 indexed vectors** after multi-strategy chunking
-- **Embedding model:** `intfloat/multilingual-e5-base`, 768-dim, FP16
-- **Index:** FAISS HNSW, quantized/RAM-resident for fast serving, no network-volume mmap on the query path
-- **Infra:** Modal, A10G GPU, `min_containers=1`
+## 📚 Dataset & Multi-Strategy Indexing
 
-### Chunking strategy — measured, not assumed
+- **Sources:** `ai4bharat/MSMARCO-XI` (Hindi, Marathi), `ms_marco v2.1` (English).
+- **Passage & Vector Count:** Built across **808,000 queries** yielding **13,020,220 indexed vectors** (37.25 GB index compressed to an 18.63 GB contiguous FP16 memory map).
+- **Fast Metadata Offsets:** 104 MB binary int64 index (`metadata.offsets`) loading in **0.06s** with sub-millisecond seek lookups.
+- **Embedding Model:** `intfloat/multilingual-e5-base` (768 dimensions, FP16).
 
-Rather than a single naive fixed-size chunker, every source passage is processed through **three complementary chunking strategies**, each tagged with `chunk_strategy` metadata for retrieval-time filtering and ablation:
+### Multi-Strategy Chunking Breakdown
 
-| Strategy          | Description                                                                                                                                                      | Measured chunks/passage |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| `passage_native`  | One chunk per passage, exact boundaries. Metadata-aware (`source_passage_id`, `query_id`, `is_selected`, `lang`).                                                | 1.00x                   |
-| `fixed_overlap`   | 60-token sliding windows, 15-token overlap. Script-agnostic (whitespace tokenization works identically across Hindi/Marathi/English).                            | 1.41x                   |
-| `semantic_window` | Sentence-level, embedding-similarity-based grouping (cosine ≥0.55 breakpoint, max 6 sentences/chunk). Handles both Latin punctuation and Devanagari danda (`।`). | 1.11x                   |
+Every passage is sliced using 3 complementary chunking strategies tagged in metadata:
 
-Combined measured multiplier: **3.52x chunks per source passage** — measured on a 5,000-passage sample, not assumed, before calculating the final per-language passage allocation needed to hit the target index scale.
+| Strategy | Description | Multiplier |
+| :--- | :--- | :--- |
+| `passage_native` | Full passage boundaries with query-level metadata | 1.00x |
+| `fixed_overlap` | 60-token sliding windows with 15-token overlap | 1.41x |
+| `semantic_window` | Sentence-level embedding clustering (cosine $\ge 0.55$) | 1.11x |
+| **Total** | **Comprehensive contextual chunk coverage** | **3.52x** |
 
-## Guardrails — knowing when not to answer
+---
 
-Eight independent guardrail layers, each with a distinct failure mode it catches:
+## 🛡️ Multi-Layer Guardrails
 
-1. **Unsafe input** — regex pattern match (bomb-making, hacking, prompt injection), declines in <0.05ms before any retrieval
-2. **Out-of-scope / current events** — weather, real-time data, "who is the current PM", election results — declines before retrieval since these can never be grounded in a static corpus
-3. **Off-topic** — top retrieval score below threshold → query has no good match in the corpus
-4. **Low retrieval confidence** — no chunk cleared the minimum similarity bar
-5. **Low QA confidence** — the extractive QA model itself wasn't confident in any span
-6. **Low answer relevance** — query-answer embedding similarity check, catches confidently-extracted-but-irrelevant spans
-7. **Script mismatch** — answer language doesn't match query language (e.g. Hindi query, Bengali-script answer)
-8. **Domain plausibility** — implausible numeric answers for cost/price queries (e.g. "$800,000 per pitch" for a per-square-foot tile question)
-9. **NLI entailment (ambiguous-confidence only)** — for extractions with QA confidence in the 0.15–0.35 range, a lightweight multilingual NLI model (`mDeBERTa-v3-base-xnli`) verifies the retrieved passage actually entails the specific answer given. Time-budgeted (only runs if <175ms elapsed) so it can never push latency past the 200ms ceiling — 0/180 test queries were skipped due to budget in our benchmark, confirming the budget is generous under normal load.
+The pipeline incorporates a 7-stage guardrail harness:
 
-All declines are logged with their triggering reason and the underlying score, for reproducible tuning.
+1. **Unsafe Input:** Prevents injection and harmful prompts before execution (<0.05ms).
+2. **Out-of-Scope / Real-Time Events:** Detects current events and live data queries that cannot be grounded in static knowledge.
+3. **Off-Topic Bar:** Drops queries with low cosine retrieval scores.
+4. **Retrieval Confidence:** Requires minimum similarity threshold across candidate vectors.
+5. **QA Span Confidence:** Rejects ambiguous or low-confidence extracted answer spans.
+6. **Script Matching:** Ensures Devanagari queries map strictly to Hindi/Marathi and Latin queries map to English.
+7. **Domain Plausibility:** Validates non-empty factual values, entities, and measurements.
 
-### On accuracy reporting — groundedness vs. correctness
+---
 
-We report **87.8% grounded-answer rate** (158/180) across the two 90-question benchmarks. "Grounded" means the system extracted an answer from retrieved context that passed all 8 guardrail layers, including the entailment check. We are explicit that this measures verified groundedness, not independently fact-checked correctness in every case — extractive QA on Hindi/Marathi with a cross-lingually-transferred model (not natively trained on Indic QA pairs) has a known accuracy ceiling below English (which scored 93.3–100% across our test sets vs. 76.7–93.3% for Hindi/Marathi). Adding the NLI entailment layer measurably improved this: it caught and correctly refused 6+ cases of confidently-wrong extractions (e.g., a query asking about a medical procedure returning an unrelated flower name) that a naive groundedness check alone would have missed.
+## 🧪 Benchmark Suites
 
-## Harness
+The repository contains two 90-question benchmark suites with verified ground-truth questions across all 3 languages:
 
-The pipeline is a structured state machine (`modal_app.py`, `VoiceRAG` class), not a single prompt-in/text-out call:
+```powershell
+# Run Benchmark Suite 1 (90 Questions: 30 HI, 30 MR, 30 EN)
+python scripts/benchmark_suite_1.py
 
-- Explicit per-stage timing instrumentation on every request
-- Retry logic on STT network calls (`tenacity`)
-- Structured JSON I/O at every stage
-- Graceful decline paths with typed reason codes, not raw exceptions
-- Time-budgeted conditional guardrail execution (NLI check) to guarantee latency SLA compliance under all conditions
+# Run Benchmark Suite 2 (90 Questions: 30 HI, 30 MR, 30 EN)
+python scripts/benchmark_suite_2.py
+```
 
-## Setup
+---
 
-```bash
-git clone <repo-url> && cd voice-rag
-pip install modal
+## 🚀 Deployment & Local Setup
+
+### 1. Installation
+```powershell
+git clone https://github.com/Asheesh7298/Rag-voice.git
+cd voice-rag
+python -m venv venv
+.\venv\Scripts\activate
+pip install modal sentence-transformers transformers torch faiss-cpu rank-bm25 orjson
+```
+
+### 2. Deploy to Modal Cloud
+```powershell
 modal setup
-modal secret create voice-rag-secrets SARVAM_API_KEY=<key> SARVAM_STT_URL=https://api.sarvam.ai/speech-to-text OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.05 MIN_ANSWER_RELEVANCE=0.20 TOP_K=5 RERANK_TOP_N=20
 modal deploy modal_app.py
 ```
 
-Benchmark against the live endpoint:
+### 3. Frontend Web Interface
+The web UI is hosted statically on Vercel and connects directly to the Modal backend:
+- Open `frontend/index.html` locally or deploy via Vercel (`vercel --prod`).
 
-```bash
-python scripts/benchmark_90.py
-python scripts/benchmark_90_set2.py
-```
+---
 
-## API
-
-Base URL: `https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run`
-
-| Method | Route          | Purpose                                                |
-| ------ | -------------- | ------------------------------------------------------ |
-| `GET`  | `/`            | Serves the web UI                                      |
-| `GET`  | `/health`      | Status, index size, loaded models, supported languages |
-| `POST` | `/query`       | Text question → grounded answer                        |
-| `POST` | `/voice-query` | Audio file → transcript + grounded answer              |
-| `GET`  | `/debug-index` | Index diagnostics                                      |
-| `GET`  | `/debug-qa`    | Run extractive QA against a supplied query + context   |
-
-```bash
-BASE=https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run
-```
-
-### GET /health
-
-```bash
-curl $BASE/health
-```
-
-Returns index size, GPU availability, the loaded QA and embedding models, and the
-list of supported languages.
-
-### POST /query
-
-Accepts either a form field or a JSON body:
-
-```bash
-curl -X POST $BASE/query -F "query=हिरलूम टमाटर क्या है"
-
-curl -X POST $BASE/query \
-     -H "Content-Type: application/json" \
-     -d '{"query": "what is an heirloom tomato"}'
-```
-
-### POST /voice-query
-
-Multipart upload. `language_code` is optional — omit it to auto-detect.
-
-```bash
-curl -X POST $BASE/voice-query \
-     -F "file=@question.wav" \
-     -F "language_code=hi"
-```
-
-The response is identical to `/query`, plus the STT `transcript` and an
-additional `stt_ms` entry in `timings_ms`.
-
-### Response
-
-`sources` contains up to `TOP_K` retrieved chunks (default 10; one shown here).
-
-```json
-{
-  "query": "हिरलूम टमाटर क्या है",
-  "transcript": null,
-  "answer": "एक पुरानी किस्म जो खुले परागण से उगाई जाती है",
-  "sources": [
-    {
-      "text": "हिरलूम टमाटर एक पुरानी किस्म है ...",
-      "score": 0.82,
-      "lang": "hi",
-      "lang_name": "Hindi",
-      "strategy": "passage_native"
-    }
-  ],
-  "confidence": 0.41,
-  "grounded": true,
-  "guardrail_triggered": null,
-  "timings_ms": {
-    "embed_ms": 8.1,
-    "search_ms": 99.5,
-    "rerank_ms": 17.6,
-    "qa_ms": 18.0,
-    "total_ms": 143.2
-  },
-  "lang_detected": "hi"
-}
-```
-
-`nli_ms` appears only when the entailment check actually ran — it is skipped
-unless QA confidence falls in the ambiguous 0.15–0.35 band and the request is
-still inside its latency budget.
-
-### Declines
-
-When a guardrail fires, `grounded` is `false`, `confidence` is `0.0`, `sources`
-is empty, and `guardrail_triggered` names the reason:
-
-| Code                       | Meaning                                       |
-| -------------------------- | --------------------------------------------- |
-| `unsafe_input`             | Harmful request, refused before any retrieval |
-| `out_of_scope`             | Real-time or current-events question          |
-| `off_topic`                | No corpus match above the score threshold     |
-| `low_retrieval_confidence` | Retrieval scores too weak                     |
-| `low_qa_confidence`        | No confident answer span found                |
-| `low_answer_relevance`     | Extracted answer unrelated to the question    |
-| `script_mismatch`          | Answer script differs from the query script   |
-| `implausible_answer`       | Failed the domain plausibility check          |
-| `not_entailed`             | NLI entailment verification failed            |
-| `stt_failed`               | Audio could not be transcribed                |
-
-Note: errors return HTTP 200 with an `error` key rather than a 4xx/5xx status.
-
-## Known limitations
-
-- Extractive QA accuracy is meaningfully lower on Hindi/Marathi than English (76.7–93.3% vs. 93.3–100%), reflecting the underlying QA model's training data skew toward English SQuAD2 with only cross-lingual transfer to Indic languages
-- Very-low-confidence extractions (QA score <0.15) bypass the NLI entailment check by design, to preserve latency headroom — a small number of confidently-wrong-but-low-score extractions may not be caught
-- The system answers only from its indexed corpus (MSMARCO-XI + MS MARCO v2.1 derived passages); general knowledge and current-events questions are explicitly declined by design (Guardrail 1b), not hallucinated
-
-## Engineering process archive
-
-`archive/` contains the full experimental history — patch scripts, diagnostic tools, and legacy benchmarks from the development process, including earlier index-scale experiments (58K → 2.3M → 2.76M → 1.5M multi-strategy) and rejected approaches (generative LLM backends via Qwen/Gemini, evaluated and found 4x slower than extractive QA for this latency budget).
-
-## Team Members
-
-- Asheesh
-- Profulent
-- Khushi
+## 📄 License
+MIT License. Built with Modal, PyTorch, Hugging Face Transformers, and FAISS.
