@@ -1149,20 +1149,23 @@
             <div class="user-avatar-circle">V</div>
             <div class="user-text-info">
               <span class="user-app-name">VoxLore</span>
-              <span class="user-app-sub">13.0M Vectors · Qwen2.5 · Modal A10G</span>
+              <span class="user-app-sub">13.02M Vectors · Modal A100 GPU</span>
             </div>
           </div>
 
           <div class="header-actions">
+            <a href="presentation.html" target="_blank" class="btn-header-action" style="text-decoration:none; background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.45); font-weight:700;" title="View Architecture & Data Flow Presentation">
+              <span>📊</span> Architecture
+            </a>
             <button class="btn-header-action" onclick="resetChat()" title="Reset to starter prompts">
               <span>↺</span> New
             </button>
             <button id="btnHeaderLatency" class="btn-header-action" onclick="openLatestTelemetry()" title="View latency breakdown for current message" style="background:rgba(255,255,255,0.22); border-color:rgba(255,255,255,0.4); font-weight:700;">
               <span>⚡</span> <span id="headerLatencyText">Latency Breakdown</span>
             </button>
-            <div class="sla-pill" onclick="openLatestTelemetry()" title="Sub-200ms SLA Verified" style="cursor:pointer;">
+            <div class="sla-pill" onclick="openLatestTelemetry()" title="Sub-150ms SLA Verified" style="cursor:pointer;">
               <div id="slaDot" class="sla-dot"></div>
-              <span id="slaText">&lt; 200ms SLA</span>
+              <span id="slaText">&lt; 150ms SLA</span>
             </div>
           </div>
 
@@ -1173,7 +1176,7 @@
       <div id="coldStartBanner" class="cold-start-banner">
         <div class="cold-start-left">
           <div id="coldStartSpinner" class="cold-start-spinner"></div>
-          <span id="coldStartText">🔄 Waking up Modal A10G GPU &amp; loading 13.0M vector index... (~15s cold start)</span>
+          <span id="coldStartText">🔄 Waking up Modal A100 GPU &amp; loading 13.02M vector index... (~14s cold start)</span>
         </div>
         <span style="cursor:pointer; opacity:0.6;" onclick="document.getElementById('coldStartBanner').style.display='none'">✕</span>
       </div>
