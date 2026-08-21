@@ -38,6 +38,13 @@ image = (
         "from transformers import AutoTokenizer, AutoModelForQuestionAnswering; "
         "AutoTokenizer.from_pretrained('deepset/xlm-roberta-base-squad2').save_pretrained('/models/qa-model'); "
         "AutoModelForQuestionAnswering.from_pretrained('deepset/xlm-roberta-base-squad2').save_pretrained('/models/qa-model')"
+        "\"",
+        # Bake NLI entailment model into image at build time
+        # MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7
+        "python -c \""
+        "from transformers import AutoTokenizer, AutoModelForSequenceClassification; "
+        "AutoTokenizer.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model'); "
+        "AutoModelForSequenceClassification.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model')"
         "\""
     )
     .add_local_dir("frontend", remote_path="/root/frontend")
@@ -86,8 +93,8 @@ class MetadataStore:
     gpu="A10G",
     cpu=8.0,
     memory=16384,
-    scaledown_window=300,
-    min_containers=1,
+    scaledown_window=420,
+    min_containers=0,
     timeout=300,
     volumes={"/index": volume},
 )
@@ -98,7 +105,7 @@ class VoiceRAG:
         import os, torch, shutil, time
         from sentence_transformers import SentenceTransformer
         from transformers import (
-            AutoTokenizer, AutoModelForQuestionAnswering, pipeline
+            AutoTokenizer, AutoModelForQuestionAnswering, AutoModelForSequenceClassification, pipeline
         )
         import faiss, json
 
@@ -155,6 +162,19 @@ class VoiceRAG:
         # Warmup pass to absorb JIT cost and cuda memory allocation
         self._extract_best_answer("warmup question", [{"text": "warmup context 1"}, {"text": "warmup context 2"}, {"text": "warmup context 3"}, {"text": "warmup context 4"}])
         print("✅ Extractive QA model ready")
+
+        # ── NLI Entailment model (MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7) ──
+        print("Loading NLI entailment model...")
+        nli_path = "/models/nli-model"
+        self.nli_tokenizer = AutoTokenizer.from_pretrained(nli_path)
+        self.nli_model = AutoModelForSequenceClassification.from_pretrained(nli_path)
+        if device == 0:
+            self.nli_model = self.nli_model.cuda()
+        self.nli_model.eval()
+        self.nli_device = device
+        # Warmup pass
+        self._check_entailment("Premise text for warmup.", "Warmup question?", "Warmup answer.")
+        print("✅ NLI entailment model ready")
 
         # Config from Modal secrets
         # modal secret create voice-rag-secrets SARVAM_API_KEY=<key> OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.25 MIN_ANSWER_RELEVANCE=0.20 TOP_K=10 RERANK_TOP_N=50
@@ -788,6 +808,32 @@ class VoiceRAG:
 
         return True
 
+    # ── NLI Entailment Check ──────────────────────────────────────────────────
+
+    def _check_entailment(self, premise: str, query: str, answer: str) -> float:
+        """
+        Check contextual entailment of the extracted answer given the source premise.
+        Uses mDeBERTa-v3 multilingual NLI. Capped at 128 max tokens for sub-20ms inference.
+        """
+        import torch
+        if not premise or not answer:
+            return 0.0
+        hypothesis = f"{query} {answer}".strip()
+        inputs = self.nli_tokenizer(
+            premise,
+            hypothesis,
+            truncation=True,
+            max_length=128,
+            return_tensors="pt"
+        )
+        if getattr(self, "nli_device", -1) == 0:
+            inputs = {k: v.cuda() for k, v in inputs.items()}
+        with torch.no_grad():
+            outputs = self.nli_model(**inputs)
+            probs = torch.softmax(outputs.logits, dim=-1)[0]
+        ent_idx = self.nli_model.config.label2id.get("entailment", 0)
+        return float(probs[ent_idx].item())
+
     # ── Decline helper ────────────────────────────────────────────────────────
 
     def _decline(self, query, reason, timings, transcript=None, debug_score=None):
@@ -802,6 +848,7 @@ class VoiceRAG:
             "low_answer_relevance":   "The retrieved context doesn't appear relevant to your question.",
             "script_mismatch":        "The extracted answer was in a different script than your question.",
             "implausible_answer":     "The extracted answer failed domain plausibility checks.",
+            "not_entailed":           "The extracted answer could not be verified by contextual entailment.",
             "stt_failed":             "Couldn't transcribe audio -- please retry.",
         }
         return {
@@ -882,6 +929,25 @@ class VoiceRAG:
         if not self._is_plausible_answer(query, best["answer"], source_text):
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "implausible_answer", timings)
+
+        # Guardrail 8 — NLI Entailment with strict latency budget
+        NLI_CHECK_MIN = 0.15
+        NLI_CHECK_MAX = 0.35
+        TIME_BUDGET_CEILING = 175.0  # ms -- leave 15ms safety margin under 190ms
+
+        elapsed_so_far = (time.perf_counter() - t_start) * 1000  # ms
+        if NLI_CHECK_MIN <= best["score"] <= NLI_CHECK_MAX and elapsed_so_far < TIME_BUDGET_CEILING:
+            t_nli_start = time.perf_counter()
+            entailment_score = self._check_entailment(best.get("source_text", ""), query, best["answer"])
+            nli_ms = (time.perf_counter() - t_nli_start) * 1000
+            timings["nli_ms"] = round(nli_ms, 2)
+            print(f"[NLI CHECK] query={query!r} score={best['score']:.4f} entailment={entailment_score:.4f} nli_ms={nli_ms:.1f}ms")
+            if entailment_score < 0.3:
+                timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
+                return self._decline(query, "not_entailed", timings, debug_score=entailment_score)
+        elif NLI_CHECK_MIN <= best["score"] <= NLI_CHECK_MAX:
+            # Ambiguous score but no time budget left -- log this so we can see how often it happens
+            print(f"[NLI SKIPPED - TIME BUDGET] query={query!r} score={best['score']} elapsed={elapsed_so_far:.1f}ms")
 
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 

@@ -1,14 +1,14 @@
 {
-  "overall_accuracy": 90.0,
-  "total_correct": 81,
+  "overall_accuracy": 83.33333333333334,
+  "total_correct": 75,
   "total_queries": 90,
-  "p50_total_ms": 147.2,
-  "p70_total_ms": 151.29,
-  "p90_total_ms": 160.71,
-  "p100_total_ms": 202.97,
-  "mean_total_ms": 148.78088888888888,
-  "p50_search_ms": 102.24,
-  "p50_qa_ms": 18.71,
+  "p50_total_ms": 145.59,
+  "p70_total_ms": 153.02,
+  "p90_total_ms": 163.25,
+  "p100_total_ms": 178.44,
+  "mean_total_ms": 146.7751111111111,
+  "p50_search_ms": 96.02,
+  "p50_qa_ms": 18.35,
   "results": [
     {
       "lang": "hi",
@@ -19,13 +19,13 @@
       "guardrail": null,
       "confidence": 0.3584,
       "timings_ms": {
-        "embed_ms": 11.09,
-        "search_ms": 102.94,
-        "rerank_ms": 2.07,
-        "total_ms": 144.67,
-        "qa_ms": 18.58
+        "embed_ms": 10.98,
+        "search_ms": 95.28,
+        "rerank_ms": 2.04,
+        "total_ms": 136.87,
+        "qa_ms": 17.83
       },
-      "client_ms": 1831.273499999952,
+      "client_ms": 1449.0719999994326,
       "success": true
     },
     {
@@ -37,13 +37,13 @@
       "guardrail": null,
       "confidence": 0.3503,
       "timings_ms": {
-        "embed_ms": 11.5,
-        "search_ms": 99.58,
-        "rerank_ms": 3.73,
-        "total_ms": 153.84,
-        "qa_ms": 28.81
+        "embed_ms": 11.05,
+        "search_ms": 98.83,
+        "rerank_ms": 3.72,
+        "total_ms": 153.02,
+        "qa_ms": 29.19
       },
-      "client_ms": 1262.6597000000856,
+      "client_ms": 1214.5745000016177,
       "success": true
     },
     {
@@ -55,13 +55,13 @@
       "guardrail": null,
       "confidence": 0.7382,
       "timings_ms": {
-        "embed_ms": 11.35,
-        "search_ms": 102.06,
-        "rerank_ms": 4.05,
-        "total_ms": 150.66,
-        "qa_ms": 22.06
+        "embed_ms": 11.52,
+        "search_ms": 91.84,
+        "rerank_ms": 3.99,
+        "total_ms": 137.57,
+        "qa_ms": 20.66
       },
-      "client_ms": 1214.4990000001599,
+      "client_ms": 1342.1123000007356,
       "success": true
     },
     {
@@ -73,13 +73,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.34,
-        "search_ms": 103.52,
+        "embed_ms": 11.97,
+        "search_ms": 97.76,
         "rerank_ms": 3.65,
-        "total_ms": 135.87,
-        "qa_ms": 17.12
+        "total_ms": 130.58,
+        "qa_ms": 17.03
       },
-      "client_ms": 1192.8038999999444,
+      "client_ms": 1223.1714999979886,
       "success": true
     },
     {
@@ -91,13 +91,14 @@
       "guardrail": null,
       "confidence": 0.1579,
       "timings_ms": {
-        "embed_ms": 11.35,
-        "search_ms": 99.1,
+        "embed_ms": 11.68,
+        "search_ms": 97.78,
         "rerank_ms": 4.54,
-        "total_ms": 147.4,
-        "qa_ms": 22.25
+        "total_ms": 163.49,
+        "qa_ms": 22.6,
+        "nli_ms": 16.5
       },
-      "client_ms": 1547.1747999999934,
+      "client_ms": 1727.477500000532,
       "success": true
     },
     {
@@ -109,13 +110,13 @@
       "guardrail": null,
       "confidence": 0.1488,
       "timings_ms": {
-        "embed_ms": 11.58,
-        "search_ms": 107.41,
-        "rerank_ms": 3.25,
-        "total_ms": 161.28,
-        "qa_ms": 28.03
+        "embed_ms": 10.59,
+        "search_ms": 96.67,
+        "rerank_ms": 3.2,
+        "total_ms": 147.7,
+        "qa_ms": 27.43
       },
-      "client_ms": 1609.8971999999776,
+      "client_ms": 1637.8091999977187,
       "success": true
     },
     {
@@ -127,13 +128,13 @@
       "guardrail": null,
       "confidence": 0.0653,
       "timings_ms": {
-        "embed_ms": 11.43,
-        "search_ms": 104.43,
-        "rerank_ms": 4.69,
-        "total_ms": 150.1,
-        "qa_ms": 19.08
+        "embed_ms": 10.48,
+        "search_ms": 90.91,
+        "rerank_ms": 4.64,
+        "total_ms": 135.17,
+        "qa_ms": 18.5
       },
-      "client_ms": 1218.582200000128,
+      "client_ms": 1334.7450000001118,
       "success": true
     },
     {
@@ -145,13 +146,13 @@
       "guardrail": null,
       "confidence": 0.1374,
       "timings_ms": {
-        "embed_ms": 11.32,
-        "search_ms": 102.63,
-        "rerank_ms": 3.89,
-        "total_ms": 145.56,
-        "qa_ms": 17.17
+        "embed_ms": 11.41,
+        "search_ms": 94.31,
+        "rerank_ms": 3.79,
+        "total_ms": 135.75,
+        "qa_ms": 16.59
       },
-      "client_ms": 1272.1842000000834,
+      "client_ms": 1430.6537999982538,
       "success": true
     },
     {
@@ -163,13 +164,13 @@
       "guardrail": null,
       "confidence": 0.0614,
       "timings_ms": {
-        "embed_ms": 11.3,
-        "search_ms": 114.46,
-        "rerank_ms": 3.07,
-        "total_ms": 164.07,
-        "qa_ms": 24.12
+        "embed_ms": 10.6,
+        "search_ms": 97.7,
+        "rerank_ms": 3.06,
+        "total_ms": 145.45,
+        "qa_ms": 23.3
       },
-      "client_ms": 1547.1772999999303,
+      "client_ms": 1446.423199999117,
       "success": true
     },
     {
@@ -181,13 +182,14 @@
       "guardrail": null,
       "confidence": 0.309,
       "timings_ms": {
-        "embed_ms": 11.4,
-        "search_ms": 106.77,
-        "rerank_ms": 3.34,
-        "total_ms": 149.3,
-        "qa_ms": 17.16
+        "embed_ms": 11.52,
+        "search_ms": 90.67,
+        "rerank_ms": 3.36,
+        "total_ms": 149.78,
+        "qa_ms": 17.34,
+        "nli_ms": 16.67
       },
-      "client_ms": 1416.7159999999512,
+      "client_ms": 1318.4338999999454,
       "success": true
     },
     {
@@ -199,13 +201,14 @@
       "guardrail": null,
       "confidence": 0.2968,
       "timings_ms": {
-        "embed_ms": 11.22,
-        "search_ms": 104.76,
-        "rerank_ms": 7.1,
-        "total_ms": 148.88,
-        "qa_ms": 14.85
+        "embed_ms": 11.46,
+        "search_ms": 93.78,
+        "rerank_ms": 7.28,
+        "total_ms": 154.13,
+        "qa_ms": 15.25,
+        "nli_ms": 16.01
       },
-      "client_ms": 1265.9743000001527,
+      "client_ms": 1329.6692000003532,
       "success": true
     },
     {
@@ -217,13 +220,13 @@
       "guardrail": null,
       "confidence": 0.4943,
       "timings_ms": {
-        "embed_ms": 11.17,
-        "search_ms": 99.41,
-        "rerank_ms": 3.97,
-        "total_ms": 143.76,
-        "qa_ms": 18.47
+        "embed_ms": 10.8,
+        "search_ms": 96.81,
+        "rerank_ms": 3.96,
+        "total_ms": 140.6,
+        "qa_ms": 18.85
       },
-      "client_ms": 1509.4540000000052,
+      "client_ms": 1641.5053000018816,
       "success": true
     },
     {
@@ -235,13 +238,13 @@
       "guardrail": null,
       "confidence": 0.0757,
       "timings_ms": {
-        "embed_ms": 11.04,
-        "search_ms": 93.91,
-        "rerank_ms": 3.38,
-        "total_ms": 142.37,
-        "qa_ms": 23.18
+        "embed_ms": 11.22,
+        "search_ms": 96.17,
+        "rerank_ms": 3.45,
+        "total_ms": 143.9,
+        "qa_ms": 23.17
       },
-      "client_ms": 1243.7548000000334,
+      "client_ms": 1332.3691000005056,
       "success": true
     },
     {
@@ -253,13 +256,13 @@
       "guardrail": null,
       "confidence": 0.4947,
       "timings_ms": {
-        "embed_ms": 11.07,
-        "search_ms": 102.24,
-        "rerank_ms": 4.22,
-        "total_ms": 145.11,
-        "qa_ms": 17.32
+        "embed_ms": 11.28,
+        "search_ms": 100.46,
+        "rerank_ms": 4.47,
+        "total_ms": 142.78,
+        "qa_ms": 16.71
       },
-      "client_ms": 1182.548499999939,
+      "client_ms": 1228.78320000018,
       "success": true
     },
     {
@@ -271,13 +274,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 98.88,
-        "rerank_ms": 3.55,
-        "total_ms": 129.99,
-        "qa_ms": 16.3
+        "embed_ms": 11.56,
+        "search_ms": 93.98,
+        "rerank_ms": 3.59,
+        "total_ms": 125.57,
+        "qa_ms": 16.28
       },
-      "client_ms": 1211.3742999999886,
+      "client_ms": 1326.7859000006865,
       "success": true
     },
     {
@@ -289,13 +292,13 @@
       "guardrail": null,
       "confidence": 0.4016,
       "timings_ms": {
-        "embed_ms": 11.75,
-        "search_ms": 100.57,
-        "rerank_ms": 2.63,
-        "total_ms": 151.35,
-        "qa_ms": 25.61
+        "embed_ms": 10.7,
+        "search_ms": 98.89,
+        "rerank_ms": 2.64,
+        "total_ms": 147.35,
+        "qa_ms": 25.39
       },
-      "client_ms": 1207.3613000000023,
+      "client_ms": 1331.5929999989748,
       "success": true
     },
     {
@@ -303,17 +306,18 @@
       "id": "hi-1072556-p2-native",
       "query": "मोना लिसा सबसे प्रसिद्ध चित्र क्यों है",
       "ground_truth": "मोना लिसा की मुस्कान।",
-      "answer": "कोई भी निश्चित रूप से नहीं जानता था कि पेंटिंग मोना लिसा इतनी प्रसिद्ध और प्रसिद्ध क्यों है।",
-      "guardrail": null,
-      "confidence": 0.1576,
+      "answer": "The extracted answer could not be verified by contextual entailment.",
+      "guardrail": "not_entailed",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.69,
-        "search_ms": 97.11,
-        "rerank_ms": 2.7,
-        "total_ms": 136.71,
-        "qa_ms": 14.95
+        "embed_ms": 10.77,
+        "search_ms": 97.06,
+        "rerank_ms": 2.74,
+        "total_ms": 152.7,
+        "qa_ms": 14.42,
+        "nli_ms": 16.86
       },
-      "client_ms": 1201.831699999957,
+      "client_ms": 1330.2500000027067,
       "success": true
     },
     {
@@ -321,17 +325,18 @@
       "id": "hi-1011876-p6-native",
       "query": "जो कि मजबूत पर्कोसेट या लोर्टैब है",
       "ground_truth": "परकोसेट",
-      "answer": "परकोसेट को लॉर्टैब से अधिक मजबूत माना जाता है।",
-      "guardrail": null,
-      "confidence": 0.2208,
+      "answer": "The extracted answer could not be verified by contextual entailment.",
+      "guardrail": "not_entailed",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.29,
-        "search_ms": 97.44,
-        "rerank_ms": 2.17,
-        "total_ms": 139.76,
-        "qa_ms": 17.98
+        "embed_ms": 11.32,
+        "search_ms": 93.13,
+        "rerank_ms": 2.2,
+        "total_ms": 152.11,
+        "qa_ms": 17.7,
+        "nli_ms": 16.93
       },
-      "client_ms": 1189.5795000000362,
+      "client_ms": 1332.3543999977119,
       "success": true
     },
     {
@@ -343,13 +348,14 @@
       "guardrail": null,
       "confidence": 0.1521,
       "timings_ms": {
-        "embed_ms": 11.24,
-        "search_ms": 97.17,
-        "rerank_ms": 3.59,
-        "total_ms": 138.91,
-        "qa_ms": 16.63
+        "embed_ms": 11.55,
+        "search_ms": 93.94,
+        "rerank_ms": 3.63,
+        "total_ms": 151.74,
+        "qa_ms": 16.67,
+        "nli_ms": 15.97
       },
-      "client_ms": 1214.2827000000125,
+      "client_ms": 1334.0810000008787,
       "success": true
     },
     {
@@ -361,13 +367,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.82,
-        "search_ms": 99.25,
-        "rerank_ms": 2.81,
-        "total_ms": 128.15,
-        "qa_ms": 14.03
+        "embed_ms": 10.77,
+        "search_ms": 93.99,
+        "rerank_ms": 2.77,
+        "total_ms": 121.72,
+        "qa_ms": 14.02
       },
-      "client_ms": 1187.9831999999624,
+      "client_ms": 1330.1747999976214,
       "success": true
     },
     {
@@ -379,13 +385,13 @@
       "guardrail": null,
       "confidence": 0.4562,
       "timings_ms": {
-        "embed_ms": 11.51,
-        "search_ms": 100.98,
-        "rerank_ms": 3.29,
-        "total_ms": 143.22,
-        "qa_ms": 16.93
+        "embed_ms": 11.4,
+        "search_ms": 95.05,
+        "rerank_ms": 3.41,
+        "total_ms": 136.33,
+        "qa_ms": 16.47
       },
-      "client_ms": 1210.3157999999894,
+      "client_ms": 1328.3354999985022,
       "success": true
     },
     {
@@ -397,13 +403,13 @@
       "guardrail": null,
       "confidence": 0.9239,
       "timings_ms": {
-        "embed_ms": 11.22,
-        "search_ms": 96.74,
-        "rerank_ms": 3.18,
-        "total_ms": 144.09,
-        "qa_ms": 22.58
+        "embed_ms": 11.89,
+        "search_ms": 91.18,
+        "rerank_ms": 3.28,
+        "total_ms": 138.18,
+        "qa_ms": 22.05
       },
-      "client_ms": 1202.8897000000143,
+      "client_ms": 1335.1256999994803,
       "success": true
     },
     {
@@ -415,13 +421,13 @@
       "guardrail": null,
       "confidence": 0.1377,
       "timings_ms": {
-        "embed_ms": 11.28,
-        "search_ms": 103.06,
-        "rerank_ms": 2.96,
-        "total_ms": 151.21,
-        "qa_ms": 23.16
+        "embed_ms": 11.84,
+        "search_ms": 96.74,
+        "rerank_ms": 2.86,
+        "total_ms": 145.31,
+        "qa_ms": 23.12
       },
-      "client_ms": 1201.3308999999026,
+      "client_ms": 1341.295900001569,
       "success": true
     },
     {
@@ -433,13 +439,13 @@
       "guardrail": null,
       "confidence": 0.4354,
       "timings_ms": {
-        "embed_ms": 11.54,
-        "search_ms": 106.0,
-        "rerank_ms": 3.48,
-        "total_ms": 150.12,
-        "qa_ms": 18.56
+        "embed_ms": 10.93,
+        "search_ms": 96.02,
+        "rerank_ms": 3.46,
+        "total_ms": 139.39,
+        "qa_ms": 18.24
       },
-      "client_ms": 1274.7148999999354,
+      "client_ms": 1317.983599998115,
       "success": true
     },
     {
@@ -451,13 +457,13 @@
       "guardrail": null,
       "confidence": 0.5592,
       "timings_ms": {
-        "embed_ms": 10.95,
-        "search_ms": 100.43,
-        "rerank_ms": 3.69,
-        "total_ms": 146.76,
-        "qa_ms": 21.32
+        "embed_ms": 11.31,
+        "search_ms": 94.13,
+        "rerank_ms": 3.78,
+        "total_ms": 139.98,
+        "qa_ms": 21.04
       },
-      "client_ms": 1432.8832000001057,
+      "client_ms": 1330.8421000001545,
       "success": true
     },
     {
@@ -469,13 +475,13 @@
       "guardrail": null,
       "confidence": 0.469,
       "timings_ms": {
-        "embed_ms": 11.4,
-        "search_ms": 100.06,
-        "rerank_ms": 2.96,
-        "total_ms": 144.16,
-        "qa_ms": 18.86
+        "embed_ms": 10.62,
+        "search_ms": 100.04,
+        "rerank_ms": 2.94,
+        "total_ms": 141.89,
+        "qa_ms": 18.32
       },
-      "client_ms": 1332.5207000000319,
+      "client_ms": 1331.995000000461,
       "success": true
     },
     {
@@ -487,13 +493,13 @@
       "guardrail": null,
       "confidence": 0.5076,
       "timings_ms": {
-        "embed_ms": 11.36,
-        "search_ms": 100.64,
-        "rerank_ms": 3.8,
-        "total_ms": 153.23,
-        "qa_ms": 26.14
+        "embed_ms": 10.48,
+        "search_ms": 95.69,
+        "rerank_ms": 3.82,
+        "total_ms": 145.59,
+        "qa_ms": 25.75
       },
-      "client_ms": 1337.9526999999598,
+      "client_ms": 1335.5324999974982,
       "success": true
     },
     {
@@ -505,13 +511,13 @@
       "guardrail": null,
       "confidence": 0.3893,
       "timings_ms": {
-        "embed_ms": 10.99,
-        "search_ms": 100.35,
-        "rerank_ms": 3.1,
-        "total_ms": 143.74,
-        "qa_ms": 18.45
+        "embed_ms": 10.62,
+        "search_ms": 102.76,
+        "rerank_ms": 3.09,
+        "total_ms": 145.73,
+        "qa_ms": 18.31
       },
-      "client_ms": 1337.2238000001744,
+      "client_ms": 1258.837900000799,
       "success": true
     },
     {
@@ -523,13 +529,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.43,
-        "search_ms": 104.47,
-        "rerank_ms": 3.85,
-        "total_ms": 138.73,
-        "qa_ms": 18.71
+        "embed_ms": 11.15,
+        "search_ms": 95.39,
+        "rerank_ms": 3.88,
+        "total_ms": 128.92,
+        "qa_ms": 18.26
       },
-      "client_ms": 1240.626999999904,
+      "client_ms": 1400.8066999995208,
       "success": true
     },
     {
@@ -541,13 +547,13 @@
       "guardrail": null,
       "confidence": 0.6773,
       "timings_ms": {
-        "embed_ms": 11.39,
-        "search_ms": 103.35,
-        "rerank_ms": 2.69,
-        "total_ms": 149.02,
-        "qa_ms": 21.02
+        "embed_ms": 10.14,
+        "search_ms": 99.02,
+        "rerank_ms": 2.82,
+        "total_ms": 143.51,
+        "qa_ms": 21.2
       },
-      "client_ms": 1313.4087999999338,
+      "client_ms": 1326.1146999975608,
       "success": true
     },
     {
@@ -559,13 +565,14 @@
       "guardrail": null,
       "confidence": 0.2952,
       "timings_ms": {
-        "embed_ms": 11.6,
-        "search_ms": 101.78,
-        "rerank_ms": 3.11,
-        "total_ms": 154.17,
-        "qa_ms": 26.62
+        "embed_ms": 11.15,
+        "search_ms": 95.16,
+        "rerank_ms": 3.17,
+        "total_ms": 161.88,
+        "qa_ms": 26.28,
+        "nli_ms": 16.18
       },
-      "client_ms": 1329.590699999926,
+      "client_ms": 1656.3620999986597,
       "success": true
     },
     {
@@ -577,13 +584,13 @@
       "guardrail": null,
       "confidence": 0.0585,
       "timings_ms": {
-        "embed_ms": 10.82,
-        "search_ms": 97.64,
-        "rerank_ms": 4.04,
-        "total_ms": 143.86,
-        "qa_ms": 21.27
+        "embed_ms": 10.43,
+        "search_ms": 92.21,
+        "rerank_ms": 4.07,
+        "total_ms": 138.78,
+        "qa_ms": 21.32
       },
-      "client_ms": 1324.1567000000032,
+      "client_ms": 1235.0494999991497,
       "success": true
     },
     {
@@ -595,13 +602,13 @@
       "guardrail": null,
       "confidence": 0.0988,
       "timings_ms": {
-        "embed_ms": 10.69,
-        "search_ms": 102.6,
-        "rerank_ms": 2.25,
-        "total_ms": 143.33,
-        "qa_ms": 17.3
+        "embed_ms": 11.74,
+        "search_ms": 93.56,
+        "rerank_ms": 2.28,
+        "total_ms": 134.03,
+        "qa_ms": 16.83
       },
-      "client_ms": 1255.8010999998714,
+      "client_ms": 1306.4133000007132,
       "success": true
     },
     {
@@ -613,13 +620,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.24,
-        "search_ms": 95.83,
-        "rerank_ms": 3.82,
-        "total_ms": 131.99,
-        "qa_ms": 20.91
+        "embed_ms": 10.26,
+        "search_ms": 95.33,
+        "rerank_ms": 4.02,
+        "total_ms": 130.37,
+        "qa_ms": 20.58
       },
-      "client_ms": 1201.9204000000627,
+      "client_ms": 1332.9386000004888,
       "success": true
     },
     {
@@ -631,13 +638,13 @@
       "guardrail": null,
       "confidence": 0.1295,
       "timings_ms": {
-        "embed_ms": 12.11,
-        "search_ms": 98.91,
-        "rerank_ms": 4.27,
-        "total_ms": 152.16,
-        "qa_ms": 25.68
+        "embed_ms": 11.5,
+        "search_ms": 94.85,
+        "rerank_ms": 4.22,
+        "total_ms": 146.91,
+        "qa_ms": 25.48
       },
-      "client_ms": 1481.1554000000342,
+      "client_ms": 1636.9644999977027,
       "success": true
     },
     {
@@ -649,13 +656,14 @@
       "guardrail": null,
       "confidence": 0.2405,
       "timings_ms": {
-        "embed_ms": 10.91,
-        "search_ms": 108.13,
-        "rerank_ms": 2.59,
-        "total_ms": 202.97,
-        "qa_ms": 70.45
+        "embed_ms": 10.69,
+        "search_ms": 94.03,
+        "rerank_ms": 0.2,
+        "total_ms": 138.99,
+        "qa_ms": 8.67,
+        "nli_ms": 15.65
       },
-      "client_ms": 1290.3888000000734,
+      "client_ms": 1541.360800001712,
       "success": true
     },
     {
@@ -667,13 +675,13 @@
       "guardrail": null,
       "confidence": 0.0783,
       "timings_ms": {
-        "embed_ms": 11.24,
-        "search_ms": 96.82,
-        "rerank_ms": 3.95,
-        "total_ms": 142.08,
-        "qa_ms": 18.89
+        "embed_ms": 10.46,
+        "search_ms": 95.68,
+        "rerank_ms": 4.0,
+        "total_ms": 139.37,
+        "qa_ms": 18.65
       },
-      "client_ms": 1232.7799999998206,
+      "client_ms": 4091.1813999991864,
       "success": true
     },
     {
@@ -681,17 +689,18 @@
       "id": "mr-1009775-p8-native",
       "query": "कोणत्या खाद्यपदार्थांमध्ये जीवनसत्व डी जास्त असते",
       "ground_truth": "शिटाके अळंबीच्या वाळलेल्या आवृत्त्या",
-      "answer": "जीवनसत्व डी हे चरबीमध्ये विरघळणारे जीवनसत्व आहे जे नैसर्गिकरित्या फारच कमी खाद्यपदार्थांमध्ये असते आणि इतरांमध्ये मिसळले जाते आणि आहारातील पूरक म्हणून उपलब्ध असते.",
-      "guardrail": null,
-      "confidence": 0.2357,
+      "answer": "The extracted answer could not be verified by contextual entailment.",
+      "guardrail": "not_entailed",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.29,
-        "search_ms": 93.3,
-        "rerank_ms": 5.24,
-        "total_ms": 143.4,
-        "qa_ms": 22.61
+        "embed_ms": 10.69,
+        "search_ms": 98.63,
+        "rerank_ms": 5.56,
+        "total_ms": 164.07,
+        "qa_ms": 22.25,
+        "nli_ms": 17.09
       },
-      "client_ms": 1524.7925999999552,
+      "client_ms": 1373.7230000006093,
       "success": true
     },
     {
@@ -703,13 +712,13 @@
       "guardrail": null,
       "confidence": 0.1349,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 98.59,
-        "rerank_ms": 4.49,
-        "total_ms": 151.29,
-        "qa_ms": 26.42
+        "embed_ms": 10.71,
+        "search_ms": 95.08,
+        "rerank_ms": 4.44,
+        "total_ms": 145.82,
+        "qa_ms": 25.94
       },
-      "client_ms": 1311.8197000001146,
+      "client_ms": 1404.6291000013298,
       "success": true
     },
     {
@@ -721,13 +730,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.55,
-        "search_ms": 104.68,
-        "rerank_ms": 5.76,
-        "total_ms": 153.93,
-        "qa_ms": 31.77
+        "embed_ms": 10.62,
+        "search_ms": 95.86,
+        "rerank_ms": 5.77,
+        "total_ms": 144.24,
+        "qa_ms": 31.78
       },
-      "client_ms": 1204.7720999999,
+      "client_ms": 1268.8694999997097,
       "success": true
     },
     {
@@ -739,13 +748,14 @@
       "guardrail": null,
       "confidence": 0.2375,
       "timings_ms": {
-        "embed_ms": 11.63,
-        "search_ms": 101.86,
-        "rerank_ms": 3.9,
-        "total_ms": 145.98,
-        "qa_ms": 17.69
+        "embed_ms": 11.8,
+        "search_ms": 93.14,
+        "rerank_ms": 3.88,
+        "total_ms": 153.89,
+        "qa_ms": 17.34,
+        "nli_ms": 16.92
       },
-      "client_ms": 1272.091600000067,
+      "client_ms": 1390.2611000012257,
       "success": true
     },
     {
@@ -757,13 +767,13 @@
       "guardrail": null,
       "confidence": 0.7336,
       "timings_ms": {
-        "embed_ms": 11.44,
-        "search_ms": 105.05,
+        "embed_ms": 10.79,
+        "search_ms": 94.92,
         "rerank_ms": 2.98,
-        "total_ms": 146.94,
-        "qa_ms": 15.96
+        "total_ms": 135.52,
+        "qa_ms": 15.71
       },
-      "client_ms": 1329.9951000001329,
+      "client_ms": 1321.5823999998975,
       "success": true
     },
     {
@@ -775,13 +785,14 @@
       "guardrail": null,
       "confidence": 0.1754,
       "timings_ms": {
-        "embed_ms": 11.42,
-        "search_ms": 111.31,
-        "rerank_ms": 3.77,
-        "total_ms": 157.19,
-        "qa_ms": 18.71
+        "embed_ms": 10.85,
+        "search_ms": 94.1,
+        "rerank_ms": 3.71,
+        "total_ms": 153.79,
+        "qa_ms": 18.35,
+        "nli_ms": 16.27
       },
-      "client_ms": 1248.094700000138,
+      "client_ms": 1439.4913999967685,
       "success": true
     },
     {
@@ -793,13 +804,13 @@
       "guardrail": null,
       "confidence": 0.1478,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 100.13,
-        "rerank_ms": 2.33,
-        "total_ms": 139.75,
-        "qa_ms": 15.88
+        "embed_ms": 10.93,
+        "search_ms": 95.43,
+        "rerank_ms": 2.36,
+        "total_ms": 134.94,
+        "qa_ms": 16.04
       },
-      "client_ms": 1220.5348999998478,
+      "client_ms": 1338.2208999973955,
       "success": true
     },
     {
@@ -811,13 +822,13 @@
       "guardrail": null,
       "confidence": 0.1139,
       "timings_ms": {
-        "embed_ms": 11.7,
-        "search_ms": 109.56,
-        "rerank_ms": 2.82,
-        "total_ms": 159.12,
-        "qa_ms": 23.95
+        "embed_ms": 11.27,
+        "search_ms": 95.27,
+        "rerank_ms": 2.89,
+        "total_ms": 143.53,
+        "qa_ms": 23.35
       },
-      "client_ms": 1240.2775000000474,
+      "client_ms": 1419.9047000001883,
       "success": true
     },
     {
@@ -829,13 +840,14 @@
       "guardrail": null,
       "confidence": 0.2972,
       "timings_ms": {
-        "embed_ms": 11.41,
-        "search_ms": 108.69,
-        "rerank_ms": 3.23,
-        "total_ms": 160.71,
-        "qa_ms": 25.99
+        "embed_ms": 11.03,
+        "search_ms": 96.77,
+        "rerank_ms": 3.19,
+        "total_ms": 165.21,
+        "qa_ms": 25.88,
+        "nli_ms": 17.29
       },
-      "client_ms": 1262.5459999999293,
+      "client_ms": 1336.6825000011886,
       "success": true
     },
     {
@@ -847,13 +859,13 @@
       "guardrail": null,
       "confidence": 0.5099,
       "timings_ms": {
-        "embed_ms": 11.26,
-        "search_ms": 107.59,
-        "rerank_ms": 2.17,
-        "total_ms": 152.46,
-        "qa_ms": 20.79
+        "embed_ms": 11.41,
+        "search_ms": 96.99,
+        "rerank_ms": 2.19,
+        "total_ms": 142.76,
+        "qa_ms": 21.17
       },
-      "client_ms": 1220.779900000025,
+      "client_ms": 1313.3791000000201,
       "success": true
     },
     {
@@ -865,13 +877,14 @@
       "guardrail": null,
       "confidence": 0.2389,
       "timings_ms": {
-        "embed_ms": 11.44,
-        "search_ms": 99.29,
-        "rerank_ms": 4.38,
-        "total_ms": 147.39,
-        "qa_ms": 21.99
+        "embed_ms": 10.74,
+        "search_ms": 99.22,
+        "rerank_ms": 4.43,
+        "total_ms": 163.87,
+        "qa_ms": 21.9,
+        "nli_ms": 16.78
       },
-      "client_ms": 1233.8174999999865,
+      "client_ms": 1341.9856000000436,
       "success": true
     },
     {
@@ -879,17 +892,18 @@
       "id": "mr-311101-p4-native",
       "query": "यूकेमध्ये मानसोपचारतज्ज्ञ किती कमावतो",
       "ground_truth": "वर्षाला £४०,००० ते £६०,०००",
-      "answer": "अमेरिकेतील मानसोपचारतज्ज्ञ सरासरी दरवर्षी सुमारे 181,000 डॉलर एवढ्या मोठ्या प्रमाणात पगाराची अपेक्षा करू शकतात.",
-      "guardrail": null,
-      "confidence": 0.2936,
+      "answer": "The extracted answer could not be verified by contextual entailment.",
+      "guardrail": "not_entailed",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.9,
-        "search_ms": 102.31,
-        "rerank_ms": 4.53,
-        "total_ms": 147.2,
-        "qa_ms": 18.14
+        "embed_ms": 11.22,
+        "search_ms": 92.75,
+        "rerank_ms": 4.54,
+        "total_ms": 153.61,
+        "qa_ms": 18.42,
+        "nli_ms": 16.42
       },
-      "client_ms": 1215.8707999999478,
+      "client_ms": 1329.573499999242,
       "success": true
     },
     {
@@ -901,13 +915,14 @@
       "guardrail": null,
       "confidence": 0.2179,
       "timings_ms": {
-        "embed_ms": 11.54,
-        "search_ms": 94.92,
-        "rerank_ms": 2.76,
-        "total_ms": 136.42,
-        "qa_ms": 16.68
+        "embed_ms": 11.6,
+        "search_ms": 98.03,
+        "rerank_ms": 2.74,
+        "total_ms": 154.74,
+        "qa_ms": 16.55,
+        "nli_ms": 16.02
       },
-      "client_ms": 1259.781299999986,
+      "client_ms": 1344.9870000004012,
       "success": true
     },
     {
@@ -919,13 +934,13 @@
       "guardrail": null,
       "confidence": 0.144,
       "timings_ms": {
-        "embed_ms": 12.2,
-        "search_ms": 104.22,
-        "rerank_ms": 3.45,
-        "total_ms": 148.15,
-        "qa_ms": 16.9
+        "embed_ms": 11.6,
+        "search_ms": 96.57,
+        "rerank_ms": 3.4,
+        "total_ms": 139.19,
+        "qa_ms": 16.45
       },
-      "client_ms": 1258.1416000000445,
+      "client_ms": 1317.7757000012207,
       "success": true
     },
     {
@@ -937,13 +952,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.73,
-        "search_ms": 109.24,
-        "rerank_ms": 6.04,
-        "total_ms": 143.43,
-        "qa_ms": 16.24
+        "embed_ms": 10.49,
+        "search_ms": 95.05,
+        "rerank_ms": 5.93,
+        "total_ms": 127.82,
+        "qa_ms": 16.18
       },
-      "client_ms": 1244.1917000001013,
+      "client_ms": 1329.599299999245,
       "success": true
     },
     {
@@ -955,13 +970,13 @@
       "guardrail": null,
       "confidence": 0.065,
       "timings_ms": {
-        "embed_ms": 11.53,
-        "search_ms": 104.46,
-        "rerank_ms": 1.54,
-        "total_ms": 144.95,
-        "qa_ms": 16.81
+        "embed_ms": 10.43,
+        "search_ms": 94.65,
+        "rerank_ms": 1.56,
+        "total_ms": 133.5,
+        "qa_ms": 16.24
       },
-      "client_ms": 1200.743599999896,
+      "client_ms": 1337.1214999970107,
       "success": true
     },
     {
@@ -973,13 +988,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.5,
-        "search_ms": 104.52,
-        "rerank_ms": 3.02,
-        "total_ms": 138.32,
-        "qa_ms": 19.04
+        "embed_ms": 11.72,
+        "search_ms": 96.22,
+        "rerank_ms": 3.04,
+        "total_ms": 130.21,
+        "qa_ms": 19.06
       },
-      "client_ms": 1195.157300000119,
+      "client_ms": 1427.559799998562,
       "success": true
     },
     {
@@ -991,13 +1006,14 @@
       "guardrail": null,
       "confidence": 0.2795,
       "timings_ms": {
-        "embed_ms": 11.13,
-        "search_ms": 119.44,
-        "rerank_ms": 4.27,
-        "total_ms": 173.9,
-        "qa_ms": 28.31
+        "embed_ms": 11.73,
+        "search_ms": 90.97,
+        "rerank_ms": 2.01,
+        "total_ms": 159.2,
+        "qa_ms": 27.46,
+        "nli_ms": 16.74
       },
-      "client_ms": 1262.4344000000747,
+      "client_ms": 1331.1887999989267,
       "success": true
     },
     {
@@ -1009,13 +1025,13 @@
       "guardrail": null,
       "confidence": 0.4672,
       "timings_ms": {
-        "embed_ms": 12.09,
-        "search_ms": 102.89,
-        "rerank_ms": 4.02,
-        "total_ms": 155.54,
-        "qa_ms": 25.58
+        "embed_ms": 11.41,
+        "search_ms": 97.59,
+        "rerank_ms": 4.05,
+        "total_ms": 148.5,
+        "qa_ms": 25.5
       },
-      "client_ms": 1344.7850999998536,
+      "client_ms": 1333.0004999988887,
       "success": true
     },
     {
@@ -1027,13 +1043,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 12.09,
-        "search_ms": 108.65,
-        "rerank_ms": 2.87,
-        "total_ms": 139.43,
-        "qa_ms": 15.61
+        "embed_ms": 11.14,
+        "search_ms": 107.34,
+        "rerank_ms": 2.83,
+        "total_ms": 136.48,
+        "qa_ms": 14.99
       },
-      "client_ms": 1367.0412999999826,
+      "client_ms": 1329.900800003088,
       "success": true
     },
     {
@@ -1045,13 +1061,13 @@
       "guardrail": null,
       "confidence": 0.1073,
       "timings_ms": {
-        "embed_ms": 11.57,
-        "search_ms": 104.55,
-        "rerank_ms": 4.43,
-        "total_ms": 154.47,
-        "qa_ms": 22.84
+        "embed_ms": 10.55,
+        "search_ms": 93.44,
+        "rerank_ms": 4.47,
+        "total_ms": 141.66,
+        "qa_ms": 22.68
       },
-      "client_ms": 1703.6562999999205,
+      "client_ms": 1649.1539999988163,
       "success": true
     },
     {
@@ -1063,13 +1079,13 @@
       "guardrail": null,
       "confidence": 0.1384,
       "timings_ms": {
-        "embed_ms": 11.31,
-        "search_ms": 100.6,
-        "rerank_ms": 4.12,
-        "total_ms": 158.94,
-        "qa_ms": 31.61
+        "embed_ms": 10.76,
+        "search_ms": 95.68,
+        "rerank_ms": 4.11,
+        "total_ms": 154.26,
+        "qa_ms": 32.71
       },
-      "client_ms": 1637.201799999957,
+      "client_ms": 1627.780900002108,
       "success": true
     },
     {
@@ -1081,13 +1097,13 @@
       "guardrail": null,
       "confidence": 0.0593,
       "timings_ms": {
-        "embed_ms": 11.73,
-        "search_ms": 121.68,
-        "rerank_ms": 2.46,
-        "total_ms": 162.81,
-        "qa_ms": 15.52
+        "embed_ms": 11.32,
+        "search_ms": 98.25,
+        "rerank_ms": 2.36,
+        "total_ms": 136.72,
+        "qa_ms": 14.78
       },
-      "client_ms": 1279.0107000000717,
+      "client_ms": 1331.0573999988264,
       "success": true
     },
     {
@@ -1099,13 +1115,13 @@
       "guardrail": null,
       "confidence": 0.0778,
       "timings_ms": {
-        "embed_ms": 11.09,
-        "search_ms": 102.87,
-        "rerank_ms": 3.23,
-        "total_ms": 144.01,
-        "qa_ms": 16.08
+        "embed_ms": 11.79,
+        "search_ms": 95.7,
+        "rerank_ms": 3.35,
+        "total_ms": 137.73,
+        "qa_ms": 16.47
       },
-      "client_ms": 1219.5683999998437,
+      "client_ms": 1432.2167999998783,
       "success": true
     },
     {
@@ -1117,13 +1133,13 @@
       "guardrail": null,
       "confidence": 0.4706,
       "timings_ms": {
-        "embed_ms": 11.64,
-        "search_ms": 104.21,
-        "rerank_ms": 4.79,
-        "total_ms": 155.09,
-        "qa_ms": 23.83
+        "embed_ms": 10.51,
+        "search_ms": 96.23,
+        "rerank_ms": 4.97,
+        "total_ms": 146.66,
+        "qa_ms": 23.95
       },
-      "client_ms": 1392.17450000001,
+      "client_ms": 1346.781699998246,
       "success": true
     },
     {
@@ -1135,13 +1151,13 @@
       "guardrail": null,
       "confidence": 0.6106,
       "timings_ms": {
-        "embed_ms": 11.46,
-        "search_ms": 109.51,
-        "rerank_ms": 3.42,
-        "total_ms": 163.45,
-        "qa_ms": 28.04
+        "embed_ms": 10.63,
+        "search_ms": 95.27,
+        "rerank_ms": 3.46,
+        "total_ms": 142.49,
+        "qa_ms": 22.43
       },
-      "client_ms": 1368.2512000000315,
+      "client_ms": 1349.7207999971579,
       "success": true
     },
     {
@@ -1153,13 +1169,13 @@
       "guardrail": null,
       "confidence": 0.5185,
       "timings_ms": {
-        "embed_ms": 11.87,
-        "search_ms": 112.01,
-        "rerank_ms": 3.3,
-        "total_ms": 163.55,
-        "qa_ms": 17.14
+        "embed_ms": 11.49,
+        "search_ms": 93.27,
+        "rerank_ms": 3.4,
+        "total_ms": 134.35,
+        "qa_ms": 16.75
       },
-      "client_ms": 1261.233200000106,
+      "client_ms": 1502.256400002807,
       "success": true
     },
     {
@@ -1171,13 +1187,14 @@
       "guardrail": null,
       "confidence": 0.1695,
       "timings_ms": {
-        "embed_ms": 11.22,
-        "search_ms": 101.18,
-        "rerank_ms": 3.56,
-        "total_ms": 143.02,
-        "qa_ms": 15.92
+        "embed_ms": 10.81,
+        "search_ms": 97.31,
+        "rerank_ms": 3.51,
+        "total_ms": 154.78,
+        "qa_ms": 15.54,
+        "nli_ms": 16.88
       },
-      "client_ms": 1219.2817000000105,
+      "client_ms": 1432.5427000003401,
       "success": true
     },
     {
@@ -1189,13 +1206,13 @@
       "guardrail": null,
       "confidence": 0.1049,
       "timings_ms": {
-        "embed_ms": 11.75,
-        "search_ms": 111.35,
-        "rerank_ms": 3.34,
-        "total_ms": 155.64,
-        "qa_ms": 17.27
+        "embed_ms": 10.54,
+        "search_ms": 95.68,
+        "rerank_ms": 3.16,
+        "total_ms": 135.61,
+        "qa_ms": 16.77
       },
-      "client_ms": 1271.1386000000857,
+      "client_ms": 1249.4058000011137,
       "success": true
     },
     {
@@ -1207,13 +1224,14 @@
       "guardrail": null,
       "confidence": 0.1689,
       "timings_ms": {
-        "embed_ms": 11.48,
-        "search_ms": 116.8,
-        "rerank_ms": 3.77,
-        "total_ms": 159.17,
-        "qa_ms": 16.21
+        "embed_ms": 10.94,
+        "search_ms": 92.23,
+        "rerank_ms": 3.72,
+        "total_ms": 150.75,
+        "qa_ms": 15.98,
+        "nli_ms": 17.07
       },
-      "client_ms": 1330.4553000000396,
+      "client_ms": 1310.3019000009226,
       "success": true
     },
     {
@@ -1225,13 +1243,14 @@
       "guardrail": null,
       "confidence": 0.2217,
       "timings_ms": {
-        "embed_ms": 11.28,
-        "search_ms": 104.62,
-        "rerank_ms": 2.94,
-        "total_ms": 151.28,
-        "qa_ms": 21.3
+        "embed_ms": 11.23,
+        "search_ms": 89.75,
+        "rerank_ms": 2.96,
+        "total_ms": 153.22,
+        "qa_ms": 21.2,
+        "nli_ms": 16.13
       },
-      "client_ms": 1333.0697999999757,
+      "client_ms": 1330.9808999983943,
       "success": true
     },
     {
@@ -1243,13 +1262,13 @@
       "guardrail": null,
       "confidence": 0.4173,
       "timings_ms": {
-        "embed_ms": 11.55,
-        "search_ms": 119.89,
-        "rerank_ms": 3.42,
-        "total_ms": 163.11,
-        "qa_ms": 17.61
+        "embed_ms": 10.97,
+        "search_ms": 101.84,
+        "rerank_ms": 3.79,
+        "total_ms": 144.96,
+        "qa_ms": 17.1
       },
-      "client_ms": 1535.7737000001634,
+      "client_ms": 1398.0434000004607,
       "success": true
     },
     {
@@ -1261,13 +1280,14 @@
       "guardrail": null,
       "confidence": 0.2818,
       "timings_ms": {
-        "embed_ms": 11.79,
-        "search_ms": 103.39,
-        "rerank_ms": 4.02,
-        "total_ms": 151.14,
-        "qa_ms": 21.05
+        "embed_ms": 12.06,
+        "search_ms": 101.16,
+        "rerank_ms": 4.04,
+        "total_ms": 165.82,
+        "qa_ms": 20.78,
+        "nli_ms": 16.26
       },
-      "client_ms": 1333.4578999999849,
+      "client_ms": 1366.1060000013094,
       "success": true
     },
     {
@@ -1279,13 +1299,14 @@
       "guardrail": null,
       "confidence": 0.1775,
       "timings_ms": {
-        "embed_ms": 11.31,
-        "search_ms": 129.71,
-        "rerank_ms": 4.12,
-        "total_ms": 170.34,
-        "qa_ms": 14.42
+        "embed_ms": 10.55,
+        "search_ms": 98.39,
+        "rerank_ms": 4.1,
+        "total_ms": 152.75,
+        "qa_ms": 14.11,
+        "nli_ms": 15.74
       },
-      "client_ms": 1328.6424999998871,
+      "client_ms": 1330.81509999829,
       "success": true
     },
     {
@@ -1297,13 +1318,13 @@
       "guardrail": null,
       "confidence": 0.1412,
       "timings_ms": {
-        "embed_ms": 11.04,
-        "search_ms": 101.76,
-        "rerank_ms": 2.36,
-        "total_ms": 140.2,
-        "qa_ms": 14.44
+        "embed_ms": 10.91,
+        "search_ms": 138.95,
+        "rerank_ms": 2.68,
+        "total_ms": 178.44,
+        "qa_ms": 15.14
       },
-      "client_ms": 1330.0544000001082,
+      "client_ms": 1398.456900002202,
       "success": true
     },
     {
@@ -1315,13 +1336,13 @@
       "guardrail": null,
       "confidence": 0.1046,
       "timings_ms": {
-        "embed_ms": 11.35,
-        "search_ms": 101.67,
-        "rerank_ms": 4.43,
-        "total_ms": 147.34,
-        "qa_ms": 19.11
+        "embed_ms": 10.83,
+        "search_ms": 102.35,
+        "rerank_ms": 4.44,
+        "total_ms": 146.11,
+        "qa_ms": 18.97
       },
-      "client_ms": 1330.932999999959,
+      "client_ms": 1350.68190000311,
       "success": true
     },
     {
@@ -1333,13 +1354,13 @@
       "guardrail": null,
       "confidence": 0.9472,
       "timings_ms": {
-        "embed_ms": 10.96,
-        "search_ms": 98.83,
-        "rerank_ms": 3.26,
-        "total_ms": 145.79,
-        "qa_ms": 22.17
+        "embed_ms": 10.9,
+        "search_ms": 93.87,
+        "rerank_ms": 3.28,
+        "total_ms": 140.63,
+        "qa_ms": 22.42
       },
-      "client_ms": 1432.9126000000088,
+      "client_ms": 1358.4559999981138,
       "success": true
     },
     {
@@ -1351,13 +1372,14 @@
       "guardrail": null,
       "confidence": 0.3209,
       "timings_ms": {
-        "embed_ms": 11.07,
-        "search_ms": 100.84,
-        "rerank_ms": 3.9,
-        "total_ms": 148.68,
-        "qa_ms": 22.54
+        "embed_ms": 12.22,
+        "search_ms": 99.18,
+        "rerank_ms": 4.0,
+        "total_ms": 165.78,
+        "qa_ms": 23.05,
+        "nli_ms": 16.97
       },
-      "client_ms": 1331.6357999999582,
+      "client_ms": 1422.409200000402,
       "success": true
     },
     {
@@ -1369,13 +1391,14 @@
       "guardrail": null,
       "confidence": 0.1553,
       "timings_ms": {
-        "embed_ms": 11.21,
-        "search_ms": 99.1,
-        "rerank_ms": 3.31,
-        "total_ms": 138.46,
-        "qa_ms": 14.24
+        "embed_ms": 10.4,
+        "search_ms": 96.99,
+        "rerank_ms": 3.29,
+        "total_ms": 149.44,
+        "qa_ms": 13.7,
+        "nli_ms": 15.41
       },
-      "client_ms": 1331.1195999999654,
+      "client_ms": 1273.9991000016744,
       "success": true
     },
     {
@@ -1387,13 +1410,14 @@
       "guardrail": null,
       "confidence": 0.2836,
       "timings_ms": {
-        "embed_ms": 11.19,
-        "search_ms": 96.84,
-        "rerank_ms": 3.57,
-        "total_ms": 143.84,
-        "qa_ms": 22.05
+        "embed_ms": 11.09,
+        "search_ms": 97.64,
+        "rerank_ms": 3.36,
+        "total_ms": 161.27,
+        "qa_ms": 22.27,
+        "nli_ms": 16.21
       },
-      "client_ms": 1330.1452999999128,
+      "client_ms": 1387.4441999978444,
       "success": true
     },
     {
@@ -1405,13 +1429,14 @@
       "guardrail": null,
       "confidence": 0.3301,
       "timings_ms": {
-        "embed_ms": 11.03,
-        "search_ms": 97.92,
-        "rerank_ms": 3.7,
-        "total_ms": 139.11,
-        "qa_ms": 15.49
+        "embed_ms": 11.37,
+        "search_ms": 98.32,
+        "rerank_ms": 3.57,
+        "total_ms": 155.87,
+        "qa_ms": 16.07,
+        "nli_ms": 16.08
       },
-      "client_ms": 1331.9194999999127,
+      "client_ms": 1330.7960000020103,
       "success": true
     },
     {
@@ -1423,13 +1448,14 @@
       "guardrail": null,
       "confidence": 0.1889,
       "timings_ms": {
-        "embed_ms": 11.53,
-        "search_ms": 100.14,
-        "rerank_ms": 3.47,
-        "total_ms": 140.62,
-        "qa_ms": 14.76
+        "embed_ms": 10.69,
+        "search_ms": 93.71,
+        "rerank_ms": 3.55,
+        "total_ms": 150.17,
+        "qa_ms": 15.31,
+        "nli_ms": 16.49
       },
-      "client_ms": 1433.5441999999148,
+      "client_ms": 1331.9570000021486,
       "success": true
     },
     {
@@ -1441,13 +1467,14 @@
       "guardrail": null,
       "confidence": 0.2854,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 104.56,
-        "rerank_ms": 3.2,
-        "total_ms": 145.72,
-        "qa_ms": 15.96
+        "embed_ms": 11.66,
+        "search_ms": 99.21,
+        "rerank_ms": 3.7,
+        "total_ms": 156.48,
+        "qa_ms": 15.76,
+        "nli_ms": 16.14
       },
-      "client_ms": 1330.5591000000732,
+      "client_ms": 1331.8703999975696,
       "success": true
     },
     {
@@ -1455,17 +1482,18 @@
       "id": "en-1174738-p1-native",
       "query": "is the mitochondria a organelle or a function",
       "ground_truth": "They are made of two membranes. The outer membrane covers the organelle and contains it like a skin. The inner membrane folds over many times and creates layered structures called cristae.",
-      "answer": "Organelle",
-      "guardrail": null,
-      "confidence": 0.2429,
+      "answer": "The extracted answer could not be verified by contextual entailment.",
+      "guardrail": "not_entailed",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.32,
-        "search_ms": 103.02,
-        "rerank_ms": 3.66,
-        "total_ms": 146.41,
-        "qa_ms": 18.37
+        "embed_ms": 10.59,
+        "search_ms": 96.89,
+        "rerank_ms": 3.69,
+        "total_ms": 156.36,
+        "qa_ms": 18.05,
+        "nli_ms": 16.72
       },
-      "client_ms": 1433.429100000012,
+      "client_ms": 1329.7062999990885,
       "success": true
     },
     {
@@ -1473,17 +1501,18 @@
       "id": "en-547021-p8-native",
       "query": "webster definition of theft",
       "ground_truth": "Theft is the illegal taking of another person's property or services without that person's permission or consent with the intent to deprive the rightful owner of it.",
-      "answer": "Taking away any object that (partly) belongs to someone else",
-      "guardrail": null,
-      "confidence": 0.1907,
+      "answer": "The extracted answer could not be verified by contextual entailment.",
+      "guardrail": "not_entailed",
+      "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 101.29,
-        "rerank_ms": 2.76,
-        "total_ms": 141.58,
-        "qa_ms": 15.82
+        "embed_ms": 12.35,
+        "search_ms": 104.39,
+        "rerank_ms": 2.73,
+        "total_ms": 163.81,
+        "qa_ms": 16.48,
+        "nli_ms": 17.28
       },
-      "client_ms": 1262.0255000001634,
+      "client_ms": 1434.7617999992508,
       "success": true
     },
     {
@@ -1495,13 +1524,13 @@
       "guardrail": null,
       "confidence": 0.5041,
       "timings_ms": {
-        "embed_ms": 11.36,
-        "search_ms": 101.95,
-        "rerank_ms": 4.79,
-        "total_ms": 151.12,
-        "qa_ms": 22.42
+        "embed_ms": 11.75,
+        "search_ms": 96.92,
+        "rerank_ms": 4.87,
+        "total_ms": 146.96,
+        "qa_ms": 22.37
       },
-      "client_ms": 1400.6259999998747,
+      "client_ms": 1330.430800000613,
       "success": true
     },
     {
@@ -1513,13 +1542,14 @@
       "guardrail": null,
       "confidence": 0.2721,
       "timings_ms": {
-        "embed_ms": 11.41,
-        "search_ms": 100.45,
-        "rerank_ms": 3.54,
-        "total_ms": 144.46,
-        "qa_ms": 17.94
+        "embed_ms": 11.67,
+        "search_ms": 102.29,
+        "rerank_ms": 3.63,
+        "total_ms": 163.25,
+        "qa_ms": 18.43,
+        "nli_ms": 16.79
       },
-      "client_ms": 2764.8291000000427,
+      "client_ms": 1331.9288000020606,
       "success": true
     },
     {
@@ -1531,13 +1561,14 @@
       "guardrail": null,
       "confidence": 0.297,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 101.57,
-        "rerank_ms": 3.59,
-        "total_ms": 142.84,
-        "qa_ms": 16.41
+        "embed_ms": 11.54,
+        "search_ms": 97.64,
+        "rerank_ms": 3.63,
+        "total_ms": 155.77,
+        "qa_ms": 16.81,
+        "nli_ms": 16.19
       },
-      "client_ms": 1330.9573999999884,
+      "client_ms": 1512.2402999986662,
       "success": true
     },
     {
@@ -1549,13 +1580,13 @@
       "guardrail": null,
       "confidence": 0.1216,
       "timings_ms": {
-        "embed_ms": 11.24,
-        "search_ms": 99.47,
-        "rerank_ms": 3.7,
-        "total_ms": 139.3,
-        "qa_ms": 14.07
+        "embed_ms": 10.9,
+        "search_ms": 99.66,
+        "rerank_ms": 5.18,
+        "total_ms": 140.22,
+        "qa_ms": 13.99
       },
-      "client_ms": 1331.0807000000295,
+      "client_ms": 1456.794699999591,
       "success": true
     },
     {
@@ -1567,13 +1598,14 @@
       "guardrail": null,
       "confidence": 0.3438,
       "timings_ms": {
-        "embed_ms": 10.88,
-        "search_ms": 100.74,
+        "embed_ms": 10.85,
+        "search_ms": 96.99,
         "rerank_ms": 3.49,
-        "total_ms": 148.92,
-        "qa_ms": 22.89
+        "total_ms": 163.06,
+        "qa_ms": 23.27,
+        "nli_ms": 17.71
       },
-      "client_ms": 1387.9171999999471,
+      "client_ms": 1330.2153000004182,
       "success": true
     },
     {
@@ -1585,13 +1617,13 @@
       "guardrail": null,
       "confidence": 0.1191,
       "timings_ms": {
-        "embed_ms": 11.37,
-        "search_ms": 103.52,
-        "rerank_ms": 4.72,
-        "total_ms": 154.11,
-        "qa_ms": 23.37
+        "embed_ms": 11.31,
+        "search_ms": 95.28,
+        "rerank_ms": 4.76,
+        "total_ms": 145.13,
+        "qa_ms": 22.64
       },
-      "client_ms": 1376.9371000000774,
+      "client_ms": 1536.3338999995904,
       "success": true
     },
     {
@@ -1603,13 +1635,14 @@
       "guardrail": null,
       "confidence": 0.2449,
       "timings_ms": {
-        "embed_ms": 12.27,
-        "search_ms": 109.13,
-        "rerank_ms": 4.42,
-        "total_ms": 158.87,
-        "qa_ms": 21.51
+        "embed_ms": 10.62,
+        "search_ms": 103.92,
+        "rerank_ms": 4.62,
+        "total_ms": 166.11,
+        "qa_ms": 20.98,
+        "nli_ms": 15.88
       },
-      "client_ms": 1433.8459000000512,
+      "client_ms": 1330.701200000476,
       "success": true
     },
     {
@@ -1621,13 +1654,14 @@
       "guardrail": null,
       "confidence": 0.2508,
       "timings_ms": {
-        "embed_ms": 11.03,
-        "search_ms": 106.85,
-        "rerank_ms": 3.7,
-        "total_ms": 148.81,
-        "qa_ms": 16.69
+        "embed_ms": 10.67,
+        "search_ms": 102.5,
+        "rerank_ms": 3.6,
+        "total_ms": 159.11,
+        "qa_ms": 16.47,
+        "nli_ms": 16.0
       },
-      "client_ms": 1330.1133999998456,
+      "client_ms": 1432.5587999992422,
       "success": true
     }
   ]

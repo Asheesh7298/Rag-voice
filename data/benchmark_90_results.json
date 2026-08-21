@@ -2,13 +2,13 @@
   "overall_accuracy": 92.22222222222223,
   "total_correct": 83,
   "total_queries": 90,
-  "p50_total_ms": 143.2,
-  "p70_total_ms": 147.03,
-  "p90_total_ms": 151.11,
-  "p100_total_ms": 160.84,
-  "mean_total_ms": 143.713,
-  "p50_search_ms": 99.51,
-  "p50_qa_ms": 18.01,
+  "p50_total_ms": 141.54,
+  "p70_total_ms": 150.94,
+  "p90_total_ms": 161.79,
+  "p100_total_ms": 183.1,
+  "mean_total_ms": 145.10066666666665,
+  "p50_search_ms": 95.76,
+  "p50_qa_ms": 18.28,
   "results": [
     {
       "lang": "hi",
@@ -19,13 +19,13 @@
       "guardrail": null,
       "confidence": 0.0602,
       "timings_ms": {
-        "embed_ms": 10.98,
-        "search_ms": 107.76,
-        "rerank_ms": 1.89,
-        "total_ms": 148.96,
-        "qa_ms": 17.3
+        "embed_ms": 10.87,
+        "search_ms": 100.97,
+        "rerank_ms": 1.92,
+        "total_ms": 141.35,
+        "qa_ms": 17.41
       },
-      "client_ms": 1605.3162999996857,
+      "client_ms": 1637.4355999978434,
       "success": true
     },
     {
@@ -37,13 +37,14 @@
       "guardrail": null,
       "confidence": 0.2094,
       "timings_ms": {
-        "embed_ms": 11.28,
-        "search_ms": 97.6,
-        "rerank_ms": 3.98,
-        "total_ms": 144.14,
-        "qa_ms": 20.78
+        "embed_ms": 10.87,
+        "search_ms": 95.55,
+        "rerank_ms": 4.05,
+        "total_ms": 157.99,
+        "qa_ms": 20.9,
+        "nli_ms": 16.39
       },
-      "client_ms": 1267.172699999719,
+      "client_ms": 1281.7339000030188,
       "success": true
     },
     {
@@ -55,13 +56,13 @@
       "guardrail": null,
       "confidence": 0.4012,
       "timings_ms": {
-        "embed_ms": 11.26,
-        "search_ms": 104.95,
-        "rerank_ms": 3.94,
-        "total_ms": 147.94,
-        "qa_ms": 17.49
+        "embed_ms": 11.37,
+        "search_ms": 136.19,
+        "rerank_ms": 4.85,
+        "total_ms": 183.1,
+        "qa_ms": 18.56
       },
-      "client_ms": 1207.1208000002116,
+      "client_ms": 1376.773799998773,
       "success": true
     },
     {
@@ -73,13 +74,13 @@
       "guardrail": null,
       "confidence": 0.0738,
       "timings_ms": {
-        "embed_ms": 11.07,
-        "search_ms": 99.97,
-        "rerank_ms": 3.35,
-        "total_ms": 142.34,
-        "qa_ms": 17.69
+        "embed_ms": 10.53,
+        "search_ms": 96.91,
+        "rerank_ms": 3.36,
+        "total_ms": 138.21,
+        "qa_ms": 17.58
       },
-      "client_ms": 1200.8026000003156,
+      "client_ms": 1326.4538000003085,
       "success": true
     },
     {
@@ -91,13 +92,13 @@
       "guardrail": null,
       "confidence": 0.1477,
       "timings_ms": {
-        "embed_ms": 11.11,
-        "search_ms": 99.35,
-        "rerank_ms": 3.26,
-        "total_ms": 141.92,
-        "qa_ms": 17.66
+        "embed_ms": 10.71,
+        "search_ms": 96.63,
+        "rerank_ms": 3.43,
+        "total_ms": 138.22,
+        "qa_ms": 17.63
       },
-      "client_ms": 1224.989800000003,
+      "client_ms": 1432.800499998848,
       "success": true
     },
     {
@@ -109,13 +110,13 @@
       "guardrail": null,
       "confidence": 0.6076,
       "timings_ms": {
-        "embed_ms": 11.41,
-        "search_ms": 104.25,
-        "rerank_ms": 3.54,
-        "total_ms": 146.65,
-        "qa_ms": 16.74
+        "embed_ms": 11.62,
+        "search_ms": 96.91,
+        "rerank_ms": 3.64,
+        "total_ms": 139.93,
+        "qa_ms": 17.39
       },
-      "client_ms": 1210.6306999999106,
+      "client_ms": 1332.5786000023072,
       "success": true
     },
     {
@@ -127,13 +128,13 @@
       "guardrail": null,
       "confidence": 0.1064,
       "timings_ms": {
-        "embed_ms": 10.73,
-        "search_ms": 106.66,
-        "rerank_ms": 4.09,
-        "total_ms": 157.64,
-        "qa_ms": 24.83
+        "embed_ms": 10.59,
+        "search_ms": 96.7,
+        "rerank_ms": 3.81,
+        "total_ms": 145.72,
+        "qa_ms": 24.84
       },
-      "client_ms": 1254.8469000003024,
+      "client_ms": 1432.1084000002884,
       "success": true
     },
     {
@@ -145,13 +146,13 @@
       "guardrail": null,
       "confidence": 0.0505,
       "timings_ms": {
-        "embed_ms": 11.39,
-        "search_ms": 105.15,
-        "rerank_ms": 3.31,
-        "total_ms": 147.66,
-        "qa_ms": 16.61
+        "embed_ms": 10.81,
+        "search_ms": 92.89,
+        "rerank_ms": 3.32,
+        "total_ms": 133.37,
+        "qa_ms": 16.47
       },
-      "client_ms": 1214.7150999999212,
+      "client_ms": 1329.8920999986876,
       "success": true
     },
     {
@@ -163,13 +164,14 @@
       "guardrail": null,
       "confidence": 0.2211,
       "timings_ms": {
-        "embed_ms": 11.59,
-        "search_ms": 100.75,
-        "rerank_ms": 2.97,
-        "total_ms": 147.03,
-        "qa_ms": 20.71
+        "embed_ms": 10.65,
+        "search_ms": 97.49,
+        "rerank_ms": 2.95,
+        "total_ms": 158.29,
+        "qa_ms": 20.91,
+        "nli_ms": 16.12
       },
-      "client_ms": 1206.5044000000853,
+      "client_ms": 1333.1592999966233,
       "success": true
     },
     {
@@ -181,13 +183,13 @@
       "guardrail": null,
       "confidence": 0.1244,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 99.06,
-        "rerank_ms": 4.66,
-        "total_ms": 151.49,
-        "qa_ms": 25.53
+        "embed_ms": 10.43,
+        "search_ms": 95.28,
+        "rerank_ms": 4.71,
+        "total_ms": 146.43,
+        "qa_ms": 25.95
       },
-      "client_ms": 1515.6879999999546,
+      "client_ms": 1637.7136000010069,
       "success": true
     },
     {
@@ -199,13 +201,13 @@
       "guardrail": null,
       "confidence": 0.1464,
       "timings_ms": {
-        "embed_ms": 11.47,
-        "search_ms": 105.84,
-        "rerank_ms": 2.81,
-        "total_ms": 147.59,
-        "qa_ms": 16.79
+        "embed_ms": 10.78,
+        "search_ms": 94.94,
+        "rerank_ms": 2.84,
+        "total_ms": 135.54,
+        "qa_ms": 16.64
       },
-      "client_ms": 1257.0206000000326,
+      "client_ms": 1333.599999998114,
       "success": true
     },
     {
@@ -217,13 +219,14 @@
       "guardrail": null,
       "confidence": 0.3389,
       "timings_ms": {
-        "embed_ms": 11.2,
-        "search_ms": 97.49,
-        "rerank_ms": 4.52,
-        "total_ms": 140.41,
-        "qa_ms": 16.24
+        "embed_ms": 10.76,
+        "search_ms": 92.45,
+        "rerank_ms": 4.56,
+        "total_ms": 152.18,
+        "qa_ms": 16.4,
+        "nli_ms": 17.06
       },
-      "client_ms": 1226.052399999844,
+      "client_ms": 1327.5022999987414,
       "success": true
     },
     {
@@ -235,13 +238,13 @@
       "guardrail": null,
       "confidence": 0.4747,
       "timings_ms": {
-        "embed_ms": 11.33,
-        "search_ms": 104.22,
-        "rerank_ms": 2.93,
-        "total_ms": 147.23,
-        "qa_ms": 18.61
+        "embed_ms": 10.83,
+        "search_ms": 90.41,
+        "rerank_ms": 2.94,
+        "total_ms": 132.62,
+        "qa_ms": 18.51
       },
-      "client_ms": 1284.8100999999588,
+      "client_ms": 1229.730600000039,
       "success": true
     },
     {
@@ -253,13 +256,13 @@
       "guardrail": null,
       "confidence": 0.0788,
       "timings_ms": {
-        "embed_ms": 11.47,
-        "search_ms": 103.83,
-        "rerank_ms": 3.18,
-        "total_ms": 144.64,
-        "qa_ms": 15.52
+        "embed_ms": 11.17,
+        "search_ms": 92.55,
+        "rerank_ms": 3.2,
+        "total_ms": 133.11,
+        "qa_ms": 15.49
       },
-      "client_ms": 1180.1645000000462,
+      "client_ms": 1310.6735000001208,
       "success": true
     },
     {
@@ -271,13 +274,13 @@
       "guardrail": null,
       "confidence": 0.086,
       "timings_ms": {
-        "embed_ms": 11.0,
-        "search_ms": 101.17,
-        "rerank_ms": 3.59,
-        "total_ms": 141.41,
-        "qa_ms": 15.45
+        "embed_ms": 10.58,
+        "search_ms": 97.58,
+        "rerank_ms": 3.61,
+        "total_ms": 136.91,
+        "qa_ms": 15.38
       },
-      "client_ms": 1181.8371999997908,
+      "client_ms": 1363.936300000205,
       "success": true
     },
     {
@@ -289,13 +292,13 @@
       "guardrail": null,
       "confidence": 0.1076,
       "timings_ms": {
-        "embed_ms": 10.98,
-        "search_ms": 94.96,
-        "rerank_ms": 4.01,
-        "total_ms": 149.95,
-        "qa_ms": 29.28
+        "embed_ms": 10.69,
+        "search_ms": 95.32,
+        "rerank_ms": 3.98,
+        "total_ms": 149.69,
+        "qa_ms": 29.77
       },
-      "client_ms": 1457.6646999998957,
+      "client_ms": 1589.574800000264,
       "success": true
     },
     {
@@ -307,13 +310,13 @@
       "guardrail": null,
       "confidence": 0.5691,
       "timings_ms": {
-        "embed_ms": 10.59,
-        "search_ms": 92.06,
-        "rerank_ms": 4.04,
-        "total_ms": 134.7,
-        "qa_ms": 17.37
+        "embed_ms": 11.71,
+        "search_ms": 92.88,
+        "rerank_ms": 3.96,
+        "total_ms": 136.77,
+        "qa_ms": 18.0
       },
-      "client_ms": 1250.493699999879,
+      "client_ms": 1468.7252000003355,
       "success": true
     },
     {
@@ -325,13 +328,13 @@
       "guardrail": null,
       "confidence": 0.4303,
       "timings_ms": {
-        "embed_ms": 11.3,
-        "search_ms": 99.45,
+        "embed_ms": 10.96,
+        "search_ms": 96.88,
         "rerank_ms": 2.54,
-        "total_ms": 144.3,
-        "qa_ms": 20.83
+        "total_ms": 142.02,
+        "qa_ms": 21.32
       },
-      "client_ms": 1185.088999999607,
+      "client_ms": 1250.2889999996114,
       "success": true
     },
     {
@@ -343,13 +346,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 10.76,
-        "search_ms": 104.0,
-        "rerank_ms": 3.81,
-        "total_ms": 140.09,
-        "qa_ms": 21.37
+        "embed_ms": 11.33,
+        "search_ms": 96.49,
+        "rerank_ms": 3.91,
+        "total_ms": 133.87,
+        "qa_ms": 21.95
       },
-      "client_ms": 1200.7978999999978,
+      "client_ms": 1310.4984000019613,
       "success": true
     },
     {
@@ -361,13 +364,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 102.79,
-        "rerank_ms": 2.18,
-        "total_ms": 138.2,
-        "qa_ms": 22.16
+        "embed_ms": 10.89,
+        "search_ms": 89.79,
+        "rerank_ms": 2.16,
+        "total_ms": 125.07,
+        "qa_ms": 22.01
       },
-      "client_ms": 1220.0692999999774,
+      "client_ms": 1330.994699997973,
       "success": true
     },
     {
@@ -379,13 +382,13 @@
       "guardrail": null,
       "confidence": 0.0588,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 100.09,
-        "rerank_ms": 4.13,
-        "total_ms": 147.35,
-        "qa_ms": 21.68
+        "embed_ms": 10.96,
+        "search_ms": 95.66,
+        "rerank_ms": 4.16,
+        "total_ms": 142.13,
+        "qa_ms": 21.46
       },
-      "client_ms": 1535.7622000001356,
+      "client_ms": 1739.225199999055,
       "success": true
     },
     {
@@ -397,13 +400,14 @@
       "guardrail": null,
       "confidence": 0.304,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 96.45,
-        "rerank_ms": 3.01,
-        "total_ms": 144.46,
-        "qa_ms": 22.27
+        "embed_ms": 10.42,
+        "search_ms": 97.9,
+        "rerank_ms": 2.99,
+        "total_ms": 160.7,
+        "qa_ms": 22.4,
+        "nli_ms": 16.51
       },
-      "client_ms": 1197.2163999998884,
+      "client_ms": 1331.9646999989345,
       "success": true
     },
     {
@@ -415,13 +419,13 @@
       "guardrail": null,
       "confidence": 0.0973,
       "timings_ms": {
-        "embed_ms": 10.81,
-        "search_ms": 97.51,
-        "rerank_ms": 3.55,
-        "total_ms": 138.3,
-        "qa_ms": 15.59
+        "embed_ms": 10.72,
+        "search_ms": 92.64,
+        "rerank_ms": 3.53,
+        "total_ms": 132.19,
+        "qa_ms": 15.3
       },
-      "client_ms": 1270.7632000001468,
+      "client_ms": 1333.3774999991874,
       "success": true
     },
     {
@@ -433,13 +437,14 @@
       "guardrail": null,
       "confidence": 0.248,
       "timings_ms": {
-        "embed_ms": 11.46,
-        "search_ms": 98.53,
-        "rerank_ms": 4.07,
-        "total_ms": 149.49,
-        "qa_ms": 25.26
+        "embed_ms": 11.63,
+        "search_ms": 92.58,
+        "rerank_ms": 4.03,
+        "total_ms": 161.79,
+        "qa_ms": 25.58,
+        "nli_ms": 17.11
       },
-      "client_ms": 1602.3328999999649,
+      "client_ms": 1444.1187000011269,
       "success": true
     },
     {
@@ -451,13 +456,13 @@
       "guardrail": null,
       "confidence": 0.1421,
       "timings_ms": {
-        "embed_ms": 10.43,
-        "search_ms": 100.0,
-        "rerank_ms": 4.03,
-        "total_ms": 140.95,
-        "qa_ms": 15.62
+        "embed_ms": 10.47,
+        "search_ms": 93.91,
+        "rerank_ms": 4.01,
+        "total_ms": 134.77,
+        "qa_ms": 15.33
       },
-      "client_ms": 1228.5158999998202,
+      "client_ms": 1231.9895000000542,
       "success": true
     },
     {
@@ -469,13 +474,13 @@
       "guardrail": null,
       "confidence": 0.358,
       "timings_ms": {
-        "embed_ms": 11.33,
-        "search_ms": 101.36,
-        "rerank_ms": 2.93,
-        "total_ms": 147.1,
-        "qa_ms": 21.05
+        "embed_ms": 11.58,
+        "search_ms": 97.77,
+        "rerank_ms": 2.81,
+        "total_ms": 144.11,
+        "qa_ms": 21.74
       },
-      "client_ms": 1269.503900000018,
+      "client_ms": 1315.2042999972764,
       "success": true
     },
     {
@@ -487,13 +492,13 @@
       "guardrail": null,
       "confidence": 0.0861,
       "timings_ms": {
-        "embed_ms": 10.99,
-        "search_ms": 100.11,
-        "rerank_ms": 3.22,
-        "total_ms": 142.7,
-        "qa_ms": 18.13
+        "embed_ms": 10.69,
+        "search_ms": 98.14,
+        "rerank_ms": 3.24,
+        "total_ms": 141.0,
+        "qa_ms": 18.07
       },
-      "client_ms": 1335.995500000081,
+      "client_ms": 1335.322200000519,
       "success": true
     },
     {
@@ -505,13 +510,14 @@
       "guardrail": null,
       "confidence": 0.1992,
       "timings_ms": {
-        "embed_ms": 12.25,
-        "search_ms": 95.62,
-        "rerank_ms": 3.77,
-        "total_ms": 138.7,
-        "qa_ms": 17.2
+        "embed_ms": 10.47,
+        "search_ms": 93.27,
+        "rerank_ms": 3.76,
+        "total_ms": 151.33,
+        "qa_ms": 17.75,
+        "nli_ms": 16.16
       },
-      "client_ms": 1176.4417999997931,
+      "client_ms": 1327.4238000012701,
       "success": true
     },
     {
@@ -523,13 +529,13 @@
       "guardrail": null,
       "confidence": 0.6577,
       "timings_ms": {
-        "embed_ms": 10.85,
-        "search_ms": 92.91,
-        "rerank_ms": 3.71,
-        "total_ms": 140.1,
-        "qa_ms": 22.34
+        "embed_ms": 10.69,
+        "search_ms": 99.26,
+        "rerank_ms": 3.73,
+        "total_ms": 147.07,
+        "qa_ms": 23.0
       },
-      "client_ms": 1192.7050000003874,
+      "client_ms": 1328.226800000266,
       "success": true
     },
     {
@@ -541,13 +547,13 @@
       "guardrail": null,
       "confidence": 0.1417,
       "timings_ms": {
-        "embed_ms": 11.3,
-        "search_ms": 97.09,
-        "rerank_ms": 2.99,
-        "total_ms": 139.0,
-        "qa_ms": 17.51
+        "embed_ms": 10.7,
+        "search_ms": 93.0,
+        "rerank_ms": 3.01,
+        "total_ms": 134.39,
+        "qa_ms": 17.75
       },
-      "client_ms": 1211.3908999999694,
+      "client_ms": 4077.653799999098,
       "success": true
     },
     {
@@ -559,13 +565,14 @@
       "guardrail": null,
       "confidence": 0.3278,
       "timings_ms": {
-        "embed_ms": 11.37,
-        "search_ms": 102.48,
-        "rerank_ms": 3.22,
-        "total_ms": 143.2,
-        "qa_ms": 15.83
+        "embed_ms": 10.24,
+        "search_ms": 97.81,
+        "rerank_ms": 3.16,
+        "total_ms": 150.78,
+        "qa_ms": 13.85,
+        "nli_ms": 15.87
       },
-      "client_ms": 1437.8962999999203,
+      "client_ms": 1359.2476999983774,
       "success": true
     },
     {
@@ -577,13 +584,13 @@
       "guardrail": null,
       "confidence": 0.3885,
       "timings_ms": {
-        "embed_ms": 10.91,
-        "search_ms": 101.54,
-        "rerank_ms": 4.36,
-        "total_ms": 148.41,
-        "qa_ms": 20.95
+        "embed_ms": 11.57,
+        "search_ms": 94.17,
+        "rerank_ms": 4.39,
+        "total_ms": 142.02,
+        "qa_ms": 21.5
       },
-      "client_ms": 1207.4231999999938,
+      "client_ms": 1414.200700000947,
       "success": true
     },
     {
@@ -595,13 +602,13 @@
       "guardrail": null,
       "confidence": 0.6546,
       "timings_ms": {
-        "embed_ms": 11.02,
-        "search_ms": 98.9,
-        "rerank_ms": 4.93,
-        "total_ms": 146.59,
-        "qa_ms": 21.6
+        "embed_ms": 11.06,
+        "search_ms": 96.09,
+        "rerank_ms": 4.89,
+        "total_ms": 143.67,
+        "qa_ms": 21.9
       },
-      "client_ms": 1240.701999999601,
+      "client_ms": 1353.1279000017093,
       "success": true
     },
     {
@@ -613,13 +620,14 @@
       "guardrail": null,
       "confidence": 0.1513,
       "timings_ms": {
-        "embed_ms": 10.91,
-        "search_ms": 99.64,
-        "rerank_ms": 3.37,
-        "total_ms": 142.84,
-        "qa_ms": 18.06
+        "embed_ms": 10.59,
+        "search_ms": 94.56,
+        "rerank_ms": 3.39,
+        "total_ms": 154.83,
+        "qa_ms": 18.59,
+        "nli_ms": 17.24
       },
-      "client_ms": 1261.806500000148,
+      "client_ms": 1626.6015999972296,
       "success": true
     },
     {
@@ -631,13 +639,13 @@
       "guardrail": null,
       "confidence": 0.0697,
       "timings_ms": {
-        "embed_ms": 10.74,
-        "search_ms": 97.35,
-        "rerank_ms": 3.36,
-        "total_ms": 151.6,
-        "qa_ms": 29.56
+        "embed_ms": 10.63,
+        "search_ms": 96.46,
+        "rerank_ms": 3.39,
+        "total_ms": 150.99,
+        "qa_ms": 30.33
       },
-      "client_ms": 1202.1407000002,
+      "client_ms": 1331.6921000005095,
       "success": true
     },
     {
@@ -649,13 +657,14 @@
       "guardrail": null,
       "confidence": 0.3093,
       "timings_ms": {
-        "embed_ms": 11.1,
-        "search_ms": 97.7,
-        "rerank_ms": 3.72,
-        "total_ms": 141.16,
-        "qa_ms": 18.36
+        "embed_ms": 11.17,
+        "search_ms": 95.01,
+        "rerank_ms": 3.76,
+        "total_ms": 153.97,
+        "qa_ms": 18.41,
+        "nli_ms": 15.94
       },
-      "client_ms": 1211.701599999742,
+      "client_ms": 1337.8121000023384,
       "success": true
     },
     {
@@ -667,13 +676,13 @@
       "guardrail": null,
       "confidence": 0.121,
       "timings_ms": {
-        "embed_ms": 10.89,
-        "search_ms": 98.3,
-        "rerank_ms": 2.27,
-        "total_ms": 138.64,
-        "qa_ms": 17.04
+        "embed_ms": 10.74,
+        "search_ms": 91.45,
+        "rerank_ms": 2.24,
+        "total_ms": 131.54,
+        "qa_ms": 16.91
       },
-      "client_ms": 1250.3881000002366,
+      "client_ms": 1333.596000000398,
       "success": true
     },
     {
@@ -685,13 +694,13 @@
       "guardrail": null,
       "confidence": 0.8111,
       "timings_ms": {
-        "embed_ms": 11.41,
-        "search_ms": 106.9,
-        "rerank_ms": 2.2,
-        "total_ms": 145.33,
-        "qa_ms": 14.85
+        "embed_ms": 11.03,
+        "search_ms": 102.97,
+        "rerank_ms": 2.25,
+        "total_ms": 140.31,
+        "qa_ms": 14.32
       },
-      "client_ms": 1204.616999999871,
+      "client_ms": 1320.8702000010817,
       "success": true
     },
     {
@@ -703,13 +712,14 @@
       "guardrail": null,
       "confidence": 0.2314,
       "timings_ms": {
-        "embed_ms": 10.74,
-        "search_ms": 98.49,
-        "rerank_ms": 4.38,
-        "total_ms": 153.22,
-        "qa_ms": 29.38
+        "embed_ms": 10.73,
+        "search_ms": 99.91,
+        "rerank_ms": 4.35,
+        "total_ms": 171.74,
+        "qa_ms": 29.88,
+        "nli_ms": 16.61
       },
-      "client_ms": 1491.7324000002736,
+      "client_ms": 1739.2462999996496,
       "success": true
     },
     {
@@ -721,13 +731,14 @@
       "guardrail": null,
       "confidence": 0.2723,
       "timings_ms": {
-        "embed_ms": 11.01,
-        "search_ms": 101.44,
-        "rerank_ms": 2.74,
-        "total_ms": 144.22,
-        "qa_ms": 18.43
+        "embed_ms": 10.54,
+        "search_ms": 100.38,
+        "rerank_ms": 2.72,
+        "total_ms": 157.43,
+        "qa_ms": 18.11,
+        "nli_ms": 15.91
       },
-      "client_ms": 1181.4564000001155,
+      "client_ms": 1334.1054000011354,
       "success": true
     },
     {
@@ -739,13 +750,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 98.79,
-        "rerank_ms": 3.34,
-        "total_ms": 139.04,
-        "qa_ms": 25.57
+        "embed_ms": 11.14,
+        "search_ms": 95.66,
+        "rerank_ms": 3.28,
+        "total_ms": 136.13,
+        "qa_ms": 25.87
       },
-      "client_ms": 1219.434099999944,
+      "client_ms": 1329.2381999999634,
       "success": true
     },
     {
@@ -757,13 +768,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 10.91,
-        "search_ms": 99.19,
-        "rerank_ms": 3.17,
-        "total_ms": 131.53,
-        "qa_ms": 18.07
+        "embed_ms": 10.53,
+        "search_ms": 96.2,
+        "rerank_ms": 3.24,
+        "total_ms": 128.75,
+        "qa_ms": 18.61
       },
-      "client_ms": 1182.61289999964,
+      "client_ms": 1330.2927000004274,
       "success": true
     },
     {
@@ -775,13 +786,13 @@
       "guardrail": null,
       "confidence": 0.4126,
       "timings_ms": {
-        "embed_ms": 11.32,
-        "search_ms": 99.49,
-        "rerank_ms": 2.53,
-        "total_ms": 146.1,
-        "qa_ms": 22.03
+        "embed_ms": 10.62,
+        "search_ms": 92.55,
+        "rerank_ms": 2.52,
+        "total_ms": 138.54,
+        "qa_ms": 22.67
       },
-      "client_ms": 1197.5929000000178,
+      "client_ms": 1343.5945999990508,
       "success": true
     },
     {
@@ -793,13 +804,13 @@
       "guardrail": null,
       "confidence": 0.1422,
       "timings_ms": {
-        "embed_ms": 10.86,
-        "search_ms": 100.78,
-        "rerank_ms": 2.05,
-        "total_ms": 146.11,
-        "qa_ms": 22.26
+        "embed_ms": 11.03,
+        "search_ms": 93.36,
+        "rerank_ms": 2.08,
+        "total_ms": 139.4,
+        "qa_ms": 22.7
       },
-      "client_ms": 1240.9336000000621,
+      "client_ms": 1624.3211000000883,
       "success": true
     },
     {
@@ -811,13 +822,13 @@
       "guardrail": null,
       "confidence": 0.0503,
       "timings_ms": {
-        "embed_ms": 10.75,
-        "search_ms": 101.52,
+        "embed_ms": 12.05,
+        "search_ms": 100.66,
         "rerank_ms": 1.88,
-        "total_ms": 147.29,
-        "qa_ms": 20.78
+        "total_ms": 147.92,
+        "qa_ms": 22.55
       },
-      "client_ms": 1241.668799999843,
+      "client_ms": 1342.1400000006543,
       "success": true
     },
     {
@@ -829,13 +840,14 @@
       "guardrail": null,
       "confidence": 0.2407,
       "timings_ms": {
-        "embed_ms": 11.21,
-        "search_ms": 101.54,
-        "rerank_ms": 3.17,
-        "total_ms": 140.75,
-        "qa_ms": 14.28
+        "embed_ms": 11.31,
+        "search_ms": 95.43,
+        "rerank_ms": 3.19,
+        "total_ms": 152.06,
+        "qa_ms": 14.92,
+        "nli_ms": 16.67
       },
-      "client_ms": 1223.2192000001305,
+      "client_ms": 1532.483899998624,
       "success": true
     },
     {
@@ -847,13 +859,14 @@
       "guardrail": null,
       "confidence": 0.1659,
       "timings_ms": {
-        "embed_ms": 11.44,
-        "search_ms": 103.22,
-        "rerank_ms": 2.9,
-        "total_ms": 150.74,
-        "qa_ms": 22.95
+        "embed_ms": 11.15,
+        "search_ms": 94.01,
+        "rerank_ms": 2.88,
+        "total_ms": 160.54,
+        "qa_ms": 23.7,
+        "nli_ms": 17.73
       },
-      "client_ms": 1490.4928999999356,
+      "client_ms": 1631.937400001334,
       "success": true
     },
     {
@@ -865,13 +878,14 @@
       "guardrail": null,
       "confidence": 0.2461,
       "timings_ms": {
-        "embed_ms": 11.07,
-        "search_ms": 101.58,
-        "rerank_ms": 4.99,
-        "total_ms": 159.37,
-        "qa_ms": 30.95
+        "embed_ms": 11.02,
+        "search_ms": 92.79,
+        "rerank_ms": 4.93,
+        "total_ms": 168.37,
+        "qa_ms": 31.25,
+        "nli_ms": 17.49
       },
-      "client_ms": 1535.652300000038,
+      "client_ms": 1637.2092999990855,
       "success": true
     },
     {
@@ -883,13 +897,13 @@
       "guardrail": null,
       "confidence": 0.1201,
       "timings_ms": {
-        "embed_ms": 10.79,
-        "search_ms": 97.34,
+        "embed_ms": 11.69,
+        "search_ms": 97.36,
         "rerank_ms": 3.44,
-        "total_ms": 139.38,
-        "qa_ms": 17.55
+        "total_ms": 140.38,
+        "qa_ms": 17.24
       },
-      "client_ms": 1256.6545999998198,
+      "client_ms": 1437.0211999994353,
       "success": true
     },
     {
@@ -901,13 +915,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 103.76,
-        "rerank_ms": 4.72,
-        "total_ms": 134.0,
-        "qa_ms": 14.19
+        "embed_ms": 10.98,
+        "search_ms": 101.18,
+        "rerank_ms": 4.68,
+        "total_ms": 131.22,
+        "qa_ms": 14.21
       },
-      "client_ms": 1240.0416000000405,
+      "client_ms": 1327.7032999976655,
       "success": true
     },
     {
@@ -919,13 +933,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.55,
-        "search_ms": 98.91,
-        "rerank_ms": 3.6,
-        "total_ms": 134.84,
-        "qa_ms": 20.6
+        "embed_ms": 10.85,
+        "search_ms": 96.71,
+        "rerank_ms": 3.56,
+        "total_ms": 132.78,
+        "qa_ms": 21.5
       },
-      "client_ms": 1186.5304000002652,
+      "client_ms": 1434.8470999975689,
       "success": true
     },
     {
@@ -937,13 +951,13 @@
       "guardrail": null,
       "confidence": 0.1416,
       "timings_ms": {
-        "embed_ms": 11.61,
-        "search_ms": 102.56,
-        "rerank_ms": 4.16,
-        "total_ms": 151.11,
-        "qa_ms": 21.98
+        "embed_ms": 11.6,
+        "search_ms": 93.59,
+        "rerank_ms": 4.18,
+        "total_ms": 142.72,
+        "qa_ms": 22.62
       },
-      "client_ms": 1489.4107000000076,
+      "client_ms": 1738.3814999993774,
       "success": true
     },
     {
@@ -955,13 +969,13 @@
       "guardrail": null,
       "confidence": 0.0772,
       "timings_ms": {
-        "embed_ms": 11.09,
-        "search_ms": 102.47,
-        "rerank_ms": 1.78,
-        "total_ms": 150.78,
-        "qa_ms": 25.02
+        "embed_ms": 11.3,
+        "search_ms": 96.8,
+        "rerank_ms": 1.73,
+        "total_ms": 145.6,
+        "qa_ms": 25.72
       },
-      "client_ms": 1213.2599000001392,
+      "client_ms": 1332.7069000006304,
       "success": true
     },
     {
@@ -973,13 +987,13 @@
       "guardrail": "low_qa_confidence",
       "confidence": 0.0,
       "timings_ms": {
-        "embed_ms": 11.14,
-        "search_ms": 99.64,
-        "rerank_ms": 3.66,
-        "total_ms": 131.22,
-        "qa_ms": 16.56
+        "embed_ms": 10.75,
+        "search_ms": 95.5,
+        "rerank_ms": 3.5,
+        "total_ms": 126.68,
+        "qa_ms": 16.73
       },
-      "client_ms": 1227.9553999997006,
+      "client_ms": 1433.7290000003122,
       "success": true
     },
     {
@@ -991,13 +1005,14 @@
       "guardrail": null,
       "confidence": 0.1954,
       "timings_ms": {
-        "embed_ms": 11.35,
-        "search_ms": 99.01,
-        "rerank_ms": 4.64,
-        "total_ms": 153.95,
-        "qa_ms": 28.56
+        "embed_ms": 10.5,
+        "search_ms": 92.33,
+        "rerank_ms": 4.65,
+        "total_ms": 162.64,
+        "qa_ms": 28.83,
+        "nli_ms": 16.46
       },
-      "client_ms": 1504.7460999999203,
+      "client_ms": 1739.9359000010008,
       "success": true
     },
     {
@@ -1009,13 +1024,14 @@
       "guardrail": null,
       "confidence": 0.2336,
       "timings_ms": {
-        "embed_ms": 10.98,
-        "search_ms": 106.73,
-        "rerank_ms": 2.83,
-        "total_ms": 160.84,
-        "qa_ms": 29.29
+        "embed_ms": 11.37,
+        "search_ms": 100.14,
+        "rerank_ms": 2.82,
+        "total_ms": 169.63,
+        "qa_ms": 29.38,
+        "nli_ms": 16.02
       },
-      "client_ms": 1242.8123999998206,
+      "client_ms": 1335.5178000019805,
       "success": true
     },
     {
@@ -1027,13 +1043,14 @@
       "guardrail": null,
       "confidence": 0.1999,
       "timings_ms": {
-        "embed_ms": 11.78,
-        "search_ms": 101.24,
-        "rerank_ms": 4.56,
-        "total_ms": 150.24,
-        "qa_ms": 21.99
+        "embed_ms": 11.49,
+        "search_ms": 92.96,
+        "rerank_ms": 4.59,
+        "total_ms": 159.7,
+        "qa_ms": 22.97,
+        "nli_ms": 16.29
       },
-      "client_ms": 1557.5220999999146,
+      "client_ms": 1737.2218999989855,
       "success": true
     },
     {
@@ -1046,12 +1063,12 @@
       "confidence": 0.104,
       "timings_ms": {
         "embed_ms": 11.04,
-        "search_ms": 99.0,
-        "rerank_ms": 3.21,
-        "total_ms": 139.61,
-        "qa_ms": 15.53
+        "search_ms": 89.73,
+        "rerank_ms": 3.24,
+        "total_ms": 129.77,
+        "qa_ms": 15.85
       },
-      "client_ms": 1207.8615000000354,
+      "client_ms": 1433.4268999991764,
       "success": true
     },
     {
@@ -1063,13 +1080,14 @@
       "guardrail": null,
       "confidence": 0.1893,
       "timings_ms": {
-        "embed_ms": 11.36,
-        "search_ms": 104.46,
-        "rerank_ms": 6.06,
-        "total_ms": 157.2,
-        "qa_ms": 25.25
+        "embed_ms": 11.38,
+        "search_ms": 94.41,
+        "rerank_ms": 6.08,
+        "total_ms": 163.86,
+        "qa_ms": 25.81,
+        "nli_ms": 16.18
       },
-      "client_ms": 1525.0190000001567,
+      "client_ms": 1636.6601000008814,
       "success": true
     },
     {
@@ -1081,13 +1099,14 @@
       "guardrail": null,
       "confidence": 0.1617,
       "timings_ms": {
-        "embed_ms": 11.18,
-        "search_ms": 97.68,
-        "rerank_ms": 3.75,
-        "total_ms": 144.06,
-        "qa_ms": 20.85
+        "embed_ms": 11.97,
+        "search_ms": 102.88,
+        "rerank_ms": 3.82,
+        "total_ms": 168.35,
+        "qa_ms": 21.75,
+        "nli_ms": 17.01
       },
-      "client_ms": 1186.819199999718,
+      "client_ms": 1337.801000001491,
       "success": true
     },
     {
@@ -1099,13 +1118,13 @@
       "guardrail": null,
       "confidence": 0.4578,
       "timings_ms": {
-        "embed_ms": 10.75,
-        "search_ms": 97.2,
-        "rerank_ms": 4.24,
-        "total_ms": 142.84,
-        "qa_ms": 20.99
+        "embed_ms": 11.31,
+        "search_ms": 118.81,
+        "rerank_ms": 4.31,
+        "total_ms": 166.29,
+        "qa_ms": 21.56
       },
-      "client_ms": 1228.6956000002647,
+      "client_ms": 1290.0527999991027,
       "success": true
     },
     {
@@ -1117,13 +1136,14 @@
       "guardrail": null,
       "confidence": 0.198,
       "timings_ms": {
-        "embed_ms": 10.88,
-        "search_ms": 95.44,
-        "rerank_ms": 3.51,
-        "total_ms": 133.29,
-        "qa_ms": 13.68
+        "embed_ms": 11.11,
+        "search_ms": 110.35,
+        "rerank_ms": 3.62,
+        "total_ms": 164.52,
+        "qa_ms": 13.92,
+        "nli_ms": 15.74
       },
-      "client_ms": 1250.1953999999387,
+      "client_ms": 1474.3058000021847,
       "success": true
     },
     {
@@ -1135,13 +1155,13 @@
       "guardrail": null,
       "confidence": 0.7199,
       "timings_ms": {
-        "embed_ms": 11.01,
-        "search_ms": 98.44,
-        "rerank_ms": 3.43,
-        "total_ms": 140.77,
-        "qa_ms": 18.01
+        "embed_ms": 11.13,
+        "search_ms": 106.37,
+        "rerank_ms": 3.51,
+        "total_ms": 150.94,
+        "qa_ms": 18.82
       },
-      "client_ms": 1187.4870000001465,
+      "client_ms": 1254.7682000003988,
       "success": true
     },
     {
@@ -1153,13 +1173,13 @@
       "guardrail": null,
       "confidence": 0.1069,
       "timings_ms": {
-        "embed_ms": 10.59,
-        "search_ms": 93.19,
-        "rerank_ms": 3.84,
-        "total_ms": 134.84,
-        "qa_ms": 16.73
+        "embed_ms": 10.68,
+        "search_ms": 96.45,
+        "rerank_ms": 3.87,
+        "total_ms": 138.64,
+        "qa_ms": 16.83
       },
-      "client_ms": 1232.4028000002727,
+      "client_ms": 1402.2884999976668,
       "success": true
     },
     {
@@ -1171,13 +1191,13 @@
       "guardrail": null,
       "confidence": 0.1241,
       "timings_ms": {
-        "embed_ms": 10.66,
-        "search_ms": 92.39,
-        "rerank_ms": 2.96,
-        "total_ms": 128.42,
-        "qa_ms": 12.56
+        "embed_ms": 11.09,
+        "search_ms": 97.1,
+        "rerank_ms": 2.98,
+        "total_ms": 134.54,
+        "qa_ms": 12.57
       },
-      "client_ms": 1181.5848999999616,
+      "client_ms": 1432.708399999683,
       "success": true
     },
     {
@@ -1189,13 +1209,13 @@
       "guardrail": null,
       "confidence": 0.5289,
       "timings_ms": {
-        "embed_ms": 11.39,
-        "search_ms": 96.7,
-        "rerank_ms": 2.91,
-        "total_ms": 133.89,
-        "qa_ms": 12.42
+        "embed_ms": 10.47,
+        "search_ms": 98.22,
+        "rerank_ms": 2.96,
+        "total_ms": 134.38,
+        "qa_ms": 12.68
       },
-      "client_ms": 1211.4289000001008,
+      "client_ms": 1330.8804999978747,
       "success": true
     },
     {
@@ -1207,13 +1227,13 @@
       "guardrail": null,
       "confidence": 0.3949,
       "timings_ms": {
-        "embed_ms": 11.25,
-        "search_ms": 93.0,
-        "rerank_ms": 3.52,
-        "total_ms": 132.53,
-        "qa_ms": 14.12
+        "embed_ms": 11.11,
+        "search_ms": 92.94,
+        "rerank_ms": 3.59,
+        "total_ms": 132.62,
+        "qa_ms": 14.46
       },
-      "client_ms": 1178.627299999789,
+      "client_ms": 1252.4228999973275,
       "success": true
     },
     {
@@ -1225,13 +1245,13 @@
       "guardrail": null,
       "confidence": 0.0913,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 98.4,
-        "rerank_ms": 2.78,
-        "total_ms": 140.82,
-        "qa_ms": 18.2
+        "embed_ms": 10.63,
+        "search_ms": 96.8,
+        "rerank_ms": 6.62,
+        "total_ms": 141.47,
+        "qa_ms": 17.95
       },
-      "client_ms": 1191.0148999995727,
+      "client_ms": 1409.142200001952,
       "success": true
     },
     {
@@ -1243,13 +1263,13 @@
       "guardrail": null,
       "confidence": 0.4684,
       "timings_ms": {
-        "embed_ms": 11.29,
-        "search_ms": 103.67,
-        "rerank_ms": 3.71,
-        "total_ms": 145.43,
-        "qa_ms": 16.75
+        "embed_ms": 10.67,
+        "search_ms": 99.9,
+        "rerank_ms": 3.66,
+        "total_ms": 141.54,
+        "qa_ms": 17.19
       },
-      "client_ms": 1181.1597000000802,
+      "client_ms": 1330.868199998804,
       "success": true
     },
     {
@@ -1261,13 +1281,13 @@
       "guardrail": null,
       "confidence": 0.3806,
       "timings_ms": {
-        "embed_ms": 11.02,
-        "search_ms": 99.19,
-        "rerank_ms": 3.36,
-        "total_ms": 140.67,
-        "qa_ms": 16.4
+        "embed_ms": 11.45,
+        "search_ms": 97.65,
+        "rerank_ms": 3.37,
+        "total_ms": 139.99,
+        "qa_ms": 16.67
       },
-      "client_ms": 1243.7151999997695,
+      "client_ms": 1333.3172000020568,
       "success": true
     },
     {
@@ -1279,13 +1299,13 @@
       "guardrail": null,
       "confidence": 0.587,
       "timings_ms": {
-        "embed_ms": 11.69,
-        "search_ms": 99.31,
-        "rerank_ms": 3.37,
-        "total_ms": 140.04,
-        "qa_ms": 15.08
+        "embed_ms": 10.57,
+        "search_ms": 95.58,
+        "rerank_ms": 3.32,
+        "total_ms": 134.5,
+        "qa_ms": 15.27
       },
-      "client_ms": 1187.3516999999083,
+      "client_ms": 1330.157299998973,
       "success": true
     },
     {
@@ -1297,13 +1317,13 @@
       "guardrail": null,
       "confidence": 0.6144,
       "timings_ms": {
-        "embed_ms": 11.1,
-        "search_ms": 100.08,
-        "rerank_ms": 3.28,
-        "total_ms": 137.82,
-        "qa_ms": 13.55
+        "embed_ms": 11.4,
+        "search_ms": 95.44,
+        "rerank_ms": 3.33,
+        "total_ms": 135.27,
+        "qa_ms": 14.07
       },
-      "client_ms": 1170.8103000000847,
+      "client_ms": 1329.503199998726,
       "success": true
     },
     {
@@ -1315,13 +1335,13 @@
       "guardrail": null,
       "confidence": 0.0528,
       "timings_ms": {
-        "embed_ms": 11.12,
-        "search_ms": 97.45,
-        "rerank_ms": 3.57,
-        "total_ms": 138.34,
-        "qa_ms": 15.89
+        "embed_ms": 11.54,
+        "search_ms": 94.39,
+        "rerank_ms": 3.68,
+        "total_ms": 136.04,
+        "qa_ms": 15.83
       },
-      "client_ms": 1198.2056000001648,
+      "client_ms": 1332.3710000004212,
       "success": true
     },
     {
@@ -1333,13 +1353,13 @@
       "guardrail": null,
       "confidence": 0.0805,
       "timings_ms": {
-        "embed_ms": 10.62,
-        "search_ms": 98.3,
-        "rerank_ms": 4.15,
-        "total_ms": 140.97,
-        "qa_ms": 17.93
+        "embed_ms": 10.32,
+        "search_ms": 95.97,
+        "rerank_ms": 4.04,
+        "total_ms": 139.53,
+        "qa_ms": 18.28
       },
-      "client_ms": 1187.7042000000984,
+      "client_ms": 1331.262899999274,
       "success": true
     },
     {
@@ -1351,13 +1371,13 @@
       "guardrail": null,
       "confidence": 0.4871,
       "timings_ms": {
-        "embed_ms": 10.62,
-        "search_ms": 102.59,
-        "rerank_ms": 3.03,
-        "total_ms": 145.0,
-        "qa_ms": 18.35
+        "embed_ms": 12.33,
+        "search_ms": 98.64,
+        "rerank_ms": 2.97,
+        "total_ms": 142.35,
+        "qa_ms": 18.48
       },
-      "client_ms": 1225.1157999999123,
+      "client_ms": 1344.217199999548,
       "success": true
     },
     {
@@ -1369,13 +1389,13 @@
       "guardrail": null,
       "confidence": 0.1133,
       "timings_ms": {
-        "embed_ms": 11.75,
-        "search_ms": 98.59,
-        "rerank_ms": 3.27,
-        "total_ms": 140.56,
-        "qa_ms": 16.41
+        "embed_ms": 11.11,
+        "search_ms": 94.37,
+        "rerank_ms": 3.26,
+        "total_ms": 136.24,
+        "qa_ms": 17.32
       },
-      "client_ms": 1166.409900000417,
+      "client_ms": 1419.5087000007334,
       "success": true
     },
     {
@@ -1387,13 +1407,14 @@
       "guardrail": null,
       "confidence": 0.3403,
       "timings_ms": {
-        "embed_ms": 11.28,
-        "search_ms": 99.51,
-        "rerank_ms": 4.24,
-        "total_ms": 142.62,
-        "qa_ms": 17.95
+        "embed_ms": 11.56,
+        "search_ms": 95.64,
+        "rerank_ms": 4.29,
+        "total_ms": 155.9,
+        "qa_ms": 18.66,
+        "nli_ms": 15.63
       },
-      "client_ms": 1216.3455999998405,
+      "client_ms": 1239.248800000496,
       "success": true
     },
     {
@@ -1405,13 +1426,13 @@
       "guardrail": null,
       "confidence": 0.1139,
       "timings_ms": {
-        "embed_ms": 11.53,
-        "search_ms": 98.78,
-        "rerank_ms": 4.47,
-        "total_ms": 152.07,
-        "qa_ms": 27.04
+        "embed_ms": 10.9,
+        "search_ms": 95.76,
+        "rerank_ms": 4.59,
+        "total_ms": 149.69,
+        "qa_ms": 27.96
       },
-      "client_ms": 1233.8410000002114,
+      "client_ms": 1321.6029000031995,
       "success": true
     },
     {
@@ -1423,13 +1444,14 @@
       "guardrail": null,
       "confidence": 0.2697,
       "timings_ms": {
-        "embed_ms": 11.0,
-        "search_ms": 100.38,
-        "rerank_ms": 3.25,
-        "total_ms": 139.88,
-        "qa_ms": 15.32
+        "embed_ms": 11.74,
+        "search_ms": 94.32,
+        "rerank_ms": 3.27,
+        "total_ms": 153.0,
+        "qa_ms": 15.77,
+        "nli_ms": 16.99
       },
-      "client_ms": 1227.2078000000874,
+      "client_ms": 1432.5601999989885,
       "success": true
     },
     {
@@ -1441,13 +1463,13 @@
       "guardrail": null,
       "confidence": 0.1436,
       "timings_ms": {
-        "embed_ms": 10.52,
-        "search_ms": 97.69,
-        "rerank_ms": 4.78,
-        "total_ms": 143.45,
-        "qa_ms": 20.73
+        "embed_ms": 10.89,
+        "search_ms": 95.62,
+        "rerank_ms": 4.79,
+        "total_ms": 142.22,
+        "qa_ms": 21.33
       },
-      "client_ms": 1253.5117000002174,
+      "client_ms": 1433.078199999727,
       "success": true
     },
     {
@@ -1459,13 +1481,14 @@
       "guardrail": null,
       "confidence": 0.2153,
       "timings_ms": {
-        "embed_ms": 11.54,
-        "search_ms": 102.89,
+        "embed_ms": 11.45,
+        "search_ms": 94.05,
         "rerank_ms": 3.66,
-        "total_ms": 148.89,
-        "qa_ms": 20.3
+        "total_ms": 156.77,
+        "qa_ms": 21.35,
+        "nli_ms": 15.84
       },
-      "client_ms": 1199.931099999958,
+      "client_ms": 1433.891800003039,
       "success": true
     },
     {
@@ -1477,13 +1500,13 @@
       "guardrail": null,
       "confidence": 0.1267,
       "timings_ms": {
-        "embed_ms": 10.94,
-        "search_ms": 97.92,
-        "rerank_ms": 3.72,
-        "total_ms": 140.11,
-        "qa_ms": 16.8
+        "embed_ms": 10.69,
+        "search_ms": 99.78,
+        "rerank_ms": 4.01,
+        "total_ms": 140.87,
+        "qa_ms": 16.49
       },
-      "client_ms": 1177.4383000001762,
+      "client_ms": 1433.6535000002186,
       "success": true
     },
     {
@@ -1495,13 +1518,13 @@
       "guardrail": null,
       "confidence": 0.118,
       "timings_ms": {
-        "embed_ms": 11.06,
-        "search_ms": 102.29,
-        "rerank_ms": 3.36,
-        "total_ms": 144.99,
-        "qa_ms": 17.66
+        "embed_ms": 10.67,
+        "search_ms": 94.55,
+        "rerank_ms": 3.3,
+        "total_ms": 136.79,
+        "qa_ms": 18.2
       },
-      "client_ms": 1226.5371000003142,
+      "client_ms": 1464.6366000015405,
       "success": true
     },
     {
@@ -1513,13 +1536,13 @@
       "guardrail": null,
       "confidence": 0.1379,
       "timings_ms": {
-        "embed_ms": 10.86,
-        "search_ms": 98.09,
+        "embed_ms": 11.44,
+        "search_ms": 95.72,
         "rerank_ms": 4.39,
-        "total_ms": 141.81,
-        "qa_ms": 18.38
+        "total_ms": 140.76,
+        "qa_ms": 18.71
       },
-      "client_ms": 1268.0106999996497,
+      "client_ms": 1402.6702999981353,
       "success": true
     },
     {
@@ -1531,13 +1554,13 @@
       "guardrail": null,
       "confidence": 0.0745,
       "timings_ms": {
-        "embed_ms": 11.19,
-        "search_ms": 97.39,
-        "rerank_ms": 3.52,
-        "total_ms": 136.62,
-        "qa_ms": 13.96
+        "embed_ms": 11.8,
+        "search_ms": 94.8,
+        "rerank_ms": 3.23,
+        "total_ms": 134.43,
+        "qa_ms": 13.74
       },
-      "client_ms": 1222.9206000001795,
+      "client_ms": 1227.9667999973753,
       "success": true
     },
     {
@@ -1549,13 +1572,13 @@
       "guardrail": null,
       "confidence": 0.0614,
       "timings_ms": {
-        "embed_ms": 11.1,
-        "search_ms": 100.39,
-        "rerank_ms": 3.62,
-        "total_ms": 147.8,
-        "qa_ms": 22.06
+        "embed_ms": 10.7,
+        "search_ms": 98.9,
+        "rerank_ms": 3.67,
+        "total_ms": 144.64,
+        "qa_ms": 21.61
       },
-      "client_ms": 1190.0512000001982,
+      "client_ms": 1330.1084000013361,
       "success": true
     },
     {
@@ -1567,13 +1590,14 @@
       "guardrail": null,
       "confidence": 0.2795,
       "timings_ms": {
-        "embed_ms": 10.72,
-        "search_ms": 104.73,
-        "rerank_ms": 3.73,
-        "total_ms": 144.84,
-        "qa_ms": 14.36
+        "embed_ms": 11.68,
+        "search_ms": 98.53,
+        "rerank_ms": 3.46,
+        "total_ms": 153.84,
+        "qa_ms": 14.21,
+        "nli_ms": 15.78
       },
-      "client_ms": 1189.3789000000652,
+      "client_ms": 1535.3766999978689,
       "success": true
     },
     {
@@ -1585,13 +1609,13 @@
       "guardrail": null,
       "confidence": 0.8203,
       "timings_ms": {
-        "embed_ms": 10.89,
-        "search_ms": 106.02,
-        "rerank_ms": 5.65,
-        "total_ms": 150.08,
-        "qa_ms": 16.02
+        "embed_ms": 11.02,
+        "search_ms": 95.91,
+        "rerank_ms": 3.22,
+        "total_ms": 134.84,
+        "qa_ms": 14.96
       },
-      "client_ms": 1189.8504999999204,
+      "client_ms": 1332.3343000010937,
       "success": true
     },
     {
@@ -1603,13 +1627,13 @@
       "guardrail": null,
       "confidence": 0.0785,
       "timings_ms": {
-        "embed_ms": 10.9,
-        "search_ms": 100.75,
-        "rerank_ms": 3.93,
-        "total_ms": 142.22,
-        "qa_ms": 15.78
+        "embed_ms": 10.54,
+        "search_ms": 99.68,
+        "rerank_ms": 3.97,
+        "total_ms": 139.75,
+        "qa_ms": 15.91
       },
-      "client_ms": 1182.3598000000857,
+      "client_ms": 1330.9783000004245,
       "success": true
     },
     {
@@ -1621,13 +1645,14 @@
       "guardrail": null,
       "confidence": 0.3045,
       "timings_ms": {
-        "embed_ms": 11.9,
-        "search_ms": 105.51,
-        "rerank_ms": 3.27,
-        "total_ms": 146.75,
-        "qa_ms": 15.17
+        "embed_ms": 11.5,
+        "search_ms": 97.01,
+        "rerank_ms": 3.28,
+        "total_ms": 154.51,
+        "qa_ms": 14.77,
+        "nli_ms": 16.92
       },
-      "client_ms": 1259.1166000001976,
+      "client_ms": 1435.1964999987104,
       "success": true
     }
   ]

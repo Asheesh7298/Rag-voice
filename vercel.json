@@ -1,10 +1,11 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "rewrites": [
+  "framework": null,
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/frontend/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }

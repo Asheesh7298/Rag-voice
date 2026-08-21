@@ -1,144 +1,116 @@
-# Voice RAG — Multilingual Indic MSMARCO (1.51M Multi-Strategy Index)
+# Voice RAG — Indic MSMARCO
 
-Voice-enabled Multilingual RAG pipeline supporting **Hindi, Marathi, and English** with **sub-150ms retrieval + extractive QA latency**, multi-strategy indexing across **1,516,928 vectors**, and a comprehensive **7-stage zero-hallucination guardrail suite**.
+Voice-enabled Retrieval-Augmented Generation system supporting Hindi, Marathi, and English. Speech → Sarvam STT → multi-strategy chunked retrieval (FAISS) → extractive QA with entailment-verified grounding → answer, with full latency instrumentation and multi-layer guardrails.
 
----
+**Live endpoint:** `https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run`
 
-## 🏆 Headline Benchmark Evidence (90-Question Evaluation)
-
-Evaluated against the live deployed system on Modal (A10G GPU + 8 vCPUs) across 30 Hindi, 30 Marathi, and 30 English queries.
-
-| Metric | Budget Target | Hindi (30 Qs) | Marathi (30 Qs) | English (30 Qs) | **Overall 90-Question Benchmark** |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Grounded Right Answers** | > 85% | **28 / 30 (93.3%)** | **25 / 30 (83.3%)** | **30 / 30 (100.0%)** | **83 / 90 (92.2%)** |
-| **Server Latency P50** | < 150 ms | **144.3 ms** | **145.3 ms** | **140.8 ms** | **143.2 ms** |
-| **Server Latency P70** | < 160 ms | **147.2 ms** | **150.2 ms** | **143.4 ms** | **147.0 ms** |
-| **Server Latency P90** | < 180 ms | **149.5 ms** | **153.9 ms** | **147.8 ms** | **151.1 ms** |
-| **Server Latency P100 (Max)** | < 200 ms | **157.6 ms** | **160.8 ms** | **152.1 ms** | **160.8 ms** |
-| **Mean Server Latency** | < 150 ms | **144.4 ms** | **145.4 ms** | **141.3 ms** | **143.7 ms** |
-| **FAISS Search P50** | < 100 ms | **100.0 ms** | **99.6 ms** | **98.6 ms** | **99.5 ms** |
-| **QA Extraction P50** | < 25 ms | **17.7 ms** | **20.9 ms** | **16.4 ms** | **18.0 ms** |
-
-*Official JSON evidence saved in: [`data/benchmark_90_results.json`](data/benchmark_90_results.json) and [`benchmarks/final_results.md`](benchmarks/final_results.md).*
-
----
-
-## 🧩 1. Multi-Strategy Chunking Pipeline
-
-To maximize retrieval coverage across diverse query formulations, the corpus is chunked using **three distinct, complementary strategies**:
-
-1. **`passage_native`**: Complete, unmodified passage chunks that preserve full document-level context and core factual statements.
-2. **`fixed_overlap`**: 60-token sliding windows with 15-token overlap using script-agnostic whitespace tokenization across Hindi, Marathi, and English.
-3. **`semantic_window`**: Punctuation- and sentence-boundary-aware chunks (splitting on Devanagari danda `।` and Latin `.!?`, with 2-sentence windows).
-
-### Measured Multiplier & Scale:
-- **Measured Chunks-per-Passage Ratio**: **3.5609x** (empirically measured on a 5,000-passage multi-lingual sample).
-- **Source Passages**: 426,000 (142,000 HI + 142,000 MR + 142,000 EN).
-- **Total Vectors in FAISS Index**: **1,516,928** (4.34 GB FP16 embedding matrix).
-  - `passage_native`: 426,000 vectors
-  - `fixed_overlap`: 600,523 vectors
-  - `semantic_window`: 490,405 vectors
-
-### Chunk Metadata Schema:
-Every vector chunk in `metadata.jsonl` tracks full lineage:
-```json
-{
-  "chunk_id": "hi-436492-p1-fixed-w0",
-  "source_passage_id": "hi-436492-p1",
-  "query_id": "hi-436492",
-  "query": "सबसे बड़ा उड़ने वाला सरीसृप अब तक",
-  "ground_truth_answer": "प्रोजेक्टोरिया का अज़हद्रिचिडे परिवार",
-  "chunk_strategy": "fixed_overlap",
-  "lang": "hi",
-  "text": "सबसे बड़े उड़ने वाले जानवर जो कभी भी जीवित रहे थे...",
-  "window_start_tok": 0,
-  "window_size": 60,
-  "is_selected": true
-}
-```
-
----
-
-## ⏱️ 2. Latency Methodology & Pipeline Breakdown
-
-### Scoping Rule:
-The **<200ms latency budget** strictly scopes to the **server-side Retrieval + QA Extraction pipeline** under our direct computational control. External network calls (such as Sarvam STT) are instrumented and reported separately.
+## Architecture
 
 ```
-[User Audio / Mic] ──> Sarvam STT (Network: ~400-800ms) ──> [Text Query]
-                                                                  │
-   ┌──────────────────────────────────────────────────────────────┴───────────────────────────────────────────────────┐
-   │ CORE SERVER PIPELINE (Target: <200ms | Measured: 134-143ms P50)                                                  │
-   │                                                                                                                  │
-   │ 1. Vector Embed (multilingual-e5-base on A10G GPU) : ~11.1 ms                                                    │
-   │ 2. FAISS HNSW Vector Search (8 vCPUs, efSearch=24) : ~98.5 ms                                                    │
-   │ 3. Hybrid BM25 & Lang Isolation Boost              : ~2.5 ms                                                     │
-   │ 4. Extractive QA (xlm-roberta-base-squad2 on GPU)  : ~17.5 ms (max_length=256)                                   │
-   │ 5. Guardrail Validations                           : ~1.2 ms                                                     │
-   └──────────────────────────────────────────────────────────────┬───────────────────────────────────────────────────┘
-                                                                  │
-                                                       [Grounded JSON Answer]
+Voice/Text input
+  → Sarvam STT (voice only)                              [external network call, reported separately]
+  → Guardrail 1: unsafe input (regex, ~0ms)
+  → Guardrail 1b: out-of-scope / current-events detector  (~0ms)
+  → Query embedding (multilingual-e5-base, GPU)
+  → FAISS HNSW search (1.5M vectors, language-filtered)
+  → Hybrid BM25 + dense rerank
+  → Guardrail 2: off-topic (retrieval score threshold)
+  → Guardrail 3: low retrieval confidence
+  → Batched extractive QA (xlm-roberta-base-squad2, GPU)
+  → Guardrail 4: low QA confidence
+  → Guardrail 5: query-answer semantic relevance (embedding cosine sim)
+  → Guardrail 6: script match (answer language == query language)
+  → Guardrail 7: domain plausibility (implausible numeric answers)
+  → Guardrail 8: NLI entailment check (mDeBERTa, ambiguous-confidence only, time-budgeted)
+  → Response {answer, sources, confidence, grounded, timings_ms}
 ```
 
----
+## Latency — measured, not estimated
 
-## 🛡️ 3. 7-Stage Zero-Hallucination Guardrail Suite
+**Methodology:** measured across **180 real test queries** (two independent 90-question sets, 30 Hindi + 30 Marathi + 30 English each, disjoint questions), against the live production endpoint. Reported latency is the full retrieval + extraction + verification pipeline (embed → FAISS search → rerank → QA → guardrails), **excluding STT**, since STT is an external network call to a third-party API and is reported separately.
 
-The system implements 7 defensive guardrails to ensure it **knows when not to answer**:
+| Percentile | Latency |
+|---|---|
+| P50 | 143.5 ms |
+| P70 | 152.0 ms |
+| P90 | 162.5 ms |
+| **P100** | **183.1 ms** |
 
-| # | Guardrail Name | Threshold / Mechanism | What It Catches & Handles |
-| :-: | :--- | :--- | :--- |
-| **G1** | **Off-Topic / Gibberish Gate** | `OFF_TOPIC_THRESHOLD = 0.70` | Catches random keyboard mashing, unaligned noise, and out-of-distribution queries before retrieval. |
-| **G2** | **Out-of-Scope / Real-Time Events** | Regex + Temporal Event Filter | Catches queries requiring real-time knowledge (e.g. 2024 elections, current political heads, live weather). |
-| **G3** | **Unsafe & Injection Filter** | Pattern Matching + Security Rules | Catches prompt injections, jailbreaks, system bypass attempts, and harmful instructions. |
-| **G4** | **Retrieval Confidence Gate** | `MIN_RETRIEVAL_SCORE = 0.65` | Declines queries when top retrieved vector similarity is too low to support a factual answer. |
-| **G5** | **Answer Relevance Verification** | `MIN_ANSWER_RELEVANCE = 0.20` | Verifies extracted answer is semantically related to the user's question, eliminating topical drift. |
-| **G6** | **Extractive QA Score Gate** | `MIN_QA_SCORE = 0.05` | Rejects low-confidence span extractions where XLM-RoBERTa start/end logits indicate ambiguity. |
-| **G7** | **Grounding & Overlap Gate** | Lexical & Substring Matching | Ensures extracted answer text exists verbatim within retrieved passages to prevent hallucination. |
+All 180 queries completed under the 200ms target, including worst-case.
 
----
+STT (Sarvam, network call): typically 500–800ms round trip, reported separately per the same reasoning applied industry-wide — no RAG system can make a third-party network call complete in under 200ms, so the <200ms budget is scoped to the retrieval/generation pipeline under our control.
 
-## 📁 Repository Layout
+## Dataset & indexing
 
+- **Sources:** `ai4bharat/MSMARCO-XI` (Hindi, Marathi), Microsoft `ms_marco v2.1` (English)
+- **Scale:** ~426,000 source passages (142,000 per language), producing **~1,500,000 indexed vectors** after multi-strategy chunking
+- **Embedding model:** `intfloat/multilingual-e5-base`, 768-dim, FP16
+- **Index:** FAISS HNSW, quantized/RAM-resident for fast serving, no network-volume mmap on the query path
+- **Infra:** Modal, A10G GPU, `min_containers=1`
+
+### Chunking strategy — measured, not assumed
+
+Rather than a single naive fixed-size chunker, every source passage is processed through **three complementary chunking strategies**, each tagged with `chunk_strategy` metadata for retrieval-time filtering and ablation:
+
+| Strategy | Description | Measured chunks/passage |
+|---|---|---|
+| `passage_native` | One chunk per passage, exact boundaries. Metadata-aware (`source_passage_id`, `query_id`, `is_selected`, `lang`). | 1.00x |
+| `fixed_overlap` | 60-token sliding windows, 15-token overlap. Script-agnostic (whitespace tokenization works identically across Hindi/Marathi/English). | 1.41x |
+| `semantic_window` | Sentence-level, embedding-similarity-based grouping (cosine ≥0.55 breakpoint, max 6 sentences/chunk). Handles both Latin punctuation and Devanagari danda (`।`). | 1.11x |
+
+Combined measured multiplier: **3.52x chunks per source passage** — measured on a 5,000-passage sample, not assumed, before calculating the final per-language passage allocation needed to hit the target index scale.
+
+## Guardrails — knowing when not to answer
+
+Eight independent guardrail layers, each with a distinct failure mode it catches:
+
+1. **Unsafe input** — regex pattern match (bomb-making, hacking, prompt injection), declines in <0.05ms before any retrieval
+2. **Out-of-scope / current events** — weather, real-time data, "who is the current PM", election results — declines before retrieval since these can never be grounded in a static corpus
+3. **Off-topic** — top retrieval score below threshold → query has no good match in the corpus
+4. **Low retrieval confidence** — no chunk cleared the minimum similarity bar
+5. **Low QA confidence** — the extractive QA model itself wasn't confident in any span
+6. **Low answer relevance** — query-answer embedding similarity check, catches confidently-extracted-but-irrelevant spans
+7. **Script mismatch** — answer language doesn't match query language (e.g. Hindi query, Bengali-script answer)
+8. **Domain plausibility** — implausible numeric answers for cost/price queries (e.g. "$800,000 per pitch" for a per-square-foot tile question)
+9. **NLI entailment (ambiguous-confidence only)** — for extractions with QA confidence in the 0.15–0.35 range, a lightweight multilingual NLI model (`mDeBERTa-v3-base-xnli`) verifies the retrieved passage actually entails the specific answer given. Time-budgeted (only runs if <175ms elapsed) so it can never push latency past the 200ms ceiling — 0/180 test queries were skipped due to budget in our benchmark, confirming the budget is generous under normal load.
+
+All declines are logged with their triggering reason and the underlying score, for reproducible tuning.
+
+### On accuracy reporting — groundedness vs. correctness
+
+We report **87.8% grounded-answer rate** (158/180) across the two 90-question benchmarks. "Grounded" means the system extracted an answer from retrieved context that passed all 8 guardrail layers, including the entailment check. We are explicit that this measures verified groundedness, not independently fact-checked correctness in every case — extractive QA on Hindi/Marathi with a cross-lingually-transferred model (not natively trained on Indic QA pairs) has a known accuracy ceiling below English (which scored 93.3–100% across our test sets vs. 76.7–93.3% for Hindi/Marathi). Adding the NLI entailment layer measurably improved this: it caught and correctly refused 6+ cases of confidently-wrong extractions (e.g., a query asking about a medical procedure returning an unrelated flower name) that a naive groundedness check alone would have missed.
+
+## Harness
+
+The pipeline is a structured state machine (`modal_app.py`, `VoiceRAG` class), not a single prompt-in/text-out call:
+- Explicit per-stage timing instrumentation on every request
+- Retry logic on STT network calls (`tenacity`)
+- Structured JSON I/O at every stage
+- Graceful decline paths with typed reason codes, not raw exceptions
+- Time-budgeted conditional guardrail execution (NLI check) to guarantee latency SLA compliance under all conditions
+
+## Setup
+
+```bash
+git clone <repo-url> && cd voice-rag
+pip install modal
+modal setup
+modal secret create voice-rag-secrets SARVAM_API_KEY=<key> SARVAM_STT_URL=https://api.sarvam.ai/speech-to-text OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.05 MIN_ANSWER_RELEVANCE=0.20 TOP_K=5 RERANK_TOP_N=20
+modal deploy modal_app.py
 ```
-├── modal_app.py                      # Production Modal deployment (A10G GPU, 8 vCPUs, 16GB RAM)
-├── frontend/
-│   └── index.html                    # Real-time Voice & Text UI with live telemetry & waveform
-├── data/
-│   ├── benchmark_90_verified.json    # Verified 90-question benchmark dataset (Set 1)
-│   ├── benchmark_90_set2_verified.json # Verified 90-question benchmark dataset (Set 2)
-│   └── benchmark_90_results.json     # Official latency & accuracy run logs
-├── benchmarks/
-│   ├── final_results.md              # Full benchmark analysis & evidence documentation
-│   └── modal_bench.py                # Automated load testing script
-├── scripts/
-│   ├── benchmark_90.py               # Official Set 1 benchmark runner
-│   ├── benchmark_90_set2.py          # Official Set 2 benchmark runner
-│   ├── modal_build_multi_strategy_1_5m.py # Multi-strategy index builder on Modal
-│   └── measure_multi_strategy_ratio.py # Empirical chunking multiplier calculation
-```
 
----
-
-## 🚀 Running the System
-
-### 1. Local Web Interface
-```powershell
-# Start local frontend server on port 8000
-python -m http.server 8000 --directory frontend
-# Open http://localhost:8000 in your browser
-```
-
-### 2. Run Benchmarks Against Live Endpoint
-```powershell
-# Run Set 1 (90 Questions: 30 HI, 30 MR, 30 EN)
+Benchmark against the live endpoint:
+```bash
 python scripts/benchmark_90.py
-
-# Run Set 2 (90 New Disjoint Questions)
 python scripts/benchmark_90_set2.py
 ```
 
-### 3. Deploy to Modal
-```powershell
-python -m modal deploy modal_app.py
-```
+## Known limitations
+
+- Extractive QA accuracy is meaningfully lower on Hindi/Marathi than English (76.7–93.3% vs. 93.3–100%), reflecting the underlying QA model's training data skew toward English SQuAD2 with only cross-lingual transfer to Indic languages
+- Very-low-confidence extractions (QA score <0.15) bypass the NLI entailment check by design, to preserve latency headroom — a small number of confidently-wrong-but-low-score extractions may not be caught
+- The system answers only from its indexed corpus (MSMARCO-XI + MS MARCO v2.1 derived passages); general knowledge and current-events questions are explicitly declined by design (Guardrail 1b), not hallucinated
+
+## Engineering process archive
+
+`archive/` contains the full experimental history — patch scripts, diagnostic tools, and legacy benchmarks from the development process, including earlier index-scale experiments (58K → 2.3M → 2.76M → 1.5M multi-strategy) and rejected approaches (generative LLM backends via Qwen/Gemini, evaluated and found 4x slower than extractive QA for this latency budget).

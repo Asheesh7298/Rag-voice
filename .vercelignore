@@ -1,6 +1,9 @@
 venv/
 archive/
-.git/
+benchmarks/
+scripts/
+src/
+*.py
 *.faiss
 *.jsonl
 *.pt

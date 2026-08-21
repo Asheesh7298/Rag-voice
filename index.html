@@ -207,6 +207,230 @@
       border-radius: 50%;
       background: #34D399;
       box-shadow: 0 0 6px #34D399;
+      transition: all 0.2s ease;
+    }
+
+    .sla-dot.warming {
+      background: #F59E0B;
+      box-shadow: 0 0 8px #F59E0B;
+      animation: pulseDot 1s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* Cold Start / Warmup Notification Banner */
+    .cold-start-banner {
+      display: none;
+      background: linear-gradient(135deg, #EEF0FD 0%, #E2E6FB 100%);
+      border-bottom: 1px solid var(--border-card);
+      padding: 8px 18px;
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      color: var(--purple-dark);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeIn 0.25s ease;
+      z-index: 25;
+    }
+
+    .cold-start-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cold-start-spinner {
+      width: 13px;
+      height: 13px;
+      border: 2px solid var(--purple-primary);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spinWarm 0.75s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spinWarm {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ==========================================================================
+       STARTUP WARMUP SPLASH WINDOW
+       ========================================================================== */
+    .warmup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: radial-gradient(circle at 50% 30%, #EFF2FE 0%, #DFE4FB 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s;
+    }
+
+    .warmup-overlay.hidden-overlay {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(1.02);
+    }
+
+    .warmup-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 60px rgba(90, 80, 200, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.8);
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+      animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.94) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .warmup-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .warmup-logo-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--purple-gradient);
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(124, 116, 234, 0.35);
+      margin-bottom: 4px;
+      animation: pulseRecord 2s infinite;
+    }
+
+    .warmup-logo-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: -0.5px;
+    }
+
+    .warmup-logo-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .warmup-progress-box {
+      width: 100%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .warmup-status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--purple-primary);
+    }
+
+    .warmup-timer {
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .warmup-progress-bar-bg {
+      width: 100%;
+      height: 7px;
+      background: rgba(124, 116, 234, 0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .warmup-progress-bar-fill {
+      height: 100%;
+      width: 10%;
+      background: var(--purple-gradient);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .warmup-checklist {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      text-align: left;
+    }
+
+    .warmup-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+
+    .warmup-step.active {
+      color: var(--purple-dark);
+      font-weight: 600;
+      background: rgba(124, 116, 234, 0.08);
+    }
+
+    .warmup-step.done {
+      color: var(--emerald);
+      font-weight: 600;
+    }
+
+    .step-icon {
+      font-size: 13px;
+      width: 16px;
+      text-align: center;
+    }
+
+    .btn-skip-warmup {
+      background: transparent;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-skip-warmup:hover {
+      background: var(--bg-subtle);
+      color: var(--purple-primary);
+      border-color: var(--purple-primary);
     }
 
     /* ==========================================================================
@@ -872,6 +1096,46 @@
 </head>
 <body>
 
+  <!-- Modal GPU Startup & Warmup Splash Window -->
+  <div id="warmupOverlay" class="warmup-overlay">
+    <div class="warmup-card">
+      <div class="warmup-logo-wrap">
+        <div class="warmup-logo-avatar">V</div>
+        <div class="warmup-logo-title">VoxLore</div>
+        <div class="warmup-logo-sub">Multilingual Voice RAG · 1.51M Vectors</div>
+      </div>
+
+      <div class="warmup-progress-box">
+        <div class="warmup-status-header">
+          <span id="warmupMainStatus">⚡ Initializing Modal A10G GPU...</span>
+          <span id="warmupTimer" class="warmup-timer">0s</span>
+        </div>
+        <div class="warmup-progress-bar-bg">
+          <div id="warmupProgressBar" class="warmup-progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="warmup-checklist">
+        <div id="step1" class="warmup-step active">
+          <span class="step-icon">🔄</span>
+          <span class="step-text">Booting Serverless A10G GPU Container</span>
+        </div>
+        <div id="step2" class="warmup-step">
+          <span class="step-icon">⏳</span>
+          <span class="step-text">Loading Multilingual-E5 &amp; XLM-RoBERTa Models</span>
+        </div>
+        <div id="step3" class="warmup-step">
+          <span class="step-icon">⏳</span>
+          <span class="step-text">Ingesting 1.51M FAISS HNSW Vector Index</span>
+        </div>
+      </div>
+
+      <div class="warmup-footer">
+        <button class="btn-skip-warmup" onclick="dismissWarmup()">Skip to Chat ↗</button>
+      </div>
+    </div>
+  </div>
+
   <div class="app-screen-wrapper">
     
     <!-- Phone / Web Device Frame -->
@@ -897,13 +1161,22 @@
               <span>⚡</span> <span id="headerLatencyText">Latency Breakdown</span>
             </button>
             <div class="sla-pill" onclick="openLatestTelemetry()" title="Sub-200ms SLA Verified" style="cursor:pointer;">
-              <div class="sla-dot"></div>
-              <span>&lt; 200ms SLA</span>
+              <div id="slaDot" class="sla-dot"></div>
+              <span id="slaText">&lt; 200ms SLA</span>
             </div>
           </div>
 
         </div>
       </header>
+
+      <!-- Proactive GPU Cold-Start / Startup Status Banner -->
+      <div id="coldStartBanner" class="cold-start-banner">
+        <div class="cold-start-left">
+          <div id="coldStartSpinner" class="cold-start-spinner"></div>
+          <span id="coldStartText">🔄 Waking up Modal A10G GPU &amp; loading 1.51M vector index... (~15s cold start)</span>
+        </div>
+        <span style="cursor:pointer; opacity:0.6;" onclick="document.getElementById('coldStartBanner').style.display='none'">✕</span>
+      </div>
 
       <!-- 2. SCROLLABLE CHAT & STARTER FEED -->
       <main id="chatFeedViewport" class="chat-scroll-feed">
@@ -1051,6 +1324,96 @@
     const canvas = document.getElementById("audioCanvas");
     const canvasCtx = canvas.getContext("2d");
     const chatFeedViewport = document.getElementById("chatFeedViewport");
+
+    let isServerWarm = false;
+    let warmupSeconds = 0;
+    let warmupInterval = null;
+
+    function startWarmupSequence() {
+      const timerEl = document.getElementById("warmupTimer");
+      const progressFill = document.getElementById("warmupProgressBar");
+      const mainStatus = document.getElementById("warmupMainStatus");
+      const step1 = document.getElementById("step1");
+      const step2 = document.getElementById("step2");
+      const step3 = document.getElementById("step3");
+
+      warmupInterval = setInterval(() => {
+        warmupSeconds++;
+        if (timerEl) timerEl.textContent = `${warmupSeconds}s`;
+
+        if (warmupSeconds >= 3 && warmupSeconds < 8) {
+          if (step1) { step1.className = "warmup-step done"; step1.querySelector(".step-icon").textContent = "✅"; }
+          if (step2) { step2.className = "warmup-step active"; step2.querySelector(".step-icon").textContent = "🔄"; }
+          if (progressFill) progressFill.style.width = "45%";
+          if (mainStatus) mainStatus.textContent = "🧠 Loading Neural Embedding & QA Models...";
+        } else if (warmupSeconds >= 8) {
+          if (step2) { step2.className = "warmup-step done"; step2.querySelector(".step-icon").textContent = "✅"; }
+          if (step3) { step3.className = "warmup-step active"; step3.querySelector(".step-icon").textContent = "🔄"; }
+          if (progressFill) progressFill.style.width = `${Math.min(92, 45 + (warmupSeconds - 8) * 6)}%`;
+          if (mainStatus) mainStatus.textContent = "⚡ Ingesting 1.51M FAISS HNSW Vector Index...";
+        }
+      }, 1000);
+    }
+
+    function completeWarmupSuccess() {
+      if (warmupInterval) clearInterval(warmupInterval);
+      const progressFill = document.getElementById("warmupProgressBar");
+      const mainStatus = document.getElementById("warmupMainStatus");
+      const step1 = document.getElementById("step1");
+      const step2 = document.getElementById("step2");
+      const step3 = document.getElementById("step3");
+
+      if (progressFill) progressFill.style.width = "100%";
+      if (mainStatus) mainStatus.textContent = "✅ System Ready · Sub-200ms SLA Active!";
+      if (step1) { step1.className = "warmup-step done"; step1.querySelector(".step-icon").textContent = "✅"; }
+      if (step2) { step2.className = "warmup-step done"; step2.querySelector(".step-icon").textContent = "✅"; }
+      if (step3) { step3.className = "warmup-step done"; step3.querySelector(".step-icon").textContent = "✅"; }
+
+      setTimeout(dismissWarmup, 650);
+    }
+
+    function dismissWarmup() {
+      if (warmupInterval) clearInterval(warmupInterval);
+      const overlay = document.getElementById("warmupOverlay");
+      if (overlay) overlay.classList.add("hidden-overlay");
+      isServerWarm = true;
+      const slaDot = document.getElementById("slaDot");
+      const slaText = document.getElementById("slaText");
+      if (slaDot) slaDot.className = "sla-dot";
+      if (slaText) slaText.textContent = "< 200ms SLA";
+    }
+
+    async function checkServerWarmth() {
+      const slaDot = document.getElementById("slaDot");
+      const slaText = document.getElementById("slaText");
+
+      startWarmupSequence();
+
+      let attempts = 0;
+      const pollHealth = async () => {
+        attempts++;
+        try {
+          const res = await fetch(`${API_ENDPOINT}/health`, { cache: "no-store" });
+          const data = await res.json();
+          if (data.status === "ok") {
+            isServerWarm = true;
+            if (slaDot) slaDot.className = "sla-dot";
+            if (slaText) slaText.textContent = "< 200ms SLA";
+            completeWarmupSuccess();
+            return;
+          }
+        } catch (e) {
+          // Retrying next tick
+        }
+        if (attempts < 45 && !isServerWarm) {
+          setTimeout(pollHealth, 1200);
+        }
+      };
+
+      pollHealth();
+    }
+
+    checkServerWarmth();
 
     function resetChat() {
       dynamicChatStream.innerHTML = "";
@@ -1292,9 +1655,12 @@
       // 2. Loading Placeholder on LEFT
       const temp = document.createElement("div");
       temp.className = "message-bubble-row assistant";
+      const loadingMsg = !isServerWarm 
+        ? "🔄 Waking up Modal A10G GPU &amp; loading 1.51M vectors... (Cold start ~15s)"
+        : "⚡ Retrieving across 1,516,928 vectors &amp; extracting answer on GPU...";
       temp.innerHTML = `
-        <div class="assistant-bubble-card" style="color:var(--text-muted);">
-          ⚡ Retrieving across 1,516,928 vectors &amp; extracting answer on GPU...
+        <div class="assistant-bubble-card" style="color:${!isServerWarm ? 'var(--purple-dark)' : 'var(--text-muted)'}; font-weight:${!isServerWarm ? '600' : '400'};">
+          ${loadingMsg}
         </div>
       `;
       dynamicChatStream.appendChild(temp);
@@ -1309,6 +1675,7 @@
           body: form,
         });
         const data = await res.json();
+        isServerWarm = true;
         dynamicChatStream.removeChild(temp);
 
         appendAssistantMessage(data.answer, {

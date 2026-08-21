@@ -6,3 +6,6 @@ data/processed/
 data/index/
 benchmarks/results.md
 .DS_Store
+
+.vercel
+.env*
