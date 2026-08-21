@@ -647,6 +647,39 @@
       color: #FFF;
     }
 
+    .btn-read-aloud.speaking {
+      background: #F43F5E !important;
+      color: #FFF !important;
+      border-color: #F43F5E !important;
+      animation: pulseBtn 1.2s infinite ease-in-out;
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.88; transform: scale(0.97); }
+    }
+
+    .btn-floating-stop {
+      background: #F43F5E;
+      color: #FFF;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+      transition: all 0.15s;
+    }
+
+    .btn-floating-stop:hover {
+      background: #E11D48;
+      transform: translateY(-1px);
+    }
+
     .assistant-answer-text {
       font-size: 14.5px;
       color: var(--text-dark);
@@ -1102,12 +1135,12 @@
       <div class="warmup-logo-wrap">
         <div class="warmup-logo-avatar">V</div>
         <div class="warmup-logo-title">VoxLore</div>
-        <div class="warmup-logo-sub">Multilingual Voice RAG · 13.0M Vectors · Qwen2.5 Mini-LLM</div>
+        <div class="warmup-logo-sub">Multilingual Voice RAG · 13.02M Vectors · Modal A100 GPU</div>
       </div>
 
       <div class="warmup-progress-box">
         <div class="warmup-status-header">
-          <span id="warmupMainStatus">⚡ Initializing Modal A10G GPU...</span>
+          <span id="warmupMainStatus">⚡ Initializing Modal A100 GPU...</span>
           <span id="warmupTimer" class="warmup-timer">0s</span>
         </div>
         <div class="warmup-progress-bar-bg">
@@ -1249,6 +1282,9 @@
         <div class="waveform-holder">
           <canvas id="audioCanvas" height="28"></canvas>
           <span id="waveHint" class="waveform-hint">🎙️ Press mic to speak or type in English, Hindi, or Marathi</span>
+          <button id="btnStopAudioFloating" class="btn-floating-stop" onclick="stopAllAudio()" style="display:none; position:absolute; right:8px;" title="Stop Voice Speaking">
+            <span>⏹</span> Stop Audio
+          </button>
         </div>
 
         <!-- Input Capsule -->
@@ -1497,6 +1533,7 @@
       }
 
       const isDecline = meta && meta.guardrail;
+      const btnSpeechId = 'btnSpeech_' + Math.random().toString(36).substr(2, 7);
       const cardHtml = `
         <div class="assistant-bubble-card">
           <div class="assistant-header-row">
@@ -1504,7 +1541,7 @@
               <span>VoxLore</span>
               <span class="badge">${isDecline ? '🛡️ GUARDRAIL' : '🤖 EXTRACTIVE QA'}</span>
             </div>
-            ${answer && !isDecline ? `<button class="btn-read-aloud" onclick="speakText('${encodeURIComponent(answer)}')">🔊 Listen</button>` : ''}
+            ${answer && !isDecline ? `<button id="${btnSpeechId}" class="btn-read-aloud" onclick="toggleSpeech('${encodeURIComponent(answer)}', '${btnSpeechId}')" title="Listen or Stop Audio">🔊 Listen</button>` : ''}
           </div>
 
           <div class="assistant-answer-text">${answer}</div>
@@ -1637,13 +1674,82 @@
       if (el) el.style.display = el.style.display === 'none' ? 'flex' : 'none';
     }
 
-    function speakText(encoded) {
+    let currentlySpeakingBtnId = null;
+
+    function toggleSpeech(encoded, btnId) {
       const txt = decodeURIComponent(encoded);
       if (!window.speechSynthesis) return;
-      window.speechSynthesis.cancel();
+
+      const btn = btnId ? document.getElementById(btnId) : null;
+      const globalBtn = document.getElementById("btnStopAudioFloating");
+
+      // If already speaking, STOP IT immediately
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        if (currentlySpeakingBtnId) {
+          const prev = document.getElementById(currentlySpeakingBtnId);
+          if (prev) {
+            prev.innerHTML = '🔊 Listen';
+            prev.classList.remove('speaking');
+          }
+        }
+        if (globalBtn) globalBtn.style.display = 'none';
+
+        // If clicked same button to stop, we are done
+        if (currentlySpeakingBtnId === btnId) {
+          currentlySpeakingBtnId = null;
+          return;
+        }
+      }
+
+      // Start new speech
       const utter = new SpeechSynthesisUtterance(txt);
       utter.rate = 1.0;
+      currentlySpeakingBtnId = btnId;
+
+      if (btn) {
+        btn.innerHTML = '⏹ Stop';
+        btn.classList.add('speaking');
+      }
+      if (globalBtn) {
+        globalBtn.style.display = 'inline-flex';
+      }
+
+      utter.onend = () => {
+        if (btn) {
+          btn.innerHTML = '🔊 Listen';
+          btn.classList.remove('speaking');
+        }
+        if (globalBtn) globalBtn.style.display = 'none';
+        currentlySpeakingBtnId = null;
+      };
+
+      utter.onerror = () => {
+        if (btn) {
+          btn.innerHTML = '🔊 Listen';
+          btn.classList.remove('speaking');
+        }
+        if (globalBtn) globalBtn.style.display = 'none';
+        currentlySpeakingBtnId = null;
+      };
+
       window.speechSynthesis.speak(utter);
+    }
+
+    function stopAllAudio() {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      if (currentlySpeakingBtnId) {
+        const prev = document.getElementById(currentlySpeakingBtnId);
+        if (prev) {
+          prev.innerHTML = '🔊 Listen';
+          prev.classList.remove('speaking');
+        }
+      }
+      const globalBtn = document.getElementById("btnStopAudioFloating");
+      if (globalBtn) globalBtn.style.display = 'none';
+      currentlySpeakingBtnId = null;
     }
 
     async function handleSend() {
@@ -1659,8 +1765,8 @@
       const temp = document.createElement("div");
       temp.className = "message-bubble-row assistant";
       const loadingMsg = !isServerWarm 
-        ? "🔄 Waking up Modal A10G GPU &amp; loading 13.0M vectors... (Cold start ~15s)"
-        : "⚡ Retrieving across 13,020,220 vectors &amp; generating with Qwen2.5...";
+        ? "🔄 Waking up Modal A100 GPU &amp; loading 13.02M vectors... (Cold start ~14s)"
+        : "⚡ Retrieving across 13,020,220 vectors &amp; extracting grounded answer...";
       temp.innerHTML = `
         <div class="assistant-bubble-card" style="color:${!isServerWarm ? 'var(--purple-dark)' : 'var(--text-muted)'}; font-weight:${!isServerWarm ? '600' : '400'};">
           ${loadingMsg}
