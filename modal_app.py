@@ -65,24 +65,31 @@ app = modal.App("voice-rag", image=image, secrets=secrets)
 
 
 class MetadataStore:
-    def __init__(self, meta_path: str):
-        import time
+    def __init__(self, meta_path: str, offsets_path: str = "/index/metadata.offsets"):
+        import time, os, numpy as np
         t0 = time.perf_counter()
-        self.data = []
-        try:
-            import orjson
-            with open(meta_path, "rb") as f:
-                for line in f:
-                    if line.strip():
-                        self.data.append(orjson.loads(line))
-        except Exception:
-            import json
-            with open(meta_path, "r", encoding="utf-8") as f:
-                for line in f:
-                    if line.strip():
-                        self.data.append(json.loads(line))
-        self.size = len(self.data)
-        print(f"Loaded {self.size:,} metadata entries in {time.perf_counter()-t0:.1f}s")
+        self.meta_path = meta_path
+        self.f = open(meta_path, "rb")
+        if os.path.exists(offsets_path):
+            self.offsets = np.fromfile(offsets_path, dtype=np.int64)
+        else:
+            offsets_list = [0]
+            pos = 0
+            buf_size = 1024 * 1024 * 8
+            while True:
+                chunk = self.f.read(buf_size)
+                if not chunk: break
+                nl_pos = 0
+                while True:
+                    idx = chunk.find(b"\n", nl_pos)
+                    if idx == -1: break
+                    offsets_list.append(pos + idx + 1)
+                    nl_pos = idx + 1
+                pos += len(chunk)
+            if offsets_list and offsets_list[-1] >= pos: offsets_list.pop()
+            self.offsets = np.array(offsets_list, dtype=np.int64)
+        self.size = len(self.offsets)
+        print(f"Loaded {self.size:,} metadata offsets in {time.perf_counter()-t0:.2f}s")
 
     def __len__(self):
         return self.size
@@ -92,13 +99,19 @@ class MetadataStore:
             idx = self.size + idx
         if idx < 0 or idx >= self.size:
             return {}
-        return self.data[idx]
+        try:
+            import orjson
+            self.f.seek(int(self.offsets[idx]))
+            line = self.f.readline()
+            return orjson.loads(line)
+        except Exception:
+            return {}
 
 
 @app.cls(
-    gpu="A10G",
+    gpu="A100",
     cpu=8.0,
-    memory=32768,
+    memory=40960,
     scaledown_window=420,
     min_containers=0,
     timeout=300,
@@ -108,7 +121,7 @@ class VoiceRAG:
 
     @modal.enter()
     def load(self):
-        import os, torch, shutil, time
+        import os, torch, time
         from sentence_transformers import SentenceTransformer
         from transformers import (
             AutoTokenizer, AutoModelForQuestionAnswering, AutoModelForSequenceClassification, pipeline
@@ -118,19 +131,9 @@ class VoiceRAG:
         device = 0 if torch.cuda.is_available() else -1
         print(f"Device: {'cuda' if device == 0 else 'cpu'}")
 
-        # ── Copy from Volume to local disk for fast lookup ──
         volume.reload()
-        local_index_path = "/tmp/index.faiss"
-        local_meta_path = "/tmp/metadata.jsonl"
-        vol_index_size = os.path.getsize("/index/index.faiss") if os.path.exists("/index/index.faiss") else 0
-        local_index_size = os.path.getsize(local_index_path) if os.path.exists(local_index_path) else 0
-
-        if not os.path.exists(local_index_path) or vol_index_size != local_index_size:
-            print("Copying latest index from Volume to local disk...")
-            t0 = time.perf_counter()
-            shutil.copyfile("/index/index.faiss", local_index_path)
-            shutil.copyfile("/index/metadata.jsonl", local_meta_path)
-            print(f"Index and metadata copied in {time.perf_counter()-t0:.1f}s")
+        index_path = "/index/index.faiss"
+        meta_path = "/index/metadata.jsonl"
 
         # Set FAISS threads explicitly
         n_threads = os.cpu_count() or 8
@@ -144,27 +147,30 @@ class VoiceRAG:
         self.embed_model.encode(["warmup"], normalize_embeddings=True)
         print("✅ Embedding model ready")
 
-        # ── FAISS index (Loaded & Transferred to A10G GPU Tensor Memory) ──
-        print("Loading FAISS index into RAM and GPU Tensor memory...")
-        self.faiss_index = faiss.read_index(local_index_path)
-        print(f"FAISS index loaded: {self.faiss_index.ntotal:,} vectors")
+        # ── Raw 13M Vectors (Direct FP16 load to A10G Tensor memory in ~3s) ──
+        fp16_bin = "/index/vectors_fp16.bin"
         self.gpu_vectors = None
         self.gpu_vector_err = None
-        if device == 0:
+        if os.path.exists(fp16_bin) and device == 0:
             try:
                 import numpy as np
-                raw_bytes = faiss.vector_to_array(self.faiss_index.codes)
-                raw_vecs = raw_bytes.view(np.float32).reshape(self.faiss_index.ntotal, self.faiss_index.d)
-                self.gpu_vectors = torch.from_numpy(raw_vecs).cuda().half()
-                print(f"✅ Transferred {self.faiss_index.ntotal:,} vectors to A10G Tensor Core memory (FP16: {self.gpu_vectors.element_size() * self.gpu_vectors.nelement() / (1024**3):.2f} GB)")
+                t_vecs = time.perf_counter()
+                print(f"Loading 13M vectors directly from {fp16_bin} into GPU VRAM...")
+                mmap_vecs = np.memmap(fp16_bin, dtype=np.float16, mode="r", shape=(13020220, 768))
+                self.gpu_vectors = torch.empty((13020220, 768), dtype=torch.float16, device="cuda")
+                chunk_sz = 2_000_000
+                for c_start in range(0, 13020220, chunk_sz):
+                    c_end = min(c_start + chunk_sz, 13020220)
+                    self.gpu_vectors[c_start:c_end] = torch.from_numpy(mmap_vecs[c_start:c_end]).cuda()
+                print(f"✅ Loaded 13,020,220 vectors into A10G GPU VRAM in {time.perf_counter()-t_vecs:.2f}s!")
             except Exception as e:
                 import traceback
                 self.gpu_vector_err = f"{e}\n{traceback.format_exc()}"
-                print(f"Fallback to CPU FAISS search: {self.gpu_vector_err}")
+                print(f"GPU vector load error: {self.gpu_vector_err}")
 
-        # ── Fast In-Memory Metadata Store ──
+        # ── Fast Offset-Based Metadata Store ──
         print("Loading metadata store into RAM...")
-        self.metadata = MetadataStore(local_meta_path)
+        self.metadata = MetadataStore(meta_path)
 
         # ── Extractive QA model ──
         print("Loading extractive QA model...")
@@ -949,6 +955,7 @@ class VoiceRAG:
 
     # ── Main query pipeline ───────────────────────────────────────────────────
 
+    @modal.method()
     def _run_query(self, query: str) -> dict:
         import time, re
         timings = {}
