@@ -108,7 +108,7 @@ class MetadataStore:
     gpu="A100",
     cpu=8.0,
     memory=40960,
-    scaledown_window=60,
+    scaledown_window=420,
     min_containers=0,
     timeout=300,
     volumes={"/index": volume},
