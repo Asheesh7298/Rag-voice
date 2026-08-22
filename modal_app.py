@@ -223,6 +223,14 @@ class VoiceRAG:
             .split()
         )
 
+        # ── Full End-to-End Pipeline Warmup (Primes CUDA GEMM, Tokenizer & Memory) ──
+        print("Executing full end-to-end pipeline warmup...")
+        try:
+            _warm_res = self._run_query("what county is columbus city in")
+            print(f"✅ Full pipeline pre-warmed: answer={_warm_res.get('answer')!r} in {_warm_res.get('timings_ms', {}).get('total_ms')}ms")
+        except Exception as e:
+            print(f"Warmup notice: {e}")
+
     # ── Extractive QA ─────────────────────────────────────────────────────────
 
     def _extract_answer(self, question: str, context: str) -> dict:

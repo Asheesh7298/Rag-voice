@@ -1447,10 +1447,10 @@
             return;
           }
         } catch (e) {
-          // Retrying next tick
+          // Retrying next tick while Modal spins up container
         }
-        if (attempts < 45 && !isServerWarm) {
-          setTimeout(pollHealth, 1200);
+        if (attempts < 60 && !isServerWarm) {
+          setTimeout(pollHealth, 1500);
         }
       };
 
