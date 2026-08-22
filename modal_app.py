@@ -363,10 +363,20 @@ class VoiceRAG:
                 input_id_seq = inputs["input_ids"][i]
                 seq_len = input_id_seq.shape[0]
 
+                # Mask non-context tokens (question & special tokens)
+                try:
+                    seq_ids = inputs.sequence_ids(i)
+                    for k_idx, s_id in enumerate(seq_ids):
+                        if s_id != 1:  # 1 corresponds to passage context
+                            s_logits[i][k_idx] = -10000.0
+                            e_logits[i][k_idx] = -10000.0
+                except Exception:
+                    pass
+
                 # Exact 2D matrix span search over bounded lengths (1 <= start <= end <= start + 35)
                 if seq_len > 1:
-                    s_sub = s_logits[i][1:]
-                    e_sub = e_logits[i][1:]
+                    s_sub = s_logits[i]
+                    e_sub = e_logits[i]
                     L = s_sub.size(0)
 
                     score_matrix = s_sub.unsqueeze(1) + e_sub.unsqueeze(0)
@@ -376,23 +386,23 @@ class VoiceRAG:
                     valid_mask = (span_lens >= 0) & (span_lens <= 35)
                     score_matrix = torch.where(valid_mask, score_matrix, torch.tensor(-1e9, device=s_logits.device))
 
-                    # Sort top candidates from score matrix and pick the best non-trivial span (length >= 4 chars)
+                    # Sort top candidates from score matrix and pick the best non-trivial span (length >= 3 chars)
                     flat_sorted = torch.argsort(score_matrix.view(-1), descending=True)
                     answer = ""
-                    best_s, best_e = 1, 1
+                    best_s, best_e = 0, 0
                     for flat_idx in flat_sorted[:10]:
-                        s_cand = int(flat_idx // L) + 1
-                        e_cand = int(flat_idx % L) + 1
+                        s_cand = int(flat_idx // L)
+                        e_cand = int(flat_idx % L)
                         toks = input_id_seq[s_cand : e_cand + 1]
                         ans_cand = self.qa_tokenizer.decode(toks, skip_special_tokens=True).strip()
-                        if len(ans_cand) >= 4:
+                        if len(ans_cand) >= 3 and not ans_cand.startswith(("<s>", "</s>", "<pad>")):
                             answer = ans_cand
                             best_s, best_e = s_cand, e_cand
                             break
                     if not answer:
                         best_flat_idx = int(torch.argmax(score_matrix))
-                        best_s = (best_flat_idx // L) + 1
-                        best_e = (best_flat_idx % L) + 1
+                        best_s = int(best_flat_idx // L)
+                        best_e = int(best_flat_idx % L)
                         tokens = input_id_seq[best_s : best_e + 1]
                         answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
 
