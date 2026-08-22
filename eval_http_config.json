@@ -1,6 +1,6 @@
 {
   "name": "voxlore_modal_http",
-  "endpoint": "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query",
+  "endpoint": "https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run/query",
   "method": "POST",
   "headers": {
     "Content-Type": "application/x-www-form-urlencoded"
@@ -16,7 +16,7 @@
     "latency_ms": "timings_ms.total_ms"
   },
   "embed_endpoint": {
-    "url": "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query",
+    "url": "https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run/query",
     "method": "POST"
   }
 }

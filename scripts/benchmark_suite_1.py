@@ -10,7 +10,7 @@ import json
 import statistics
 import urllib.request
 
-MODAL_URL = "https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run/query"
+MODAL_URL = "https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run/query"
 
 DATASET_HI = [
     {
@@ -562,7 +562,7 @@ DATASET_EN = [
 def run_suite():
     print("=" * 80)
     print("  RUNNING 90-QUESTION BENCHMARK SUITE 1")
-    print("  Endpoint: https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run")
+    print("  Endpoint: https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run")
     print("  Dataset: 30 Hindi, 30 Marathi, 30 English (90 total)")
     print("=" * 80)
 

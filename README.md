@@ -5,7 +5,7 @@ Voice-enabled, ultra-low latency Retrieval-Augmented Generation system supportin
 - **Scale:** **13,020,220 multi-strategy vectors** across 808,000 source passages & queries.
 - **Hardware:** Modal A100 GPU (1,555 GB/s memory bandwidth) + Tensor Core matrix operations.
 - **Serving Latency:** **P50 = 90.7 ms | P90 = 125.2 ms | Mean = 96.9 ms** (Strictly $< 150\text{ ms}$ SLA).
-- **Live Deployment URL:** `https://healthbaba25--voice-rag-voicerag-fastapi-app.modal.run`
+- **Live Deployment URL:** `https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run`
 
 ---
 

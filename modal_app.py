@@ -45,12 +45,6 @@ image = (
         "from transformers import AutoTokenizer, AutoModelForSequenceClassification; "
         "AutoTokenizer.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model'); "
         "AutoModelForSequenceClassification.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model')"
-        "\"",
-        # Bake Qwen2.5-0.5B-Instruct Mini-LLM into image
-        "python -c \""
-        "from transformers import AutoTokenizer, AutoModelForCausalLM; "
-        "AutoTokenizer.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct').save_pretrained('/models/qwen-0.5b'); "
-        "AutoModelForCausalLM.from_pretrained('Qwen/Qwen2.5-0.5B-Instruct', torch_dtype='auto').save_pretrained('/models/qwen-0.5b')"
         "\""
     )
     .add_local_dir("frontend", remote_path="/root/frontend")
@@ -72,6 +66,8 @@ class MetadataStore:
         self.f = open(meta_path, "rb")
         if os.path.exists(offsets_path):
             self.offsets = np.fromfile(offsets_path, dtype=np.int64)
+        elif os.path.exists("/index/metadata_offsets.npy"):
+            self.offsets = np.load("/index/metadata_offsets.npy")
         else:
             offsets_list = [0]
             pos = 0
@@ -147,7 +143,7 @@ class VoiceRAG:
         self.embed_model.encode(["warmup"], normalize_embeddings=True)
         print("✅ Embedding model ready")
 
-        # ── Raw 13M Vectors (Direct FP16 load to A10G Tensor memory in ~3s) ──
+        # ── Raw 13M Vectors (Direct FP16 load to A100 Tensor memory in ~2s) ──
         fp16_bin = "/index/vectors_fp16.bin"
         self.gpu_vectors = None
         self.gpu_vector_err = None
@@ -157,12 +153,8 @@ class VoiceRAG:
                 t_vecs = time.perf_counter()
                 print(f"Loading 13M vectors directly from {fp16_bin} into GPU VRAM...")
                 mmap_vecs = np.memmap(fp16_bin, dtype=np.float16, mode="r", shape=(13020220, 768))
-                self.gpu_vectors = torch.empty((13020220, 768), dtype=torch.float16, device="cuda")
-                chunk_sz = 2_000_000
-                for c_start in range(0, 13020220, chunk_sz):
-                    c_end = min(c_start + chunk_sz, 13020220)
-                    self.gpu_vectors[c_start:c_end] = torch.from_numpy(mmap_vecs[c_start:c_end]).cuda()
-                print(f"✅ Loaded 13,020,220 vectors into A10G GPU VRAM in {time.perf_counter()-t_vecs:.2f}s!")
+                self.gpu_vectors = torch.from_numpy(mmap_vecs).cuda()
+                print(f"✅ Loaded 13,020,220 vectors into A100 GPU VRAM in {time.perf_counter()-t_vecs:.2f}s!")
             except Exception as e:
                 import traceback
                 self.gpu_vector_err = f"{e}\n{traceback.format_exc()}"
@@ -198,25 +190,6 @@ class VoiceRAG:
         # Warmup pass
         self._check_entailment("Premise text for warmup.", "Warmup question?", "Warmup answer.")
         print("✅ NLI entailment model ready")
-
-        # ── Qwen2.5-0.5B-Instruct Mini-LLM ──
-        print("Loading Qwen2.5-0.5B-Instruct Mini-LLM onto CUDA GPU...")
-        from transformers import AutoModelForCausalLM
-        qwen_path = "/models/qwen-0.5b"
-        self.qwen_tokenizer = AutoTokenizer.from_pretrained(qwen_path)
-        self.qwen_model = AutoModelForCausalLM.from_pretrained(
-            qwen_path,
-            torch_dtype=torch.float16 if device == 0 else torch.float32,
-        )
-        if device == 0:
-            self.qwen_model = self.qwen_model.cuda()
-        self.qwen_model.eval()
-        # Warmup pass to prime CUDA KV-cache allocation
-        _warm_in = self.qwen_tokenizer(["Hello"], return_tensors="pt")
-        if device == 0: _warm_in = {k: v.cuda() for k, v in _warm_in.items()}
-        with torch.no_grad():
-            self.qwen_model.generate(**_warm_in, max_new_tokens=2)
-        print("✅ Qwen2.5-0.5B Mini-LLM ready")
 
         # Config from Modal secrets
         # modal secret create voice-rag-secrets SARVAM_API_KEY=<key> OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.25 MIN_ANSWER_RELEVANCE=0.20 TOP_K=10 RERANK_TOP_N=50
