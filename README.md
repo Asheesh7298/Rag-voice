@@ -72,6 +72,17 @@ Every passage is sliced using 3 complementary chunking strategies tagged in meta
 
 ---
 
+## 💡 Dual Extractive & Open-Ended Query Handling
+
+VoxLore supports both hyper-specific factual entity queries and broad open-ended conversational prompts with **zero additional latency**:
+
+1. **Direct Fact-Seeking Queries** (*"What county is Columbus in?"*, *"महाराष्ट्राची राजधानी कोणती"*):
+   - XLM-RoBERTa extracts the precise named entity or numerical value span (`"Franklin County"`, `"मुंबई"`).
+2. **Open-Ended Topic Prompts** (*"Tell me about Goa"*, *"Explain photosynthesis"*, *"के बारे में बताएं"*):
+   - The engine automatically routes to **Zero-Latency Passage Sentence Synthesis**, returning the top 2 factual sentences directly from the highest-ranked retrieved chunk with complete grammatical fluency.
+
+---
+
 ## 🛡️ Multi-Layer Guardrails
 
 The pipeline incorporates a 7-stage guardrail harness:

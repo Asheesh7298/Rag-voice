@@ -57,46 +57,80 @@ def _expand_to_sentence(span: str, context: str) -> str:
 def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
     """
     Extracts an answer given a query and retrieved results context.
+    Evaluates top candidate chunks with sentence expansion for high correctness.
     """
     t0 = time.perf_counter()
     
     if results and len(results) > 0:
-        contexts = [getattr(r, "text", str(r)) for r in results[:3]]
-        full_context = " ".join(contexts)
-        
         try:
             tokenizer, model = _get_qa_model()
-            inputs = tokenizer(query, full_context, return_tensors="pt", max_length=512, truncation=True)
-            
-            with torch.no_grad():
-                outputs = model(**inputs)
-                start_logits = outputs.start_logits[0]
-                end_logits = outputs.end_logits[0]
+            best_ans = ""
+            best_score = -999.0
+            best_grounded = False
+
+            for r in results[:4]:
+                context = getattr(r, "text", str(r)).strip()
+                if not context:
+                    continue
+
+                inputs = tokenizer(query, context, return_tensors="pt", max_length=384, truncation=True)
                 
-                # Mask special tokens and query
-                seq_ids = inputs.sequence_ids(0)
-                for i, s_id in enumerate(seq_ids):
-                    if s_id != 1:  # 1 is context
-                        start_logits[i] = -10000.0
-                        end_logits[i] = -10000.0
-                
-                start_idx = torch.argmax(start_logits).item()
-                end_idx = torch.argmax(end_logits).item()
-                
-                # Quality & confidence score
-                raw_score = (torch.max(start_logits) + torch.max(end_logits)).item()
-                
-                if end_idx >= start_idx and raw_score > 3.0:
-                    input_ids = inputs["input_ids"][0][start_idx:end_idx + 1]
-                    ans_span = tokenizer.decode(input_ids, skip_special_tokens=True).strip()
-                    ans_text = _expand_to_sentence(ans_span, full_context)
-                    is_grounded = True
-                else:
-                    ans_text = "Decline: The retrieved context does not contain sufficient information to answer this question."
-                    is_grounded = False
-                
+                with torch.no_grad():
+                    outputs = model(**inputs)
+                    start_logits = outputs.start_logits[0]
+                    end_logits = outputs.end_logits[0]
+                    
+                    # Mask non-context tokens
+                    seq_ids = inputs.sequence_ids(0)
+                    for i, s_id in enumerate(seq_ids):
+                        if s_id != 1:  # 1 is context
+                            start_logits[i] = -10000.0
+                            end_logits[i] = -10000.0
+                    
+                    start_idx = int(torch.argmax(start_logits).item())
+                    end_idx = int(torch.argmax(end_logits).item())
+                    
+                    if end_idx >= start_idx:
+                        s_prob = float(torch.softmax(outputs.start_logits[0], dim=-1)[start_idx].item())
+                        e_prob = float(torch.softmax(outputs.end_logits[0], dim=-1)[end_idx].item())
+                        prob_score = s_prob * e_prob
+                        raw_score = float((start_logits[start_idx] + end_logits[end_idx]).item())
+                        
+                        input_ids = inputs["input_ids"][0][start_idx:end_idx + 1]
+                        ans_span = tokenizer.decode(input_ids, skip_special_tokens=True).strip()
+                        
+                        if len(ans_span) >= 2 and raw_score > 0.2:
+                            expanded = _expand_to_sentence(ans_span, context)
+                            if raw_score > best_score:
+                                best_score = raw_score
+                                best_ans = expanded
+                                best_grounded = True
+
+            # Open-ended conversational prompt handler (Zero Latency)
+            q_lower = query.lower().strip()
+            OPEN_PROMPTS = (
+                "tell me about", "tell me", "describe", "explain", "information about",
+                "information on", "what is the story of", "overview of",
+                "के बारे में", "के बारे में बताएं", "बद्दल माहिती", "बद्दल सांगा", "माहिती द्या"
+            )
+            if any(p in q_lower for p in OPEN_PROMPTS) and results:
+                first_ctx = getattr(results[0], "text", str(results[0])).strip()
+                if first_ctx:
+                    sents = [s.strip() for s in re.split(r'(?<=[.!?\n।])\s+', first_ctx) if s.strip() and len(s) > 15]
+                    matched_sents = [s for s in sents if any(w in s.lower() for w in q_lower.split() if len(w) > 3)]
+                    if matched_sents:
+                        best_ans = " ".join(matched_sents[:2])
+                        best_grounded = True
+                    elif sents:
+                        best_ans = " ".join(sents[:2])
+                        best_grounded = True
+
+            if not best_ans or (best_score < 0.2 and not best_grounded):
+                best_ans = "Decline: The retrieved context does not contain sufficient information to answer this question."
+                best_grounded = False
+
             elapsed_ms = (time.perf_counter() - t0) * 1000.0
-            return Answer(text=ans_text, grounded=is_grounded, generation_ms=elapsed_ms, model="xlm-roberta-base-squad2")
+            return Answer(text=best_ans, grounded=best_grounded, generation_ms=elapsed_ms, model="xlm-roberta-base-squad2")
         except Exception as e:
             elapsed_ms = (time.perf_counter() - t0) * 1000.0
             return Answer(text=f"Decline: {e}", grounded=False, generation_ms=elapsed_ms)

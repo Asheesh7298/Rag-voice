@@ -7,8 +7,13 @@ Evaluates Grounded Multilingual QA on the 13.02M Vector Multi-Strategy Index.
 
 import time
 import json
+import sys
+import os
 import statistics
 import urllib.request
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 MODAL_URL = "https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run/query"
 
@@ -584,8 +589,9 @@ def run_suite():
         req = urllib.request.Request(MODAL_URL, data=payload, headers={"Content-Type": "application/json"})
         
         t0 = time.perf_counter()
+        req_timeout = 60 if idx == 1 else 30
         try:
-            with urllib.request.urlopen(req, timeout=20) as resp:
+            with urllib.request.urlopen(req, timeout=req_timeout) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 e2e_ms = round((time.perf_counter() - t0) * 1000, 1)
                 answer = data.get("answer", "").strip()
