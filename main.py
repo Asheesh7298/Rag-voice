@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Main Entrypoint for Native Python Evaluation (rag-local-eval-loop Branch A).
-Exposes embed(), generate_answer(), and query().
+Main Entrypoint for Native Python Evaluation (rag-local-eval-loop).
+Exposes embed(), embed_one(), get_model(), generate_answer().
 """
 
-from app.embedder import embed, embed_query, embed_passages
-from app.generator import generate_answer
+from app.embedder import embed, embed_one, get_model, embed_query, embed_passages
+from app.generator import generate_answer, Answer
 
 def query(text: str):
     return generate_answer(text)

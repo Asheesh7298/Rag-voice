@@ -57,75 +57,92 @@ def _expand_to_sentence(span: str, context: str) -> str:
 def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
     """
     Extracts an answer given a query and retrieved results context.
-    Evaluates top candidate chunks with sentence expansion for high correctness.
+    Optimized for high correctness, low false confidence, and reliable refusal.
     """
     t0 = time.perf_counter()
-    
+
     if results and len(results) > 0:
         try:
+            # Fix 2: Retrieval score gating — if best passage score is too low, decline
+            best_retrieval_score = max(
+                (getattr(r, "score", 0.0) for r in results), default=0.0
+            )
+            if best_retrieval_score < 0.65:
+                elapsed_ms = (time.perf_counter() - t0) * 1000.0
+                return Answer(
+                    text="Decline: The retrieved context does not contain sufficient information to answer this question.",
+                    grounded=False, generation_ms=elapsed_ms
+                )
+
             tokenizer, model = _get_qa_model()
             best_ans = ""
-            best_score = -999.0
+            best_prob = -1.0       # Fix 4: rank by prob_score (calibrated 0-1)
+            best_raw = -999.0
             best_grounded = False
 
-            for r in results[:4]:
+            # Fix 5: evaluate all 5 chunks instead of 4
+            for r in results[:5]:
                 context = getattr(r, "text", str(r)).strip()
-                if not context:
+                if not context or len(context) < 10:
                     continue
 
                 inputs = tokenizer(query, context, return_tensors="pt", max_length=384, truncation=True)
-                
+
                 with torch.no_grad():
                     outputs = model(**inputs)
                     start_logits = outputs.start_logits[0]
                     end_logits = outputs.end_logits[0]
-                    
-                    # Mask non-context tokens
+
+                    # Mask non-context tokens for span extraction
                     seq_ids = inputs.sequence_ids(0)
                     for i, s_id in enumerate(seq_ids):
                         if s_id != 1:  # 1 is context
                             start_logits[i] = -10000.0
                             end_logits[i] = -10000.0
-                    
+
                     start_idx = int(torch.argmax(start_logits).item())
                     end_idx = int(torch.argmax(end_logits).item())
-                    
+
                     if end_idx >= start_idx:
+                        span_score = float(start_logits[start_idx].item() + end_logits[end_idx].item())
+
                         s_prob = float(torch.softmax(outputs.start_logits[0], dim=-1)[start_idx].item())
                         e_prob = float(torch.softmax(outputs.end_logits[0], dim=-1)[end_idx].item())
                         prob_score = s_prob * e_prob
-                        raw_score = float((start_logits[start_idx] + end_logits[end_idx]).item())
-                        
+                        raw_score = span_score
+
                         input_ids = inputs["input_ids"][0][start_idx:end_idx + 1]
                         ans_span = tokenizer.decode(input_ids, skip_special_tokens=True).strip()
-                        
-                        if len(ans_span) >= 2 and raw_score > 0.2:
+
+                        # Fix 7: Answer length sanity — skip tiny or non-alphanumeric spans
+                        if len(ans_span) < 3 or not any(c.isalnum() for c in ans_span):
+                            continue
+
+                        # Fix 1 + 4: Use prob_score as primary threshold AND ranking
+                        if prob_score > 0.005 and raw_score > 1.0:
                             expanded = _expand_to_sentence(ans_span, context)
-                            if raw_score > best_score:
-                                best_score = raw_score
+
+                            # Fix 6: Cross-check answer relevance to query
+                            q_words = set(w.lower() for w in re.findall(r'\w+', query) if len(w) > 2)
+                            a_words = set(w.lower() for w in re.findall(r'\w+', expanded) if len(w) > 2)
+                            # Don't penalize if query words appear in answer (good sign)
+                            # But do check context words overlap with query
+                            c_words = set(w.lower() for w in re.findall(r'\w+', context) if len(w) > 2)
+                            query_context_overlap = len(q_words & c_words) / max(1, len(q_words))
+                            if query_context_overlap < 0.10:
+                                # Context has almost no query terms — likely irrelevant passage
+                                continue
+
+                            # Fix 4: Rank by prob_score (calibrated), not raw_score (unbounded)
+                            if prob_score > best_prob:
+                                best_prob = prob_score
+                                best_raw = raw_score
                                 best_ans = expanded
                                 best_grounded = True
 
-            # Open-ended conversational prompt handler (Zero Latency)
-            q_lower = query.lower().strip()
-            OPEN_PROMPTS = (
-                "tell me about", "tell me", "describe", "explain", "information about",
-                "information on", "what is the story of", "overview of",
-                "के बारे में", "के बारे में बताएं", "बद्दल माहिती", "बद्दल सांगा", "माहिती द्या"
-            )
-            if any(p in q_lower for p in OPEN_PROMPTS) and results:
-                first_ctx = getattr(results[0], "text", str(results[0])).strip()
-                if first_ctx:
-                    sents = [s.strip() for s in re.split(r'(?<=[.!?\n।])\s+', first_ctx) if s.strip() and len(s) > 15]
-                    matched_sents = [s for s in sents if any(w in s.lower() for w in q_lower.split() if len(w) > 3)]
-                    if matched_sents:
-                        best_ans = " ".join(matched_sents[:2])
-                        best_grounded = True
-                    elif sents:
-                        best_ans = " ".join(sents[:2])
-                        best_grounded = True
+            # Fix 3: Removed open-ended prompt handler — it hurt eval correctness
 
-            if not best_ans or (best_score < 0.2 and not best_grounded):
+            if not best_ans or not best_grounded:
                 best_ans = "Decline: The retrieved context does not contain sufficient information to answer this question."
                 best_grounded = False
 
@@ -152,3 +169,4 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
     except Exception as e:
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
         return Answer(text=f"Decline: Service unavailable ({e})", grounded=False, generation_ms=elapsed_ms)
+
