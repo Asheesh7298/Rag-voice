@@ -87,7 +87,7 @@ def _check_intent_alignment(query: str, span: str, sentence: str) -> bool:
 def _expand_to_sentence(span: str, context: str, query: str = "") -> str:
     """Expands a short extracted span to the most relevant, complete, clean sentence."""
     span_clean = span.strip()
-    if len(span_clean) > 120:
+    if len(span_clean) >= 90:
         return _clean_text_fragment(span_clean)
 
     # Split context into clean sentences
@@ -97,23 +97,23 @@ def _expand_to_sentence(span: str, context: str, query: str = "") -> str:
         matching = [s for s in sentences if span_clean.lower() in s.lower()]
 
     if matching:
-        # If multiple sentences match the span, pick the one with highest query overlap
-        if len(matching) > 1 and query:
-            q_words = set(w.lower() for w in re.findall(r'\w+', query) if len(w) > 2)
+        # Require sentence to have relevance to query if query is provided
+        q_words = set(w.lower() for w in re.findall(r'\w+', query) if len(w) > 2)
+        if q_words:
             scored = []
             for s in matching:
                 s_words = set(w.lower() for w in re.findall(r'\w+', s) if len(w) > 2)
                 overlap = len(q_words & s_words)
-                scored.append((overlap, s))
+                # Penalize sentences that are overly long (>250 chars) to prevent dragging in unrelated clauses
+                length_penalty = 1.0 if len(s) < 220 else 0.5
+                scored.append((overlap * length_penalty, s))
             scored.sort(key=lambda x: x[0], reverse=True)
             chosen = scored[0][1]
         else:
             chosen = matching[0]
 
         cleaned = _clean_text_fragment(chosen)
-        if len(cleaned) >= len(span_clean) and len(cleaned) < 320:
-            if not cleaned.lower().startswith(("ways to", "how to", "step ")):
-                return cleaned
+        if len(cleaned) >= len(span_clean) and len(cleaned) < 260:
             return cleaned
 
     return _clean_text_fragment(span_clean)
@@ -129,11 +129,11 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
     if results and len(results) > 0:
         try:
-            # Retrieval score gating — only drop completely irrelevant passages (< 0.62)
+            # Retrieval score gating — only drop completely irrelevant passages (< 0.52)
             best_retrieval_score = max(
                 (getattr(r, "score", 0.0) for r in results), default=0.0
             )
-            if best_retrieval_score < 0.62:
+            if best_retrieval_score < 0.52:
                 elapsed_ms = (time.perf_counter() - t0) * 1000.0
                 return Answer(
                     text="Decline: The retrieved context does not contain sufficient information to answer this question.",
@@ -142,7 +142,7 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
             tokenizer, model = _get_qa_model()
             best_ans = ""
-            best_prob = -1.0       # rank by composite score
+            best_diff = -999.0     # rank by (span_score - null_score)
             best_raw = -999.0
             best_grounded = False
 
@@ -176,6 +176,7 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
                     if end_idx >= start_idx:
                         span_score = float(start_logits[start_idx].item() + end_logits[end_idx].item())
+                        score_diff = span_score - null_score
 
                         s_prob = float(torch.softmax(outputs.start_logits[0], dim=-1)[start_idx].item())
                         e_prob = float(torch.softmax(outputs.end_logits[0], dim=-1)[end_idx].item())
@@ -186,11 +187,15 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
                         ans_span = tokenizer.decode(input_ids, skip_special_tokens=True).strip()
 
                         # Answer length & formatting sanity
-                        if len(ans_span) < 3 or not any(c.isalnum() for c in ans_span):
+                        if len(ans_span) < 2 or not any(c.isalnum() for c in ans_span):
                             continue
 
                         # Reject headline titles and company profiles
                         if any(p in ans_span.lower() for p in ["company profile", "activities association", "overview", "table of contents"]):
+                            continue
+
+                        # SQuAD2 unanswerable check: filter out severely negative score differentials
+                        if score_diff < -2.8 or prob_score < 0.01 or raw_score < 1.0:
                             continue
 
                         expanded = _expand_to_sentence(ans_span, context, query)
@@ -210,14 +215,10 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
                         aligned = _check_intent_alignment(query, ans_span, expanded)
 
-                        # Require minimum probability floor (rejects garbled low-prob fragments)
-                        if prob_score < 0.02 or raw_score < 2.0:
-                            continue
-
-                        # Dynamic Thresholding:
-                        if aligned and prob_score > 0.02 and raw_score > 2.0:
+                        # Calibrated validation: answerable questions with intent alignment pass with moderate threshold
+                        if aligned and score_diff > -2.0 and raw_score > 1.2:
                             is_valid = True
-                        elif not aligned and prob_score > 0.18 and raw_score > 6.0:
+                        elif not aligned and score_diff > 1.5 and prob_score > 0.08:
                             is_valid = True
                         else:
                             is_valid = False
@@ -252,14 +253,14 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
                             ctx_overlap = 1.0
                             ans_overlap = 1.0
 
-                        # Reject ungrounded guesses on irrelevant passages
-                        if not is_definition and ctx_overlap < 0.15 and raw_score < 4.0:
+                        # Reject only if zero overlap and very weak score
+                        if not is_definition and ctx_overlap < 0.05 and score_diff < 0.5:
                             continue
 
-                        # Select the best candidate across all 5 chunks by cross-attention span score
-                        if span_score > best_raw:
+                        # Select candidate with the best balance of span quality and differential
+                        if score_diff > best_diff or (abs(score_diff - best_diff) < 0.8 and span_score > best_raw):
+                            best_diff = score_diff
                             best_raw = span_score
-                            best_prob = prob_score
                             best_ans = expanded
                             best_grounded = True
 
