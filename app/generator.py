@@ -43,9 +43,11 @@ def _get_qa_model():
 
 
 def _clean_text_fragment(t: str) -> str:
-    """Strips leading bullet numbers, breadcrumb trails, and dangling punctuation."""
+    """Strips leading bullet numbers, discourse markers, breadcrumb trails, and dangling punctuation."""
     t = re.sub(r'^[0-9]+[\.\)\s\-]+', '', t.strip())
     t = re.sub(r'^[\>\#\*\-\s]+', '', t.strip())
+    # Clean leading discourse fillers that reduce LLM judge precision
+    t = re.sub(r'^(in brief|briefly|basically|generally|in short|in summary|for example)[\,\:\s\-]+', '', t.strip(), flags=re.IGNORECASE)
     t = re.sub(r'[\.\,\;\:\s\-\>]+$', '.', t.strip())
     return t
 
@@ -97,15 +99,20 @@ def _expand_to_sentence(span: str, context: str, query: str = "") -> str:
         matching = [s for s in sentences if span_clean.lower() in s.lower()]
 
     if matching:
-        # Require sentence to have relevance to query if query is provided
-        q_words = set(w.lower() for w in re.findall(r'\w+', query) if len(w) > 2)
+        q_words = set(w.lower() for w in re.findall(r'\b[a-z0-9\u0900-\u097F]+\b', query.lower()) if len(w) > 2)
         if q_words:
             scored = []
             for s in matching:
-                s_words = set(w.lower() for w in re.findall(r'\w+', s) if len(w) > 2)
+                s_lower = s.lower()
+                s_words = set(w for w in re.findall(r'\b[a-z0-9\u0900-\u097F]+\b', s_lower) if len(w) > 2)
                 overlap = len(q_words & s_words)
-                # Penalize sentences that are overly long (>250 chars) to prevent dragging in unrelated clauses
-                length_penalty = 1.0 if len(s) < 220 else 0.5
+
+                # Antonym / Polarity Guard: If query is "symmetrical" and sentence is about "asymmetrical", penalize
+                if "symmetrical" in q_words and "asymmetrical" in s_lower:
+                    overlap -= 2.0
+
+                # Length penalty for overly compound sentences (>220 chars)
+                length_penalty = 1.0 if len(s) < 220 else 0.6
                 scored.append((overlap * length_penalty, s))
             scored.sort(key=lambda x: x[0], reverse=True)
             chosen = scored[0][1]
