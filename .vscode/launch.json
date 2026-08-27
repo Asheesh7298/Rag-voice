@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🚀 Run RAG Local Eval Loop (VS Code)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "eval.runner",
+            "args": [
+                "--rag-root",
+                "${workspaceFolder}",
+                "--num-answerable",
+                "50",
+                "--num-unanswerable",
+                "50",
+                "--workers",
+                "1",
+                "--judge-workers",
+                "16"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "EVAL_EMBEDDER_MODULE": "main",
+                "EVAL_GENERATOR_MODULE": "main",
+                "PYTHONPATH": "C:\\Users\\ashee\\Desktop\\rag-local-eval-loop;${workspaceFolder}",
+                "PYTHONIOENCODING": "utf-8",
+                "PYTHONUTF8": "1"
+            },
+            "python": "${workspaceFolder}\\venv\\Scripts\\python.exe"
+        }
+    ]
+}
