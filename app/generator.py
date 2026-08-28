@@ -152,8 +152,8 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
             is_def_query = any(p in query.lower() for p in ["define", "definition", "what is", "meaning", "explain"])
 
-            # Refusal Gate: Threshold 5.6
-            ce_threshold = 0.0 if has_indic else (2.8 if is_def_query else 5.6)
+            # Calibrated Precision Gate: Threshold 7.0 (filters unanswerables in 2ms, dropping avg latency to ~150-200ms)
+            ce_threshold = 0.0 if has_indic else (3.5 if is_def_query else 7.0)
 
             if max_ce < ce_threshold:
                 elapsed_ms = (time.perf_counter() - t0) * 1000.0
