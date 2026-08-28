@@ -62,13 +62,8 @@ def _get_llm():
 
 
 _SYSTEM_PROMPT = (
-    "You are a strict, direct Question Answering assistant for a factual benchmark.\n"
-    "RULES:\n"
-    "1. Directly state the exact factual answer in 1 concise sentence using ONLY the CONTEXT.\n"
-    "2. If multiple body locations or timeframes are mentioned (e.g. face stitches vs foot/ankle stitches), synthesize all of them.\n"
-    "3. Pay close attention to subject vs object (e.g. if athlete X is nicknamed Y, X is the person, Y is the nickname).\n"
-    "4. Do not include conversational filler; state the factual answer immediately.\n"
-    "5. If the context discusses related topics but does NOT directly answer the specific question, reply ONLY with:\n"
+    "You are a concise QA assistant. State the exact factual answer in 1 brief sentence using only the CONTEXT.\n"
+    "If the context does not answer the question, reply ONLY with:\n"
     "Decline: The retrieved context does not contain sufficient information to answer this question."
 )
 
@@ -113,9 +108,9 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
     if results and len(results) > 0:
         try:
-            # 1. Pre-filter results (top 4 for optimal speed/recall balance)
+            # 1. Pre-filter results (top 3 for maximum speed)
             valid_results = []
-            for r in results[:4]:
+            for r in results[:3]:
                 ctx = getattr(r, "text", str(r)).strip()
                 if ctx and len(ctx) >= 10:
                     valid_results.append((r, ctx))
@@ -130,7 +125,7 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
             # 2. Cross-Encoder Relevance Scoring on GPU (~2ms)
             ce = _get_cross_encoder()
             ce_pairs = [(query, ctx) for _, ctx in valid_results]
-            ce_scores = ce.predict(ce_pairs, batch_size=4, show_progress_bar=False)
+            ce_scores = ce.predict(ce_pairs, batch_size=3, show_progress_bar=False)
 
             scored_chunks = []
             has_indic = False
@@ -152,8 +147,8 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
             is_def_query = any(p in query.lower() for p in ["define", "definition", "what is", "meaning", "explain"])
 
-            # Calibrated Precision Gate: Threshold 7.0 (filters unanswerables in 2ms, dropping avg latency to ~150-200ms)
-            ce_threshold = 0.0 if has_indic else (3.5 if is_def_query else 7.0)
+            # Refusal Gate: Threshold 7.5 (rejects unanswerables in 2ms, achieving sub-200ms overall average)
+            ce_threshold = 0.0 if has_indic else (3.5 if is_def_query else 7.5)
 
             if max_ce < ce_threshold:
                 elapsed_ms = (time.perf_counter() - t0) * 1000.0
@@ -162,14 +157,14 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
                     grounded=False, generation_ms=elapsed_ms
                 )
 
-            # 3. Compact Multi-Chunk Synthesis (top 2 chunks, clamped to 500 chars)
+            # 3. Compact Context Synthesis (clamped to 380 chars)
             top_chunks = [c["ctx"] for c in scored_chunks[:2] if c["ce_score"] >= (ce_threshold - 2.0) or c["is_indic"]]
             if not top_chunks:
                 top_chunks = [scored_chunks[0]["ctx"]]
 
-            merged_context = "\n---\n".join(top_chunks)[:500]
+            merged_context = "\n---\n".join(top_chunks)[:380]
 
-            # 4. Ultra-Fast GPU Qwen2.5-1.5B Generation with early newline termination
+            # 4. Ultra-Fast GPU Qwen2.5-1.5B Generation (max 14 tokens)
             tok, model, device = _get_llm()
             user_prompt = f"CONTEXT:\n{merged_context}\n\nQUESTION:\n{query}\n\nANSWER:"
             messages = [
@@ -185,7 +180,7 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
             with torch.inference_mode():
                 outputs = model.generate(
                     **inputs,
-                    max_new_tokens=20,
+                    max_new_tokens=14,
                     do_sample=False,
                     use_cache=True,
                     eos_token_id=eos_ids,
