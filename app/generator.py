@@ -47,6 +47,9 @@ def _get_llm():
     if _llm_model is None:
         from transformers import AutoModelForCausalLM, AutoTokenizer
         _device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            torch.backends.cuda.matmul.allow_tf32 = True
+            torch.backends.cudnn.benchmark = True
         model_name = "Qwen/Qwen2.5-1.5B-Instruct"
         _llm_tokenizer = AutoTokenizer.from_pretrained(model_name)
         _llm_model = AutoModelForCausalLM.from_pretrained(
@@ -159,14 +162,14 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
                     grounded=False, generation_ms=elapsed_ms
                 )
 
-            # 3. Compact Multi-Chunk Synthesis (top 2 chunks, clamped to 650 chars)
+            # 3. Compact Multi-Chunk Synthesis (top 2 chunks, clamped to 500 chars)
             top_chunks = [c["ctx"] for c in scored_chunks[:2] if c["ce_score"] >= (ce_threshold - 2.0) or c["is_indic"]]
             if not top_chunks:
                 top_chunks = [scored_chunks[0]["ctx"]]
 
-            merged_context = "\n---\n".join(top_chunks)[:650]
+            merged_context = "\n---\n".join(top_chunks)[:500]
 
-            # 4. GPU-Accelerated Qwen2.5-1.5B Generation (~300-450ms on RTX 4050)
+            # 4. Ultra-Fast GPU Qwen2.5-1.5B Generation with early newline termination
             tok, model, device = _get_llm()
             user_prompt = f"CONTEXT:\n{merged_context}\n\nQUESTION:\n{query}\n\nANSWER:"
             messages = [
@@ -176,12 +179,16 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
             text_input = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             inputs = tok([text_input], return_tensors="pt").to(device)
 
+            nl_id = tok.encode("\n")[-1] if tok.encode("\n") else tok.eos_token_id
+            eos_ids = [tok.eos_token_id, nl_id] if tok.eos_token_id != nl_id else [tok.eos_token_id]
+
             with torch.inference_mode():
                 outputs = model.generate(
                     **inputs,
-                    max_new_tokens=32,
+                    max_new_tokens=20,
                     do_sample=False,
                     use_cache=True,
+                    eos_token_id=eos_ids,
                     pad_token_id=tok.eos_token_id
                 )
 
