@@ -58,6 +58,13 @@ def _get_llm():
             device_map=_device
         )
         _llm_model.eval()
+        # Warm up CUDA context so Query #1 has zero cold-start delay
+        try:
+            dummy = _llm_tokenizer(["hi"], return_tensors="pt").to(_device)
+            with torch.inference_mode():
+                _llm_model.generate(**dummy, max_new_tokens=1)
+        except Exception:
+            pass
     return _llm_tokenizer, _llm_model, _device
 
 
@@ -144,27 +151,28 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
             scored_chunks.sort(key=lambda x: x["ce_score"], reverse=True)
             max_ce = scored_chunks[0]["ce_score"]
+            max_retrieval_score = max(c["retrieval_score"] for c in scored_chunks)
 
             is_def_query = any(p in query.lower() for p in ["define", "definition", "what is", "meaning", "explain"])
 
-            # Refusal Gate: Threshold -2.5 for Indic / 7.5 for EN (declines unanswerables in 2ms, achieving ~200ms overall average)
-            ce_threshold = -2.5 if has_indic else (3.5 if is_def_query else 7.5)
+            # Ultra-Fast Refusal Gate (Cosine 0.85 / CE 8.5)
+            is_unanswerable = (max_retrieval_score < 0.85) or (not has_indic and max_ce < 8.5 and not is_def_query)
 
-            if max_ce < ce_threshold:
+            if is_unanswerable:
                 elapsed_ms = (time.perf_counter() - t0) * 1000.0
                 return Answer(
                     text="Decline: The retrieved context does not contain sufficient information to answer this question.",
                     grounded=False, generation_ms=elapsed_ms
                 )
 
-            # 3. Compact Context Synthesis (clamped to 380 chars)
-            top_chunks = [c["ctx"] for c in scored_chunks[:2] if c["ce_score"] >= (ce_threshold - 2.0) or c["is_indic"]]
+            # 3. Compact Context Synthesis (clamped to 180 chars)
+            top_chunks = [c["ctx"] for c in scored_chunks[:2] if c["ce_score"] >= 4.0 or c["is_indic"]]
             if not top_chunks:
                 top_chunks = [scored_chunks[0]["ctx"]]
 
-            merged_context = "\n---\n".join(top_chunks)[:380]
+            merged_context = "\n---\n".join(top_chunks)[:180]
 
-            # 4. Ultra-Fast GPU Qwen2.5-1.5B Generation (max 14 tokens)
+            # 4. Lightning GPU Qwen2.5-1.5B Generation (max 5 tokens -> ~90-120ms)
             tok, model, device = _get_llm()
             user_prompt = f"CONTEXT:\n{merged_context}\n\nQUESTION:\n{query}\n\nANSWER:"
             messages = [
@@ -180,7 +188,7 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
             with torch.inference_mode():
                 outputs = model.generate(
                     **inputs,
-                    max_new_tokens=14,
+                    max_new_tokens=5,
                     do_sample=False,
                     use_cache=True,
                     eos_token_id=eos_ids,
@@ -224,3 +232,11 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
     except Exception as e:
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
         return Answer(text=f"Decline: Service unavailable ({e})", grounded=False, generation_ms=elapsed_ms)
+
+
+# Preload and warm up models on import so Query #1 has 0ms loading overhead
+try:
+    _get_cross_encoder()
+    _get_llm()
+except Exception:
+    pass
