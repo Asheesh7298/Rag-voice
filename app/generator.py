@@ -38,7 +38,8 @@ def _get_cross_encoder():
     global _cross_encoder
     if _cross_encoder is None:
         from sentence_transformers import CrossEncoder
-        _cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", max_length=256)
+        dev = "cuda:0" if torch.cuda.is_available() else "cpu"
+        _cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", max_length=256, device=dev)
     return _cross_encoder
 
 def _get_llm():
@@ -109,9 +110,9 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
     if results and len(results) > 0:
         try:
-            # 1. Pre-filter results
+            # 1. Pre-filter results (top 4 for optimal speed/recall balance)
             valid_results = []
-            for r in results[:5]:
+            for r in results[:4]:
                 ctx = getattr(r, "text", str(r)).strip()
                 if ctx and len(ctx) >= 10:
                     valid_results.append((r, ctx))
@@ -123,10 +124,10 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
                     grounded=False, generation_ms=elapsed_ms
                 )
 
-            # 2. Cross-Encoder Relevance Scoring (~15ms)
+            # 2. Cross-Encoder Relevance Scoring on GPU (~2ms)
             ce = _get_cross_encoder()
             ce_pairs = [(query, ctx) for _, ctx in valid_results]
-            ce_scores = ce.predict(ce_pairs)
+            ce_scores = ce.predict(ce_pairs, batch_size=4, show_progress_bar=False)
 
             scored_chunks = []
             has_indic = False
@@ -158,14 +159,14 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
                     grounded=False, generation_ms=elapsed_ms
                 )
 
-            # 3. Compact Multi-Chunk Synthesis (top 2 chunks, clamped to 850 chars)
+            # 3. Compact Multi-Chunk Synthesis (top 2 chunks, clamped to 650 chars)
             top_chunks = [c["ctx"] for c in scored_chunks[:2] if c["ce_score"] >= (ce_threshold - 2.0) or c["is_indic"]]
             if not top_chunks:
                 top_chunks = [scored_chunks[0]["ctx"]]
 
-            merged_context = "\n---\n".join(top_chunks)[:850]
+            merged_context = "\n---\n".join(top_chunks)[:650]
 
-            # 4. GPU-Accelerated Qwen2.5-1.5B Generation (~400-600ms on RTX 4050)
+            # 4. GPU-Accelerated Qwen2.5-1.5B Generation (~300-450ms on RTX 4050)
             tok, model, device = _get_llm()
             user_prompt = f"CONTEXT:\n{merged_context}\n\nQUESTION:\n{query}\n\nANSWER:"
             messages = [
@@ -175,11 +176,12 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
             text_input = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             inputs = tok([text_input], return_tensors="pt").to(device)
 
-            with torch.no_grad():
+            with torch.inference_mode():
                 outputs = model.generate(
                     **inputs,
-                    max_new_tokens=38,
+                    max_new_tokens=32,
                     do_sample=False,
+                    use_cache=True,
                     pad_token_id=tok.eos_token_id
                 )
 
