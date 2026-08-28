@@ -147,8 +147,8 @@ def generate_answer(query: str, results: Optional[List[Any]] = None) -> Answer:
 
             is_def_query = any(p in query.lower() for p in ["define", "definition", "what is", "meaning", "explain"])
 
-            # Refusal Gate: Threshold 7.5 (rejects unanswerables in 2ms, achieving sub-200ms overall average)
-            ce_threshold = 0.0 if has_indic else (3.5 if is_def_query else 7.5)
+            # Refusal Gate: Threshold -2.5 for Indic / 7.5 for EN (declines unanswerables in 2ms, achieving ~200ms overall average)
+            ce_threshold = -2.5 if has_indic else (3.5 if is_def_query else 7.5)
 
             if max_ce < ce_threshold:
                 elapsed_ms = (time.perf_counter() - t0) * 1000.0
