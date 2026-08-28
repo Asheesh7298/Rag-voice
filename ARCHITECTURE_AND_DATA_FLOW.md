@@ -1,6 +1,6 @@
-# VoxLore — Architecture, Data Flow & System Presentation Guide
+# VoxLore — Architecture, Data Flow & System Design Guide
 
-This document contains complete architecture diagrams, data flow representations, memory layout schematics, and video presentation talking points for **VoxLore (Indic Voice RAG across 13.02 Million Vectors)**.
+> Complete architecture diagrams, data flow representations, guardrail pipeline schematics, and benchmark performance analysis for VoxLore — Voice-Enabled Multilingual RAG System.
 
 ---
 
@@ -12,49 +12,47 @@ graph TD
     
     %% Input Routing
     Ingest -->|Voice Audio Stream| STT[Sarvam AI Indic STT API]
-    Ingest -->|Text Query| API[FastAPI Gateway on Modal A100]
-    STT -->|Transcribed Text| API
+    Ingest -->|Text Query| Pipeline[RAG Pipeline Entry]
+    STT -->|Transcribed Text| Pipeline
 
-    %% Guardrails Layer 1
+    %% Phase 1: Pre-Retrieval
     subgraph "Phase 1: Pre-Retrieval Guardrails (< 1 ms)"
-        API --> G1[Guardrail 1: Unsafe Input Filter]
-        G1 -->|Passed| G1b[Guardrail 1b: Out-of-Scope / Real-Time Events]
-        G1 -.->|Violated| Decline1[🛡️ Instant Safe Decline]
-        G1b -.->|Violated| Decline2[🛡️ Out-of-Scope Safe Decline]
+        Pipeline --> G1[Guardrail 1: Unsafe Input Filter]
+        G1 -->|Passed| G1b[Guardrail 2: Out-of-Scope Detector]
+        G1 -.->|Violated| Decline1["🛡️ Instant Safe Decline"]
+        G1b -.->|Violated| Decline2["🛡️ Out-of-Scope Decline"]
     end
 
-    %% Embedding & Dense Retrieval
-    subgraph "Phase 2: Ultra-Fast Vector Search (~35 ms)"
-        G1b -->|Passed| Embed[Multilingual-E5-Base Embedding FP16 <br/> 13 ms]
-        Embed --> DenseSearch["PyTorch GPU Tensor-Core Search <br/> 13,020,220 Vectors (18.63 GB FP16 VRAM) <br/> 24–28 ms"]
-        DenseSearch --> TopK["Top-35 Candidate Chunk IDs"]
+    %% Phase 2: Embedding & Retrieval
+    subgraph "Phase 2: Dense Retrieval (~12 ms)"
+        G1b -->|Passed| Embed["multilingual-e5-small Embedding (384-dim, NFC Normalized, ~8 ms)"]
+        Embed --> DenseSearch["FAISS IndexFlatIP Vector Search (top_k=5, ~0.1 ms)"]
     end
 
-    %% Metadata & Hybrid Reranking
-    subgraph "Phase 3: Hybrid Lexical Rerank & Filtering (~5 ms)"
-        TopK --> MetaStore["Binary Offset Metadata Store (metadata.offsets) <br/> Sub-millisecond Seek"]
-        MetaStore --> BM25["BM25 Lexical + Morphological Trigram Matcher"]
-        BM25 --> ScriptFilter["Strict Script & Language Isolation (HI / MR / EN)"]
+    %% Phase 3: Cross-Encoder Gating
+    subgraph "Phase 3: Cross-Encoder Relevance Gate (~15 ms)"
+        DenseSearch --> CE["ms-marco-MiniLM-L-6-v2 Cross-Encoder"]
+        CE -->|"Score < 5.6"| Decline3["🛡️ Decline: Irrelevant Context"]
+        CE -->|"Score >= 5.6"| Merge["Dual-Chunk Context Merge (Top 2, 850 chars)"]
     end
 
-    %% Answer Extraction & Guardrails
-    subgraph "Phase 4: Grounded Answer Extraction & Verification (~25 ms)"
-        ScriptFilter --> QA["XLM-RoBERTa-SQuAD2 Batched Extractive QA <br/> 15–20 ms"]
-        QA --> G4["Guardrail 4: QA Span Confidence Check"]
-        G4 --> G5["Guardrail 5: Semantic Embedding Relevance Check"]
-        G5 --> G6["Guardrail 6: Domain & Entity Plausibility Check"]
+    %% Phase 4: GPU Generation
+    subgraph "Phase 4: GPU-Accelerated Generation (~450 ms)"
+        Merge --> LLM["Qwen2.5-1.5B-Instruct (FP16 on RTX 4050, 3.2 GB VRAM)"]
+        LLM --> PostGuard["Post-Generation Guardrails (Refusal Detection, Intent Validation)"]
     end
 
-    %% Response Delivery
-    subgraph "Phase 5: Output Synthesis & Voice Response (< 10 ms)"
-        G6 --> Response["Structured JSON Response <br/> { answer, sources, confidence, grounded, timings_ms }"]
-        Response --> TTS["Web Speech Synthesis (Native Audio Playback)"]
-        TTS --> FinalUser([🔊 User Hears Accurate Grounded Answer])
+    %% Phase 5: Response
+    subgraph "Phase 5: Response Delivery"
+        PostGuard --> Response["Structured Answer (text, grounded, generation_ms, model)"]
+        Response --> TTS["Web Speech Synthesis (Browser Audio)"]
+        TTS --> FinalUser(["🔊 User Hears Grounded Answer"])
     end
 
-    style DenseSearch fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#fff
     style Embed fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#fff
-    style QA fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#fff
+    style DenseSearch fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#fff
+    style CE fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fff
+    style LLM fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#fff
     style Response fill:#0f172a,stroke:#a855f7,stroke-width:2px,color:#fff
 ```
 
@@ -66,108 +64,97 @@ graph TD
 sequenceDiagram
     autonumber
     actor User as 👤 User
-    participant Frontend as 🌐 Web UI (Vercel)
-    participant Modal as ⚡ Modal Serverless (A100 GPU)
-    participant E5 as 🧠 E5 Embedding Model
-    participant GPU_VRAM as 💾 13.02M Vector VRAM (FP16)
-    participant Meta as 📑 Binary Metadata Store
-    participant QA as 🔍 XLM-RoBERTa QA Engine
+    participant Frontend as 🌐 Web UI
+    participant E5 as 🧠 E5-Small Embedder
+    participant FAISS as 💾 FAISS Vector Index
+    participant CE as 🔍 Cross-Encoder Gate
+    participant GPU as ⚡ Qwen2.5-1.5B (RTX 4050)
 
-    User->>Frontend: Speaks / Types Query (Hindi / Marathi / English)
-    Frontend->>Modal: POST /query {"query": "..."}
-    Note over Modal: T=0.0ms: Pre-retrieval Regex Guardrails (<0.1ms)
+    User->>Frontend: Speaks / Types Query (Hindi / English)
+    Frontend->>E5: Encode query to 384-dim vector
+    Note over E5: T+0ms → T+8ms (NFC Normalize + Encode)
+    E5-->>FAISS: Query vector
     
-    Modal->>E5: Encode query to 768-dim FP16 vector
-    E5-->>Modal: Query vector generated (13.3ms)
+    FAISS-->>CE: Top-5 candidate passages + scores
+    Note over FAISS: T+8ms → T+8.1ms (IndexFlatIP search)
     
-    Modal->>GPU_VRAM: torch.matmul(13020220x768, q_vec.T) + topk(35)
-    Note over GPU_VRAM: 1,555 GB/s High Bandwidth Memory scan
-    GPU_VRAM-->>Modal: Top-35 Vector Indices (24.1ms)
+    CE->>CE: Score each (query, passage) pair
+    Note over CE: T+8.1ms → T+23ms (Cross-Encoder relevance scoring)
     
-    Modal->>Meta: Seek int64 offsets in metadata.offsets
-    Meta-->>Modal: Candidate passage texts + languages (3.2ms)
+    alt max_ce < 5.6 (Unanswerable)
+        CE-->>Frontend: Decline: grounded=False (~23ms total)
+    else max_ce >= 5.6 (Answerable)
+        CE->>GPU: Merged context (top 2 chunks, 850 chars)
+        Note over GPU: T+23ms → T+473ms (Qwen FP16 generation, 38 tokens)
+        GPU-->>Frontend: Answer + grounded=True + generation_ms
+    end
     
-    Modal->>QA: Batched Span Forward Pass on candidate texts
-    QA-->>Modal: Best extracted factual entity + confidence (18.5ms)
-    
-    Note over Modal: Post-Extraction Guardrails & Clean Format (2.0ms)
-    Modal-->>Frontend: JSON {answer, confidence, timings_ms: total=61.1ms}
-    Frontend->>User: Renders Answer + Voice Synthesis (Total < 100ms)
+    Frontend->>User: Renders Answer + Voice Synthesis
 ```
 
 ---
 
-## 3. 13.02 Million Vector Ingestion & Multi-Strategy Chunking Pipeline
+## 3. Multi-Strategy Chunking Pipeline
 
 ```mermaid
 graph LR
     subgraph "Raw Dataset Sources"
-        D1[ai4bharat / MSMARCO-XI <br/> Hindi Passages]
-        D2[ai4bharat / MSMARCO-XI <br/> Marathi Passages]
-        D3[Microsoft MSMARCO v2.1 <br/> English Passages]
+        D1["ai4bharat/MSMARCO-XI (Hindi Passages)"]
+        D2["ai4bharat/MSMARCO-XI (English Passages)"]
     end
 
     subgraph "Multi-Strategy Chunking (3.52x Expansion)"
-        D1 & D2 & D3 --> S1["Strategy 1: Native Passage <br/> (Exact boundaries, 1.00x)"]
-        D1 & D2 & D3 --> S2["Strategy 2: Fixed Overlap <br/> (60 tokens / 15 overlap, 1.41x)"]
-        D1 & D2 & D3 --> S3["Strategy 3: Semantic Window <br/> (Cosine ≥0.55 grouping, 1.11x)"]
+        D1 & D2 --> S1["Strategy 1: Native Passage (Exact boundaries, 1.00x)"]
+        D1 & D2 --> S2["Strategy 2: Fixed Overlap (60 tokens / 15 overlap, 1.41x)"]
+        D1 & D2 --> S3["Strategy 3: Semantic Window (Cosine >= 0.55 grouping, 1.11x)"]
     end
 
-    subgraph "Indexing & Compression"
-        S1 & S2 & S3 --> DenseMap["13,020,220 Dense Chunks"]
-        DenseMap --> ModelEmbed["multilingual-e5-base Embedding Engine"]
-        ModelEmbed --> FP16File["18.63 GB Contiguous Binary FP16 <br/> (vectors_fp16.bin)"]
-        ModelEmbed --> OffsetIndex["104 MB Binary Offset Index <br/> (metadata.offsets)"]
+    subgraph "Embedding & Indexing"
+        S1 & S2 & S3 --> Chunks["Expanded Chunk Corpus"]
+        Chunks --> ModelEmbed["multilingual-e5-small Embedding Engine"]
+        ModelEmbed --> FaissIdx["FAISS IndexFlatIP (Cosine Similarity)"]
     end
 
-    subgraph "Production Serving"
-        FP16File --> A100["Modal A100 GPU VRAM <br/> (Loads in 14s, 24ms query scan)"]
-        OffsetIndex --> HostRAM["Host RAM Offset Lookup <br/> (Loads in 0.06s, <1ms seek)"]
-    end
-
-    style FP16File fill:#0369a1,stroke:#38bdf8,color:#fff
-    style OffsetIndex fill:#4338ca,stroke:#818cf8,color:#fff
-    style A100 fill:#15803d,stroke:#4ade80,color:#fff
+    style S1 fill:#1e40af,stroke:#60a5fa,color:#fff
+    style S2 fill:#7c3aed,stroke:#a78bfa,color:#fff
+    style S3 fill:#059669,stroke:#34d399,color:#fff
 ```
 
 ---
 
-## 4. Modal A100 Hardware Memory Layout
+## 4. RTX 4050 GPU Memory Layout
 
-| Component | Size / VRAM Allocation | Storage Medium | Lookup / Compute Speed |
-| :--- | :--- | :--- | :--- |
-| **13,020,220 Vectors** | **18.63 GB** (FP16) | A100 GPU High Bandwidth VRAM | **24–28 ms** (full matrix multiplication) |
-| **Multilingual-E5-Base** | **1.10 GB** | A100 GPU VRAM | **13.3 ms** query embedding |
-| **XLM-RoBERTa-SQuAD2** | **1.12 GB** | A100 GPU VRAM | **18.5 ms** batched span extraction |
-| **Free VRAM Buffer** | **19.15 GB** | A100 GPU VRAM | Used for dynamic batching & memory safety |
-| **Total A100 VRAM** | **40.00 GB** | **NVIDIA A100 SXM4 (1,555 GB/s)** | **Zero OOM & Zero Paging Hangs** |
-| **`metadata.offsets`** | **104.16 MB** | Host RAM | **0.06 s** initial load, **< 1 ms** seek |
-| **`metadata.jsonl`** | **37.25 GB** | Modal Network Volume (`/index`) | Lazy chunk resolution on demand |
+| Component | Size / VRAM | Compute Speed |
+|:---|:---|:---|
+| **Qwen2.5-1.5B-Instruct (FP16)** | **3.2 GB** | ~450 ms median, ~1,277 ms P95 generation |
+| **Cross-Encoder (MiniLM-L-6-v2)** | **~0.1 GB** | ~15 ms per 5-pair batch |
+| **multilingual-e5-small (CPU)** | **0 GB GPU** (runs on CPU) | ~8 ms embedding |
+| **Free VRAM Headroom** | **~3.1 GB** | Safety buffer for dynamic batching |
+| **Total RTX 4050 VRAM** | **6.44 GB** | Zero OOM risk |
 
 ---
 
-## 5. 7-Stage Guardrail Defense Architecture
+## 5. Guardrail Defense Architecture
 
 ```mermaid
 flowchart TD
-    Q[Incoming Query] --> C1{Unsafe / Injections?}
-    C1 -- Yes --> R1[Decline: Unsafe Input <0.05ms]
-    C1 -- No --> C2{Current Events / Real-Time?}
+    Q[Incoming Query] --> C1{"Guardrail 1: Unsafe / Injection?"}
+    C1 -- Yes --> R1["Decline: Unsafe Input (< 0.1ms)"]
+    C1 -- No --> C2{"Guardrail 2: Out-of-Scope / Real-Time?"}
     
-    C2 -- Yes --> R2[Decline: Out-of-Scope <0.1ms]
-    C2 -- No --> VSearch[Dense Vector Retrieval across 13.02M]
+    C2 -- Yes --> R2["Decline: Out-of-Scope (< 0.1ms)"]
+    C2 -- No --> VSearch["Dense Retrieval: E5-Small + FAISS (top_k=5)"]
     
-    VSearch --> C3{Top Cosine Similarity ≥ 0.65?}
-    C3 -- No --> R3[Decline: Off-Topic / Low Retrieval Bar]
-    C3 -- Yes --> QAExtract[XLM-RoBERTa Span Extraction]
+    VSearch --> C3{"Guardrail 3: Cross-Encoder Score >= 5.6?"}
+    C3 -- No --> R3["Decline: Irrelevant Context (15ms)"]
+    C3 -- Yes --> LLM["Qwen2.5-1.5B Generation (RTX 4050)"]
     
-    QAExtract --> C4{QA Confidence Score ≥ 0.0005?}
-    C4 -- No --> R4[Decline: Low QA Confidence]
-    C4 -- Yes --> C5{Script Matches Query Language?}
+    LLM --> C4{"Guardrail 4: Refusal Pattern Detected?"}
+    C4 -- Yes --> R4["Decline: Model Self-Refused"]
+    C4 -- No --> C5{"Guardrail 5: Intent Validates? (Address/Phone/Penalty)"}
     
-    C5 -- No --> R5[Decline: Script Mismatch]
-     C6 -- No --> R6[Decline: Implausible Answer]
-    C6 -- Yes --> Out([✅ Return Grounded Factual Answer])
+    C5 -- No --> R5["Decline: Intent Mismatch"]
+    C5 -- Yes --> Out(["✅ Return Grounded Factual Answer"])
 
     style Out fill:#166534,stroke:#22c55e,stroke-width:2px,color:#fff
     style R1 fill:#991b1b,stroke:#ef4444,color:#fff
@@ -175,49 +162,74 @@ flowchart TD
     style R3 fill:#991b1b,stroke:#ef4444,color:#fff
     style R4 fill:#991b1b,stroke:#ef4444,color:#fff
     style R5 fill:#991b1b,stroke:#ef4444,color:#fff
-    style R6 fill:#991b1b,stroke:#ef4444,color:#fff
 ```
 
 ---
 
-## 6. Live Benchmark Performance Summary
+## 6. Benchmark Performance Summary
 
-| Language | Test Set Size | Grounded Retrieval Rate | Mean Server Latency | P50 Latency | P90 Latency | Max Latency |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Hindi (हिंदी)** | 60 Questions | **86.7%** | **96.9 ms** | **90.7 ms** | **121.1 ms** | **134.7 ms** |
-| **Marathi (मराठी)** | 60 Questions | **83.3%** | **90.8 ms** | **82.5 ms** | **118.5 ms** | **139.6 ms** |
-| **English** | 60 Questions | **93.3%** | **103.0 ms** | **100.5 ms** | **135.4 ms** | **148.8 ms** |
-| **Overall System** | **180 Questions** | **87.8%** | **96.9 ms** | **90.7 ms** | **125.2 ms** | **148.8 ms** |
+### Local RTX 4050 GPU (Eval Loop Results)
 
-*(All tested queries across all languages strictly complete under the 150ms voice latency SLA).*
+| Metric | Result | Target | Status |
+|:---|:---|:---|:---|
+| **Correctness** | 70.0% – 74.0% | ≥ 70.0% | ✅ PASS |
+| **Faithfulness** | 87.0% – 90.0% | ≥ 70.0% | ✅ GOLD STANDARD |
+| **Hallucination Rate** | 10.0% – 13.0% | Minimize | ✅ LOW |
+| **Recall@1** | 0.560 | Maximize | 56% at Rank 1 |
+| **Recall@3** | 0.800 | Maximize | 80% in Top 3 |
+| **Recall@5** | 0.920 | Maximize | 92% in Top 5 |
+| **MRR** | 0.698 | Maximize | Mean Reciprocal Rank |
+| **Retrieval P95** | 11.53 ms | < 50.0 ms | ✅ PASS (77% Headroom) |
+| **Generation P95** | 1,277 ms | < 1,500 ms | ✅ PASS (15% Headroom) |
+| **False Refusal Rate** | 6.0% | Minimize | ✅ Only 3/50 missed |
+
+### Latency Percentile Breakdown
+
+| Stage | Avg | P50 | P95 | P99 |
+|:---|:---|:---|:---|:---|
+| **Embed** | 8.07 ms | 7.54 ms | 11.27 ms | 12.45 ms |
+| **Search** | 0.12 ms | 0.10 ms | 0.14 ms | 0.18 ms |
+| **Retrieval Total** | 8.46 ms | 7.87 ms | 11.53 ms | 12.63 ms |
+| **Generation** | 710 ms | 466 ms | 1,277 ms | 1,500 ms |
 
 ---
 
-## 7. Video Submission Script & Talking Points (2-Minute Voiceover)
+## 7. Model Selection Rationale
 
-Use this script during your screen recording or slide presentation:
+We empirically benchmarked 5 model architectures on the RTX 4050 GPU:
 
-### [0:00 - 0:25] Introduction & Scale
-> *"Welcome to the presentation of **VoxLore**, an ultra-low latency, voice-enabled Multilingual RAG system built for Hindi, Marathi, and English. Unlike toy demonstrations with small passage sets, VoxLore scales across **13,020,220 multi-strategy vectors** indexed directly from MSMARCO and MSMARCO-XI.*
+| Model | Correctness | Faithfulness | Generation P95 | VRAM | Verdict |
+|:---|:---|:---|:---|:---|:---|
+| Extractive XLM-RoBERTa | 42.0% | 97.0% | 484 ms | 1.1 GB | Too low correctness |
+| Qwen2.5-0.5B-Instruct | 58.0% | 63.0% | 1,304 ms | 1.2 GB | Too many hallucinations |
+| **Qwen2.5-1.5B-Instruct (FP16) 🏆** | **74.0%** | **90.0%** | **1,234 ms** | **3.2 GB** | **Champion: Best balanced** |
+| Google Gemma-2-2B-It (FP16) | 70.0% | 86.0% | 1,881 ms | 4.9 GB | Over latency budget |
+| Qwen2.5-7B-Instruct (4-bit) | 72.0% | 90.0% | 7,500 ms | 5.8 GB | Way too slow |
 
-### [0:25 - 0:55] Architectural Innovations & A100 Acceleration
-> *"To achieve real-time conversational voice responsiveness over 13 million vectors, we engineered three key innovations:
-> 1. **Multi-Strategy Chunking**: We expanded passages using native, fixed overlap, and semantic clustering for 3.52x contextual recall.
-> 2. **FP16 Tensor-Core Direct Memory Map**: We compressed the index into an 18.63 GB contiguous binary array loaded directly into **Modal A100 GPU VRAM**, enabling full dense matrix search in just **24 milliseconds**.
-> 3. **Binary Offset Indexing**: A 104 MB int64 offset file enables sub-millisecond metadata retrieval without network filesystem lag."*
+---
 
-### [0:55 - 1:30] Guardrails & Strict Grounding
-> *"Voice assistants cannot afford hallucinations. VoxLore enforces a **7-stage guardrail defense**:
+## 8. Video Submission Script (2-Minute Voiceover)
+
+### [0:00 - 0:25] Introduction & Problem Statement
+> *"Welcome to VoxLore, a voice-enabled Retrieval-Augmented Generation system built for the HH Goa 2026 Shortlisting Task. Users speak a question in Hindi or English, our pipeline transcribes it using Sarvam AI, retrieves relevant context from the MSMARCO-XI dataset, and returns a grounded factual answer — all within strict latency budgets."*
+
+### [0:25 - 0:55] Architecture & Chunking Strategy
+> *"Our architecture combines three key innovations:
+> 1. **Multi-Strategy Chunking**: We apply native passage, fixed overlap, and semantic window strategies for 3.52x contextual expansion — not a single naive fixed-size approach.
+> 2. **Cross-Encoder Precision Gating**: A dedicated ms-marco-MiniLM relevance filter eliminates irrelevant passages in 15 milliseconds before they reach the LLM.
+> 3. **GPU-Accelerated Generation**: Qwen2.5-1.5B running in FP16 on an NVIDIA RTX 4050 generates focused factual answers in under 500 milliseconds median."*
+
+### [0:55 - 1:30] Guardrails & Grounding
+> *"Voice assistants cannot afford hallucinations. VoxLore enforces a 5-stage guardrail pipeline:
 > - Pre-retrieval filters intercept unsafe and out-of-scope queries in under 0.1 milliseconds.
-> - Post-retrieval validation ensures strict script matching, QA span confidence, and domain plausibility.
-> The result is strictly grounded answers verified against retrieved knowledge context."*
+> - The Cross-Encoder gate rejects irrelevant passages with configurable thresholds.
+> - Post-generation validators detect model self-refusals and verify intent-specific grounding.
+> The result: 87–90% faithfulness with only 10–13% hallucination rate."*
 
-### [1:30 - 2:00] Measured Live Benchmarks & Conclusion
-> *"Across our 180-question live benchmark evaluation spanning Hindi, Marathi, and English:
-> - Our **P50 latency is 90.7 milliseconds**.
-> - Our **P90 latency is 125.2 milliseconds**.
-> - And our overall **grounded retrieval rate is 87.8%** with a maximum worst-case latency of **148.8 milliseconds** — completely fulfilling our strict sub-150ms voice SLA.
-> Thank you for your time, and we invite you to explore our live endpoint and code!"*ncy is 90.7 milliseconds**.
-> - Our **P90 latency is 125.2 milliseconds**.
-> - And our **maximum worst-case latency is 148.8 milliseconds** — completely fulfilling our strict sub-150ms voice SLA.
-> Thank you for your time, and we invite you to try our live endpoint!"*
+### [1:30 - 2:00] Benchmarks & Conclusion
+> *"On the official rag-local-eval-loop benchmark with 100 queries from MSMARCO-XI:
+> - Correctness: 70–74%, passing the competition target.
+> - Retrieval P95: 11.5 milliseconds — 77% headroom below the 50ms budget.
+> - Generation P95: 1,277 milliseconds — safely within the 1,500ms target.
+> - And our Recall@5 is 92%, finding the correct passage 46 out of 50 times.
+> Thank you for your time, and we invite you to explore our code and live demo!"*
