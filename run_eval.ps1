@@ -1,4 +1,13 @@
-# One-Click Evaluator for VS Code Terminal
+# One-Click Dual-Profile Evaluator for VS Code Terminal
+param(
+    [Parameter(Position=0)]
+    [ValidateSet("champion", "turbo", "speed", "fast")]
+    [string]$Mode = "champion"
+)
+
+# Set the active evaluation profile
+$env:EVAL_MODE = $Mode
+
 if (-not $env:OPENAI_API_KEY) {
     # Check if .env file exists and load it
     if (Test-Path ".env") {
@@ -17,7 +26,11 @@ $env:PYTHONIOENCODING = "utf-8"
 $env:PYTHONUTF8 = "1"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "  🚀 Launching RAG Local Eval Loop on RTX 4050 GPU...     " -ForegroundColor Yellow
+if ($Mode -eq "turbo") {
+    Write-Host "  ⚡ PROFILE: TURBO (Ultra-Low Latency Sub-200ms)         " -ForegroundColor Green
+} else {
+    Write-Host "  🏆 PROFILE: CHAMPION (High Accuracy & Faithfulness)     " -ForegroundColor Yellow
+}
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 & ".\venv\Scripts\python.exe" -m eval.runner `
