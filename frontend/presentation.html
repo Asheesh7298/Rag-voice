@@ -426,11 +426,11 @@ graph TD
     G2 --> Embed["E5-Small Embedding (384-dim, NFC Norm, ~8ms CPU)"]
     Embed --> FAISS["FAISS IndexFlatIP Search (top_k=5, ~0.1ms)"]
     
-    FAISS --> CE["Cross-Encoder Gate: ms-marco-MiniLM-L-6-v2 (~15ms)"]
-    CE -->|"Score &lt; 5.6"| Decline["🛡️ Decline: Irrelevant Context"]
-    CE -->|"Score &gt;= 5.6"| Merge["Dual-Chunk Context Merge (Top 2, 850 chars)"]
+    FAISS --> CE["Cross-Encoder Gate: ms-marco-MiniLM-L-6-v2 (~2ms)"]
+    CE -->|"Score &lt; 4.6"| Decline["🛡️ Decline: Irrelevant Context"]
+    CE -->|"Score &gt;= 4.6"| Merge["Dual-Chunk Context Merge (Top 2, 800 chars)"]
     
-    Merge --> LLM["Qwen2.5-1.5B-Instruct (FP16, RTX 4050, ~450ms)"]
+    Merge --> LLM["Qwen2.5-1.5B-Instruct (FP16, RTX 4050, TF32)"]
     LLM --> PostGuard["Post-Gen Guardrails: Refusal Detection + Intent Validation"]
     
     PostGuard --> Response["Structured Answer (text, grounded, generation_ms)"]
@@ -445,49 +445,10 @@ graph TD
       </div>
     </div>
 
-    <!-- Section 2: Latency Waterfall -->
+    <!-- Section 2: RTX 4050 Hardware Layout -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>⏱️ 2. Request Lifecycle &amp; Latency Waterfall</h2>
-        <span class="tag tag-cyan">Sequence Execution</span>
-      </div>
-      <div class="mermaid">
-sequenceDiagram
-    autonumber
-    actor User as 👤 User
-    participant Frontend as 🌐 Web UI
-    participant E5 as 🧠 E5-Small Embedder (CPU)
-    participant FAISS as 💾 FAISS Index
-    participant CE as 🔍 Cross-Encoder Gate
-    participant GPU as ⚡ Qwen2.5-1.5B (RTX 4050)
-
-    User->>Frontend: Speaks / Types Query (Hindi / English)
-    Frontend->>E5: Encode query to 384-dim vector
-    Note over E5: T+0ms → T+8ms (NFC Normalize + Encode)
-    E5-->>FAISS: Query vector
-    
-    FAISS-->>CE: Top-5 candidate passages + cosine scores
-    Note over FAISS: T+8ms → T+8.1ms (IndexFlatIP search)
-    
-    CE->>CE: Score each (query, passage) pair
-    Note over CE: T+8.1ms → T+23ms (Cross-Encoder relevance scoring)
-    
-    alt max_ce_score < 5.6 (Unanswerable)
-        CE-->>Frontend: Decline: grounded=False (~23ms total)
-    else max_ce_score >= 5.6 (Answerable)
-        CE->>GPU: Merged context (top 2 chunks, 850 chars max)
-        Note over GPU: T+23ms → T+473ms (Qwen FP16 generation, 38 tokens max)
-        GPU-->>Frontend: Answer + grounded=True + generation_ms
-    end
-    
-    Frontend->>User: Renders Answer + Voice Synthesis
-      </div>
-    </div>
-
-    <!-- Section 3: RTX 4050 Hardware Layout -->
-    <div class="diagram-card">
-      <div class="card-head">
-        <h2>💾 3. NVIDIA RTX 4050 GPU Memory Layout (6.44 GB VRAM)</h2>
+        <h2>💾 2. NVIDIA RTX 4050 GPU Memory Layout (6.44 GB VRAM)</h2>
         <span class="tag tag-green">Hardware Specs</span>
       </div>
       <table>
@@ -534,10 +495,10 @@ sequenceDiagram
       </table>
     </div>
 
-    <!-- Section 4: Verified Benchmark Scorecard -->
+    <!-- Section 3: Verified Benchmark Scorecard -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>📊 4. Official Benchmark Scorecard (rag-local-eval-loop)</h2>
+        <h2>📊 3. Official Benchmark Scorecard (rag-local-eval-loop)</h2>
         <span class="tag tag-purple">100 Queries</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:20px;">
@@ -633,10 +594,10 @@ sequenceDiagram
       </table>
     </div>
 
-    <!-- Section 4.5: Adaptive Dual-Tier Inference Profile -->
+    <!-- Section 4: Adaptive Dual-Tier Inference Profile -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>⚡ 5. Adaptive Dual-Tier Inference Architecture</h2>
+        <h2>⚡ 4. Adaptive Dual-Tier Inference Architecture</h2>
         <span class="tag tag-cyan">Enterprise Flexibility</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
@@ -685,10 +646,10 @@ sequenceDiagram
       </table>
     </div>
 
-    <!-- Section 6: Model Selection Rationale -->
+    <!-- Section 5: Model Selection Rationale -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>🧪 6. Model Selection — Empirical Head-to-Head</h2>
+        <h2>🧪 5. Model Selection — Empirical Head-to-Head</h2>
         <span class="tag tag-amber">5 Models Tested</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
@@ -750,10 +711,10 @@ sequenceDiagram
       </table>
     </div>
 
-    <!-- Section 7: Embedding Model Selection -->
+    <!-- Section 6: Embedding Model Selection -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>🔬 7. Embedding Model Selection</h2>
+        <h2>🔬 6. Embedding Model Selection</h2>
         <span class="tag tag-cyan">2 Models Tested</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
@@ -794,10 +755,10 @@ sequenceDiagram
       </table>
     </div>
 
-    <!-- Section 8: Guardrail Pipeline -->
+    <!-- Section 7: Guardrail Pipeline -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>🛡️ 8. Guardrail Defense Pipeline</h2>
+        <h2>🛡️ 7. Guardrail Defense Pipeline</h2>
         <span class="tag tag-green">5-Stage Defense</span>
       </div>
       <div class="mermaid">
@@ -829,10 +790,10 @@ flowchart TD
       </div>
     </div>
 
-    <!-- Section 9: Multi-Strategy Chunking -->
+    <!-- Section 8: Multi-Strategy Chunking -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>📚 9. Multi-Strategy Chunking Pipeline</h2>
+        <h2>📚 8. Multi-Strategy Chunking Pipeline</h2>
         <span class="tag tag-purple">3.52x Expansion</span>
       </div>
       <div class="mermaid">
@@ -860,10 +821,10 @@ graph LR
       </div>
     </div>
 
-    <!-- Section 10: How to Reproduce -->
+    <!-- Section 9: How to Reproduce -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>⚖️ 10. Reproduce the Benchmark</h2>
+        <h2>⚖️ 9. Reproduce the Benchmark</h2>
         <span class="tag tag-cyan">Judges' Guide</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
