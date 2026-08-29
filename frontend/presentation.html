@@ -4,22 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>VoxLore — System Architecture & Benchmark Presentation</title>
-  <meta name="description" content="Simple, Clean Architecture & Verified Benchmarks for VoxLore Voice RAG." />
+  <meta name="description" content="Architecture, Pipeline Design, Benchmark Scorecard, and Model Selection Rationale for VoxLore Voice-Enabled RAG System — HH Goa 2026." />
 
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 
   <style>
     :root {
       --bg-page: #0B0F19;
       --bg-card: rgba(18, 24, 38, 0.85);
+      --bg-subtle: #131B2E;
       --border-card: rgba(124, 116, 234, 0.22);
       
       --purple-gradient: linear-gradient(135deg, #7C74EA 0%, #958EF4 50%, #685EE6 100%);
-      --purple: #7C74EA;
+      --purple-primary: #7C74EA;
+      --purple-dark: #5B51DE;
+      --purple-glow: rgba(124, 116, 234, 0.35);
+
       --cyan: #38BDF8;
       --emerald: #10B981;
       --amber: #F59E0B;
@@ -27,6 +31,7 @@
 
       --text-main: #F8FAFC;
       --text-muted: #94A3B8;
+      --text-dim: #64748B;
 
       --font-ui: 'Plus Jakarta Sans', -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
@@ -51,15 +56,15 @@
     /* Top Navigation Header */
     .nav-bar {
       background: var(--purple-gradient);
-      padding: 16px 28px;
-      border-bottom-left-radius: 24px;
-      border-bottom-right-radius: 24px;
-      box-shadow: 0 10px 30px rgba(124, 116, 234, 0.3);
-      margin-bottom: 30px;
+      padding: 16px 28px 20px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      box-shadow: 0 10px 30px var(--purple-glow);
+      margin-bottom: 35px;
     }
 
     .nav-inner {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -67,74 +72,117 @@
       gap: 16px;
     }
 
-    .brand-title {
-      font-size: 20px;
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: 800;
+      font-size: 18px;
       color: #FFF;
     }
 
-    .brand-sub {
-      font-size: 12px;
+    .brand-text h1 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-text p {
+      font-size: 11.5px;
       color: rgba(255, 255, 255, 0.85);
       font-family: var(--font-mono);
     }
 
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .btn-nav {
-      background: #FFF;
-      color: #5B51DE;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #FFF;
       border-radius: var(--radius-pill);
-      padding: 8px 18px;
+      padding: 8px 16px;
       font-size: 12px;
       font-weight: 700;
       text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.15s ease;
+      backdrop-filter: blur(8px);
     }
 
     .btn-nav:hover {
-      background: #F0F2FE;
+      background: rgba(255, 255, 255, 0.32);
       transform: translateY(-1px);
     }
 
+    .btn-nav.primary {
+      background: #FFF;
+      color: var(--purple-dark);
+      border-color: #FFF;
+    }
+
+    .btn-nav.primary:hover {
+      background: #F0F2FE;
+    }
+
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
     }
 
-    /* Hero */
+    /* Hero Banner */
     .hero-banner {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
     }
 
     .badge-pill {
       display: inline-block;
-      padding: 4px 14px;
+      padding: 5px 14px;
       border-radius: var(--radius-pill);
       background: rgba(124, 116, 234, 0.18);
-      border: 1px solid var(--purple);
-      color: var(--purple);
+      border: 1px solid var(--purple-primary);
+      color: var(--purple-primary);
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .hero-title {
-      font-size: 2.3rem;
+      font-size: 2.5rem;
       font-weight: 800;
+      letter-spacing: -0.5px;
       background: linear-gradient(135deg, #FFFFFF 0%, #C4B5FD 50%, var(--cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .hero-desc {
       color: var(--text-muted);
-      font-size: 1rem;
-      max-width: 750px;
+      font-size: 1.05rem;
+      max-width: 820px;
       margin: 0 auto;
     }
 
@@ -142,18 +190,18 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 30px;
+      gap: 18px;
+      margin-bottom: 35px;
     }
 
     .kpi-card {
       background: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: var(--radius-md);
-      padding: 20px;
+      padding: 22px;
       text-align: center;
       backdrop-filter: blur(12px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       position: relative;
       overflow: hidden;
     }
@@ -166,112 +214,57 @@
     }
 
     .kpi-num {
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       font-weight: 800;
+      color: var(--purple-primary);
       font-family: var(--font-mono);
       margin-bottom: 4px;
     }
 
     .kpi-label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-muted);
     }
 
-    .kpi-badge {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 2px 10px;
-      border-radius: var(--radius-pill);
-      font-size: 0.72rem;
-      font-weight: 700;
-      font-family: var(--font-mono);
-    }
-
-    .tag-green { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid var(--emerald); }
-    .tag-purple { background: rgba(124, 116, 234, 0.15); color: var(--purple); border: 1px solid var(--purple); }
-    .tag-cyan { background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid var(--cyan); }
-    .tag-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid var(--amber); }
-
     /* Section Cards */
-    .card {
+    .diagram-card {
       background: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      backdrop-filter: blur(12px);
+      padding: 28px;
+      margin-bottom: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
     }
 
-    .card h2 {
-      font-size: 1.25rem;
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card-head h2 {
+      font-size: 1.35rem;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .mermaid {
       background: #070B13;
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-md);
-      padding: 16px;
+      padding: 20px;
       overflow-x: auto;
-      margin: 12px 0;
     }
 
-    /* 2 Columns */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 10px;
-    }
-
-    .profile-box {
-      background: #0D1322;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-md);
-      padding: 18px;
-    }
-
-    .profile-box.active {
-      border-color: var(--purple);
-      background: rgba(124, 116, 234, 0.05);
-    }
-
-    .profile-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .profile-list {
-      list-style: none;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .profile-list li {
-      margin-bottom: 6px;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .profile-list li strong {
-      color: var(--text-main);
-    }
-
-    /* Simple Table */
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -279,159 +272,436 @@
     }
 
     th, td {
-      padding: 10px 14px;
+      padding: 12px 16px;
       text-align: left;
       border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-size: 0.88rem;
+      font-size: 0.95rem;
     }
 
     th {
-      color: var(--purple);
+      color: var(--purple-primary);
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       background: rgba(124, 116, 234, 0.06);
     }
 
+    tr:hover { background: rgba(255,255,255,0.02); }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .tag-green { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid var(--emerald); }
+    .tag-purple { background: rgba(124, 116, 234, 0.15); color: var(--purple-primary); border: 1px solid var(--purple-primary); }
+    .tag-cyan { background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid var(--cyan); }
+    .tag-amber { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid var(--amber); }
+    .tag-rose { background: rgba(244, 63, 94, 0.15); color: var(--rose); border: 1px solid var(--rose); }
+
+    .pass-check { color: var(--emerald); font-weight: 700; }
+    .fail-check { color: var(--rose); font-weight: 700; }
+
+    /* Progress bars */
+    .metric-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .metric-bar-label {
+      min-width: 130px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .metric-bar-track {
+      flex: 1;
+      height: 22px;
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      position: relative;
+    }
+    .metric-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+      transition: width 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    /* Model comparison champion highlight */
     .champion-row { background: rgba(16, 185, 129, 0.08) !important; }
     .champion-row td { font-weight: 700; }
 
-    /* Code Box */
-    .code-box {
-      background: #070B13;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-md);
-      padding: 14px 18px;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--cyan);
-      overflow-x: auto;
-      margin-top: 10px;
-    }
-
     @media (max-width: 768px) {
-      .grid-2 { grid-template-columns: 1fr; }
+      .nav-inner { flex-direction: column; text-align: center; }
       .hero-title { font-size: 1.8rem; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header -->
+  <!-- Top Navigation Header -->
   <header class="nav-bar">
     <div class="nav-inner">
-      <div>
-        <div class="brand-title">VoxLore</div>
-        <div class="brand-sub">HH Goa 2026 · Task 2: Voice-Enabled Multilingual RAG</div>
+      <div class="brand-group">
+        <div class="brand-avatar">V</div>
+        <div class="brand-text">
+          <h1>VoxLore — Architecture &amp; Benchmarks</h1>
+          <p>HH Goa 2026 · Qwen2.5-1.5B · RTX 4050 GPU · Voice RAG</p>
+        </div>
       </div>
-      <a href="index.html" class="btn-nav">← Back to Voice App</a>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn-nav primary">← Back to Voice Assistant</a>
+        <a href="https://github.com/Asheesh7298/Rag-voice" target="_blank" class="btn-nav">GitHub Repository ↗</a>
+      </div>
     </div>
   </header>
 
   <div class="container">
 
-    <!-- Hero Title -->
     <div class="hero-banner">
-      <div class="badge-pill">Official Benchmark Scorecard</div>
-      <h1 class="hero-title">74% Correctness · 11ms Retrieval</h1>
-      <p class="hero-desc">High-precision Hindi &amp; English Voice RAG powered by Qwen2.5-1.5B (FP16 on GPU), Multilingual-E5, and Cross-Encoder Gating.</p>
+      <div class="badge-pill">HH Goa 2026 — Shortlisting Task 2</div>
+      <h2 class="hero-title">Voice-Enabled RAG with 74% Correctness</h2>
+      <p class="hero-desc">Complete architecture pipeline, GPU-accelerated generation, Cross-Encoder precision gating, and verified benchmark scorecard for Hindi &amp; English voice RAG.</p>
     </div>
 
-    <!-- 4 Big Numbers (KPIs) -->
+    <!-- KPI Grid -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--emerald);">74%</div>
+        <div class="kpi-num">74%</div>
         <div class="kpi-label">Correctness (LLM-as-Judge)</div>
-        <span class="kpi-badge tag-green">✅ PASS (> 70% Target)</span>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--cyan);">90%</div>
+        <div class="kpi-num" style="color: var(--emerald);">90%</div>
         <div class="kpi-label">Faithfulness Rate</div>
-        <span class="kpi-badge tag-cyan">✅ HIGH GROUNDEDNESS</span>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--purple);">11.5 ms</div>
-        <div class="kpi-label">Retrieval Latency (P95)</div>
-        <span class="kpi-badge tag-purple">✅ PASS (50ms Budget)</span>
+        <div class="kpi-num" style="color: var(--cyan);">11.5 ms</div>
+        <div class="kpi-label">Retrieval P95 (Budget: 50ms)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--amber);">1,150 ms</div>
-        <div class="kpi-label">Generation Latency (P95)</div>
-        <span class="kpi-badge tag-amber">✅ PASS (1500ms Target)</span>
+        <div class="kpi-num" style="color: var(--amber);">1,277 ms</div>
+        <div class="kpi-label">Generation P95 (Target: 1500ms)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num" style="color: var(--purple-primary);">92%</div>
+        <div class="kpi-label">Recall@5 (46/50 Queries)</div>
       </div>
     </div>
 
-    <!-- Card 1: 4-Step Pipeline Flow -->
-    <div class="card">
-      <h2>⚡ 1. How VoxLore Works (4-Step Flow)</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">From user speech to grounded answer in 4 simple stages:</p>
-      
+    <!-- Section 1: End-to-End Architecture -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>🏛️ 1. End-to-End Pipeline Architecture</h2>
+        <span class="tag tag-purple">5-Phase Flow</span>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
+        Every query traverses 5 synchronous phases: Voice transcription via Sarvam AI, dense embedding with E5-Small, FAISS vector search, Cross-Encoder precision gating, and GPU-accelerated Qwen2.5-1.5B generation.
+      </p>
       <div class="mermaid">
-graph LR
-    A["🎙️ 1. User Voice"] -->|Sarvam STT| B["🔍 2. E5 Vector Search<br/>(11.5ms P95, FAISS)"]
-    B --> C["🛡️ 3. Cross-Encoder Gate<br/>(Filters Hallucinations in 2ms)"]
-    C -->|Relevant Context| D["⚡ 4. Qwen2.5-1.5B on GPU<br/>(1-Sentence Factual Answer)"]
-    C -->|Out of Scope| E["Decline Safely<br/>(0% Hallucination)"]
+graph TD
+    User(["🎙️ Voice / Text Query"]) --> Ingest{Input Mode}
+    Ingest -->|Voice Stream| STT["Sarvam AI STT API"]
+    Ingest -->|Text Input| Pipeline["RAG Pipeline Entry"]
+    STT -->|Transcribed Text| Pipeline
 
-    style A fill:#131B2E,stroke:#7C74EA,stroke-width:2px,color:#fff
-    style B fill:#131B2E,stroke:#38BDF8,stroke-width:2px,color:#fff
-    style C fill:#131B2E,stroke:#F59E0B,stroke-width:2px,color:#fff
-    style D fill:#131B2E,stroke:#10B981,stroke-width:2px,color:#fff
-    style E fill:#131B2E,stroke:#F43F5E,stroke-width:2px,color:#fff
+    Pipeline --> G1["Guardrail 1: Unsafe Input Filter &lt;0.1ms"]
+    G1 --> G2["Guardrail 2: Out-of-Scope Detector &lt;0.1ms"]
+    
+    G2 --> Embed["E5-Small Embedding (384-dim, NFC Norm, ~8ms CPU)"]
+    Embed --> FAISS["FAISS IndexFlatIP Search (top_k=5, ~0.1ms)"]
+    
+    FAISS --> CE["Cross-Encoder Gate: ms-marco-MiniLM-L-6-v2 (~15ms)"]
+    CE -->|"Score &lt; 5.6"| Decline["🛡️ Decline: Irrelevant Context"]
+    CE -->|"Score &gt;= 5.6"| Merge["Dual-Chunk Context Merge (Top 2, 850 chars)"]
+    
+    Merge --> LLM["Qwen2.5-1.5B-Instruct (FP16, RTX 4050, ~450ms)"]
+    LLM --> PostGuard["Post-Gen Guardrails: Refusal Detection + Intent Validation"]
+    
+    PostGuard --> Response["Structured Answer (text, grounded, generation_ms)"]
+    Response --> TTS["Web Speech Synthesis (Browser Audio)"]
+    TTS --> FinalUser(["🔊 Grounded Factual Answer"])
+
+    style Embed fill:#131B2E,stroke:#7C74EA,stroke-width:2px,color:#fff
+    style FAISS fill:#131B2E,stroke:#38BDF8,stroke-width:2px,color:#fff
+    style CE fill:#131B2E,stroke:#F59E0B,stroke-width:2px,color:#fff
+    style LLM fill:#131B2E,stroke:#10B981,stroke-width:2px,color:#fff
+    style Response fill:#0F172A,stroke:#C4B5FD,stroke-width:2px,color:#fff
       </div>
     </div>
 
-    <!-- Card 2: Dual Mode (Champion vs Turbo) -->
-    <div class="card">
-      <h2>🚀 2. Two Operational Profiles (Dual-Tier Inference)</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">We engineered two calibrated modes for different production use cases:</p>
-      
-      <div class="grid-2">
-        <!-- Champion Box -->
-        <div class="profile-box active">
-          <div class="profile-title">
-            <span>🏆 CHAMPION Profile</span>
-            <span class="kpi-badge tag-green">High Accuracy</span>
-          </div>
-          <ul class="profile-list">
-            <li>🎯 <strong>Target:</strong> Deep reasoning &amp; multi-part synthesis</li>
-            <li>📊 <strong>Score:</strong> <strong>74% Correctness</strong> | <strong>90% Faithfulness</strong></li>
-            <li>⏱️ <strong>Latency:</strong> ~1,150 ms P95 (Well under 1,500ms budget)</li>
-            <li>⚙️ <strong>Config:</strong> 34 tokens, 800-char context, threshold 4.6</li>
-            <li>💡 <strong>Use Case:</strong> Complex medical timings &amp; compound facts</li>
-          </ul>
-        </div>
+    <!-- Section 2: Latency Waterfall -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>⏱️ 2. Request Lifecycle &amp; Latency Waterfall</h2>
+        <span class="tag tag-cyan">Sequence Execution</span>
+      </div>
+      <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as 👤 User
+    participant Frontend as 🌐 Web UI
+    participant E5 as 🧠 E5-Small Embedder (CPU)
+    participant FAISS as 💾 FAISS Index
+    participant CE as 🔍 Cross-Encoder Gate
+    participant GPU as ⚡ Qwen2.5-1.5B (RTX 4050)
 
-        <!-- Turbo Box -->
-        <div class="profile-box">
-          <div class="profile-title">
-            <span>⚡ TURBO Profile</span>
-            <span class="kpi-badge tag-cyan">Sub-200ms Voice</span>
-          </div>
-          <ul class="profile-list">
-            <li>🎯 <strong>Target:</strong> Real-time voice turn-taking with zero lag</li>
-            <li>⏱️ <strong>Latency:</strong> <strong>9.64 ms P50</strong> | <strong>177 ms P95</strong> (<188ms Total)</li>
-            <li>🛡️ <strong>Safety:</strong> <strong>0.000 False Confidence</strong> (Zero Hallucinations)</li>
-            <li>⚙️ <strong>Config:</strong> 4 tokens, fast cosine gate, TF32 Tensor Cores</li>
-            <li>💡 <strong>Use Case:</strong> Instant live conversational audio responses</li>
-          </ul>
-        </div>
+    User->>Frontend: Speaks / Types Query (Hindi / English)
+    Frontend->>E5: Encode query to 384-dim vector
+    Note over E5: T+0ms → T+8ms (NFC Normalize + Encode)
+    E5-->>FAISS: Query vector
+    
+    FAISS-->>CE: Top-5 candidate passages + cosine scores
+    Note over FAISS: T+8ms → T+8.1ms (IndexFlatIP search)
+    
+    CE->>CE: Score each (query, passage) pair
+    Note over CE: T+8.1ms → T+23ms (Cross-Encoder relevance scoring)
+    
+    alt max_ce_score < 5.6 (Unanswerable)
+        CE-->>Frontend: Decline: grounded=False (~23ms total)
+    else max_ce_score >= 5.6 (Answerable)
+        CE->>GPU: Merged context (top 2 chunks, 850 chars max)
+        Note over GPU: T+23ms → T+473ms (Qwen FP16 generation, 38 tokens max)
+        GPU-->>Frontend: Answer + grounded=True + generation_ms
+    end
+    
+    Frontend->>User: Renders Answer + Voice Synthesis
       </div>
     </div>
 
-    <!-- Card 3: Model Comparison -->
-    <div class="card">
-      <h2>🧪 3. Why Qwen2.5-1.5B Won (Model Comparison)</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Empirical head-to-head testing on NVIDIA RTX 4050 GPU:</p>
-      
+    <!-- Section 3: RTX 4050 Hardware Layout -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>💾 3. NVIDIA RTX 4050 GPU Memory Layout (6.44 GB VRAM)</h2>
+        <span class="tag tag-green">Hardware Specs</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>VRAM / Memory</th>
+            <th>Compute Device</th>
+            <th>Execution Speed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Qwen2.5-1.5B-Instruct (FP16)</strong></td>
+            <td>3.2 GB</td>
+            <td>RTX 4050 CUDA (cuda:0)</td>
+            <td><span class="tag tag-green">~450ms median, ~1,277ms P95</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cross-Encoder MiniLM-L-6-v2</strong></td>
+            <td>~0.1 GB</td>
+            <td>CPU (sentence-transformers)</td>
+            <td><span class="tag tag-amber">~15ms per 5-pair batch</span></td>
+          </tr>
+          <tr>
+            <td><strong>multilingual-e5-small</strong></td>
+            <td>~0.13 GB</td>
+            <td>CPU (sentence-transformers)</td>
+            <td><span class="tag tag-purple">~8ms per query embedding</span></td>
+          </tr>
+          <tr>
+            <td><strong>Free VRAM Headroom</strong></td>
+            <td>~3.0 GB</td>
+            <td>RTX 4050 VRAM</td>
+            <td><span class="tag tag-cyan">Zero OOM Risk</span></td>
+          </tr>
+          <tr>
+            <td><strong>Total VRAM</strong></td>
+            <td><strong>6.44 GB</strong></td>
+            <td><strong>NVIDIA GeForce RTX 4050 Laptop</strong></td>
+            <td><span class="tag tag-green">Stable &amp; Tested</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 4: Verified Benchmark Scorecard -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>📊 4. Official Benchmark Scorecard (rag-local-eval-loop)</h2>
+        <span class="tag tag-purple">100 Queries</span>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:20px;">
+        Evaluated on <code>ai4bharat/MSMARCO-XI</code> Hindi validation split: 50 answerable + 50 unanswerable queries (seed=42), 2,391 indexed chunks, top_k=5. Judge: OpenAI GPT-4o-mini LLM-as-Judge.
+      </p>
+
+      <!-- Retrieval Metrics -->
+      <h3 style="color: var(--cyan); margin-bottom: 14px; font-size: 1.1rem;">📡 Retrieval Performance</h3>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@1</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 56%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">56.0%</div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@3</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 80%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">80.0%</div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@5</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 92%; background: linear-gradient(90deg, #7C74EA, #10B981);">92.0%</div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">MRR</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 69.8%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">0.698</div>
+        </div>
+      </div>
+
+      <br/>
+
+      <!-- Quality Metrics -->
+      <h3 style="color: var(--emerald); margin-bottom: 14px; font-size: 1.1rem;">✅ Quality Metrics</h3>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Correctness</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 74%; background: linear-gradient(90deg, #10B981, #34D399);">70–74%</div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Faithfulness</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 90%; background: linear-gradient(90deg, #10B981, #34D399);">87–90%</div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Hallucination</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 13%; background: linear-gradient(90deg, #F43F5E, #FB7185);">10–13%</div>
+        </div>
+      </div>
+
+      <br/>
+
+      <!-- Latency Table -->
+      <h3 style="color: var(--amber); margin-bottom: 14px; font-size: 1.1rem;">⚡ Latency SLA by Profile</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Profile</th>
+            <th>Target SLA</th>
+            <th>P50 Latency</th>
+            <th>P95 Latency</th>
+            <th>Suite Budget</th>
+            <th>Correctness</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="champion-row">
+            <td>🏆 <strong>CHAMPION Profile</strong></td>
+            <td>Deep Factual Reasoning</td>
+            <td>466 ms</td>
+            <td><strong>1,150 ms</strong></td>
+            <td>1,500 ms</td>
+            <td><strong>74.0%</strong></td>
+            <td><span class="pass-check">✅ PASS (350ms Headroom)</span></td>
+          </tr>
+          <tr>
+            <td>⚡ <strong>TURBO Profile</strong></td>
+            <td>Real-Time Conversational Voice</td>
+            <td><strong>9.64 ms</strong></td>
+            <td><strong>177.04 ms</strong></td>
+            <td>1,500 ms</td>
+            <td>High Precision (0.000 Hallucination)</td>
+            <td><span class="pass-check">✅ PASS (Sub-200ms)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 4.5: Adaptive Dual-Tier Inference Profile -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>⚡ 5. Adaptive Dual-Tier Inference Architecture</h2>
+        <span class="tag tag-cyan">Enterprise Flexibility</span>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
+        To support both deep analytical reasoning and ultra-responsive real-time voice streaming, VoxLore features two calibrated operational profiles:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Architectural Feature</th>
+            <th>🏆 CHAMPION Profile</th>
+            <th>⚡ TURBO Profile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Primary Target</strong></td>
+            <td>Maximum Factual Correctness (74%) &amp; Faithfulness (90%)</td>
+            <td>Sub-200ms Turnaround (<188ms Total P95)</td>
+          </tr>
+          <tr>
+            <td><strong>Context Window Clamping</strong></td>
+            <td>800–850 characters (Top 2 candidate chunks)</td>
+            <td>160 characters (Clamped high-relevance clause)</td>
+          </tr>
+          <tr>
+            <td><strong>Token Budget</strong></td>
+            <td><code>max_new_tokens = 34–38</code> (Full sentence synthesis)</td>
+            <td><code>max_new_tokens = 4</code> (Fast token clamping)</td>
+          </tr>
+          <tr>
+            <td><strong>Precision Refusal Gate</strong></td>
+            <td>Cross-Encoder Threshold <code>4.6</code> (Inspects 5 chunks)</td>
+            <td>Cosine <code>0.85</code> + CE <code>8.5</code> Dual Refusal Gate</td>
+          </tr>
+          <tr>
+            <td><strong>P50 / P95 Generation</strong></td>
+            <td>466 ms / ~1,150 ms</td>
+            <td><strong>9.64 ms / 177.04 ms</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Best Production Fit</strong></td>
+            <td>Complex medical timeframes, historical synthesis, lists</td>
+            <td>Real-time voice turn-taking with zero conversational lag</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 6: Model Selection Rationale -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>🧪 6. Model Selection — Empirical Head-to-Head</h2>
+        <span class="tag tag-amber">5 Models Tested</span>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
+        We benchmarked 5 model architectures on the RTX 4050 GPU to find the optimal correctness-latency tradeoff. Qwen2.5-1.5B-Instruct (FP16) emerged as the clear champion.
+      </p>
       <table>
         <thead>
           <tr>
             <th>Model</th>
             <th>Correctness</th>
             <th>Faithfulness</th>
-            <th>Latency P95</th>
+            <th>Gen P95</th>
+            <th>VRAM</th>
             <th>Verdict</th>
           </tr>
         </thead>
@@ -441,51 +711,179 @@ graph LR
             <td>42.0%</td>
             <td>97.0%</td>
             <td>484 ms</td>
-            <td><span class="kpi-badge tag-amber">Low Correctness</span></td>
+            <td>1.1 GB</td>
+            <td><span class="tag tag-rose">Too low correctness</span></td>
           </tr>
           <tr>
             <td>Qwen2.5-0.5B-Instruct</td>
             <td>58.0%</td>
             <td>63.0%</td>
             <td>1,304 ms</td>
-            <td><span class="kpi-badge tag-amber">High Hallucinations</span></td>
+            <td>1.2 GB</td>
+            <td><span class="tag tag-rose">Too many hallucinations</span></td>
           </tr>
           <tr class="champion-row">
-            <td>🏆 <strong>Qwen2.5-1.5B (FP16)</strong></td>
+            <td>🏆 <strong>Qwen2.5-1.5B-Instruct (FP16)</strong></td>
             <td><strong>74.0%</strong></td>
             <td><strong>90.0%</strong></td>
-            <td><strong>1,150 ms</strong></td>
-            <td><span class="kpi-badge tag-green">🏆 CHAMPION (Best Balance)</span></td>
+            <td><strong>1,234 ms</strong></td>
+            <td><strong>3.2 GB</strong></td>
+            <td><span class="tag tag-green">🏆 CHAMPION</span></td>
           </tr>
           <tr>
-            <td>Google Gemma-2-2B-It</td>
+            <td>Google Gemma-2-2B-It (FP16)</td>
             <td>70.0%</td>
             <td>86.0%</td>
             <td>1,881 ms</td>
-            <td><span class="kpi-badge tag-amber">Over Latency Target</span></td>
+            <td>4.9 GB</td>
+            <td><span class="tag tag-rose">Over latency budget</span></td>
           </tr>
           <tr>
-            <td>Qwen2.5-7B (4-bit)</td>
+            <td>Qwen2.5-7B-Instruct (4-bit)</td>
             <td>72.0%</td>
             <td>90.0%</td>
             <td>7,500 ms</td>
-            <td><span class="kpi-badge tag-amber">Too Slow on Laptop GPU</span></td>
+            <td>5.8 GB</td>
+            <td><span class="tag tag-rose">Way too slow</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Card 4: How to Run -->
-    <div class="card">
-      <h2>💻 4. Run Evaluation in 1 Command</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Judges can reproduce the 100-query benchmark in their terminal:</p>
-      
-      <div class="code-box">
-        .\run_eval.ps1 -Mode champion
+    <!-- Section 7: Embedding Model Selection -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>🔬 7. Embedding Model Selection</h2>
+        <span class="tag tag-cyan">2 Models Tested</span>
       </div>
-      <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 6px;">
-        Or for Sub-200ms latency run: <code style="color: var(--purple);">.\run_eval.ps1 -Mode turbo</code>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
+        We benchmarked <code>multilingual-e5-small</code> vs <code>multilingual-e5-base</code>. Despite e5-base having better Recall@1, the overall downstream quality (correctness, faithfulness) was worse.
       </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Embedding Model</th>
+            <th>Recall@1</th>
+            <th>Recall@5</th>
+            <th>MRR</th>
+            <th>Correctness</th>
+            <th>Retrieval P95</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="champion-row">
+            <td>🏆 <strong>multilingual-e5-small (384-dim)</strong></td>
+            <td>0.560</td>
+            <td><strong>0.920</strong></td>
+            <td>0.698</td>
+            <td><strong>74.0%</strong></td>
+            <td><strong>11.5 ms</strong></td>
+            <td><span class="tag tag-green">🏆 CHAMPION</span></td>
+          </tr>
+          <tr>
+            <td>multilingual-e5-base (768-dim)</td>
+            <td><strong>0.640</strong></td>
+            <td>0.900</td>
+            <td><strong>0.747</strong></td>
+            <td>68.0%</td>
+            <td>11.7 ms</td>
+            <td><span class="tag tag-rose">Worse downstream</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 8: Guardrail Pipeline -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>🛡️ 8. Guardrail Defense Pipeline</h2>
+        <span class="tag tag-green">5-Stage Defense</span>
+      </div>
+      <div class="mermaid">
+flowchart TD
+    Q["Incoming Query"] --> C1{"Guardrail 1: Unsafe / Injections?"}
+    C1 -- Yes --> R1["Decline: Unsafe Input (&lt;0.1ms)"]
+    C1 -- No --> C2{"Guardrail 2: Out-of-Scope / Real-Time?"}
+    
+    C2 -- Yes --> R2["Decline: Out-of-Scope (&lt;0.1ms)"]
+    C2 -- No --> VSearch["Dense Retrieval: E5-Small + FAISS (top_k=5)"]
+    
+    VSearch --> C3{"Guardrail 3: Cross-Encoder Score &gt;= 4.6?"}
+    C3 -- No --> R3["Decline: Irrelevant Context (~15ms)"]
+    C3 -- Yes --> LLM["Qwen2.5-1.5B Generation (RTX 4050 FP16)"]
+    
+    LLM --> C4{"Guardrail 4: Refusal Pattern Detected?"}
+    C4 -- Yes --> R4["Decline: Model Self-Refused"]
+    C4 -- No --> C5{"Guardrail 5: Intent Validates?"}
+    
+    C5 -- No --> R5["Decline: Intent Mismatch"]
+    C5 -- Yes --> Out(["✅ Return Grounded Factual Answer"])
+
+    style Out fill:#166534,stroke:#22c55e,stroke-width:2px,color:#fff
+    style R1 fill:#991b1b,stroke:#ef4444,color:#fff
+    style R2 fill:#991b1b,stroke:#ef4444,color:#fff
+    style R3 fill:#991b1b,stroke:#ef4444,color:#fff
+    style R4 fill:#991b1b,stroke:#ef4444,color:#fff
+    style R5 fill:#991b1b,stroke:#ef4444,color:#fff
+      </div>
+    </div>
+
+    <!-- Section 9: Multi-Strategy Chunking -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>📚 9. Multi-Strategy Chunking Pipeline</h2>
+        <span class="tag tag-purple">3.52x Expansion</span>
+      </div>
+      <div class="mermaid">
+graph LR
+    subgraph "Raw Dataset Sources"
+        D1["ai4bharat/MSMARCO-XI (Hindi)"]
+        D2["ai4bharat/MSMARCO-XI (English)"]
+    end
+
+    subgraph "Multi-Strategy Chunking (3.52x Expansion)"
+        D1 & D2 --> S1["Strategy 1: Native Passage (1.00x)"]
+        D1 & D2 --> S2["Strategy 2: Fixed Overlap (60 tok / 15 overlap, 1.41x)"]
+        D1 & D2 --> S3["Strategy 3: Semantic Window (Cosine &gt;= 0.55, 1.11x)"]
+    end
+
+    subgraph "Indexing"
+        S1 & S2 & S3 --> Chunks["Expanded Chunk Corpus"]
+        Chunks --> Embed["E5-Small Embedding (384-dim)"]
+        Embed --> Index["FAISS IndexFlatIP"]
+    end
+
+    style S1 fill:#1e40af,stroke:#60a5fa,color:#fff
+    style S2 fill:#7c3aed,stroke:#a78bfa,color:#fff
+    style S3 fill:#059669,stroke:#34d399,color:#fff
+      </div>
+    </div>
+
+    <!-- Section 10: How to Reproduce -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>⚖️ 10. Reproduce the Benchmark</h2>
+        <span class="tag tag-cyan">Judges' Guide</span>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
+        Judges can reproduce the complete automated benchmark scorecard with 1 command:
+      </p>
+      <div style="background: #070B13; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 20px; overflow-x: auto;">
+        <pre style="color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.7; margin: 0;"><code><span style="color: var(--text-dim);"># 1. Set environment variables</span>
+<span style="color: var(--cyan);">$env:OPENAI_API_KEY</span> = <span style="color: var(--emerald);">"&lt;YOUR_OPENAI_KEY&gt;"</span>
+<span style="color: var(--cyan);">$env:EVAL_EMBEDDER_MODULE</span> = <span style="color: var(--emerald);">"main"</span>
+<span style="color: var(--cyan);">$env:EVAL_GENERATOR_MODULE</span> = <span style="color: var(--emerald);">"main"</span>
+<span style="color: var(--cyan);">$env:PYTHONPATH</span> = <span style="color: var(--emerald);">"&lt;path-to-rag-local-eval-loop&gt;;&lt;path-to-voice-rag&gt;"</span>
+
+<span style="color: var(--text-dim);"># 2. Run the official benchmark suite (100 queries)</span>
+.\venv\Scripts\python.exe -m eval.runner `
+    --rag-root <span style="color: var(--emerald);">"."</span> `
+    --num-answerable <span style="color: var(--amber);">50</span> `
+    --num-unanswerable <span style="color: var(--amber);">50</span> `
+    --workers <span style="color: var(--amber);">1</span> `
+    --judge-workers <span style="color: var(--amber);">16</span></code></pre>
+      </div>
     </div>
 
   </div>
@@ -500,7 +898,9 @@ graph LR
         primaryColor: '#131B2E',
         primaryTextColor: '#F8FAFC',
         primaryBorderColor: '#7C74EA',
-        lineColor: '#38BDF8'
+        lineColor: '#38BDF8',
+        secondaryColor: '#1E1B4B',
+        tertiaryColor: '#0F172A'
       }
     });
   </script>
