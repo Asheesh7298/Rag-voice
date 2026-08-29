@@ -22,6 +22,10 @@ import re
 import urllib.request
 import urllib.parse
 import json
+import dotenv
+
+# Ensure OPENAI_API_KEY and other environment variables are loaded in all child workers
+dotenv.load_dotenv(override=True)
 
 class Answer:
     def __init__(self, text: str, grounded: bool = True, generation_ms: float = 0.0, model: str = "qwen2.5-1.5b-instruct-cuda"):

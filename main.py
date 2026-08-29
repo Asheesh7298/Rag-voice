@@ -5,6 +5,12 @@ Main Entrypoint for Native Python Evaluation (rag-local-eval-loop).
 Exposes embed(), embed_one(), get_model(), generate_answer().
 """
 
+import os
+import dotenv
+
+# Automatically load environment variables (OPENAI_API_KEY, etc.) from .env
+dotenv.load_dotenv(override=True)
+
 from app.embedder import embed, embed_one, get_model, embed_query, embed_passages
 from app.generator import generate_answer, Answer
 

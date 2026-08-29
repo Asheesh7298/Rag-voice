@@ -5,20 +5,20 @@ param(
     [string]$Mode = "champion"
 )
 
-# 1. Load all variables from .env file automatically
+# 1. Dynamically load all variables from .env into Process environment
 if (Test-Path ".env") {
     Get-Content ".env" | ForEach-Object {
         $line = $_.Trim()
         if ($line -and -not $line.StartsWith("#") -and $line.Contains("=")) {
-            $parts = $line -split "=", 2
-            $key = $parts[0].Trim()
-            $val = $parts[1].Trim()
-            Set-Item "env:$key" $val
+            $idx = $line.IndexOf("=")
+            $k = $line.Substring(0, $idx).Trim()
+            $v = $line.Substring($idx + 1).Trim()
+            [System.Environment]::SetEnvironmentVariable($k, $v, "Process")
         }
     }
 }
 
-# 2. Set evaluation environment variables
+# 2. Set evaluation profile environment variables
 $env:EVAL_MODE = $Mode
 $env:EVAL_EMBEDDER_MODULE = "main"
 $env:EVAL_GENERATOR_MODULE = "main"

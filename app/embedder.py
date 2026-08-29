@@ -13,6 +13,10 @@ import unicodedata
 import re
 from typing import List, Union
 import numpy as np
+import dotenv
+
+# Ensure OPENAI_API_KEY and other environment variables are loaded in all child workers
+dotenv.load_dotenv(override=True)
 
 _model = None
 
