@@ -104,13 +104,15 @@ Server-side timings from each response's `timings_ms`; network time is not inclu
 
 ## 🚀 Getting Started
 
-### Run the Voice Web UI Locally
+### Run the Web App Locally (React + TypeScript + Vite)
 ```bash
 git clone https://github.com/Asheesh7298/Rag-voice.git
-cd Rag-voice
-python -m http.server 8000
+cd Rag-voice/frontend
+npm install
+cp .env.example .env.local   # sets VITE_API_URL, the backend the app calls
+npm run dev
 ```
-Open [http://localhost:8000](http://localhost:8000) and click the microphone to talk. The page uses the deployed backend.
+Open the printed local URL and click the microphone to talk.
 
 ### Deploy the Backend on Modal
 Needs a Modal Volume `voice-rag-index` containing `vectors_fp16.bin`, `metadata.jsonl` and `metadata.offsets`, and a Modal Secret `voice-rag-secrets` with `SARVAM_API_KEY`.

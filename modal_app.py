@@ -50,7 +50,6 @@ image = (
     )
     .run_function(fetch_models, volumes={"/index": volume})
     .add_local_python_source("backend")
-    .add_local_dir("frontend", remote_path="/root/frontend")
 )
 
 # Modal secrets command:
@@ -920,31 +919,15 @@ class VoiceRAG:
     @modal.asgi_app()
     def fastapi_app(self):
         from fastapi import FastAPI, UploadFile, File, Form, Request
-        from fastapi.responses import HTMLResponse
         from fastapi.middleware.cors import CORSMiddleware
-        import time, os
+        import time
 
+        # API only: the web app (frontend/, React) is hosted separately and calls these endpoints.
         api = FastAPI(title="VoxLore — Multilingual Voice RAG")
         api.add_middleware(
             CORSMiddleware, allow_origins=["*"],
             allow_methods=["*"], allow_headers=["*"]
         )
-
-        @api.get("/", response_class=HTMLResponse)
-        @api.get("/index.html", response_class=HTMLResponse)
-        def index():
-            candidate_paths = [
-                "/root/frontend/index.html",
-                "frontend/index.html",
-                "/frontend/index.html",
-                "index.html",
-                "/root/index.html"
-            ]
-            for p in candidate_paths:
-                if os.path.exists(p):
-                    with open(p, "r", encoding="utf-8") as f:
-                        return HTMLResponse(content=f.read())
-            return HTMLResponse(content="<h1>VoxLore Live Backend</h1>")
 
         @api.get("/health")
         def health():

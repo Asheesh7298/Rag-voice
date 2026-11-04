@@ -13,3 +13,4 @@ benchmarks/results.md
 # Raw parity runs (large; the baseline and reports are committed instead)
 eval/runs/*.json
 eval/runs/*.log
+!.env.example
