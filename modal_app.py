@@ -112,6 +112,9 @@ class MetadataStore:
     scaledown_window=420,
     min_containers=0,
     timeout=300,
+    # Startup gets its own, longer limit: on slow storage days the vector load alone once took 234 s, and a
+    # start that passes the limit is killed and begins again from zero (a ~5.5 minute wait in Phase 0).
+    startup_timeout=600,
     volumes={"/index": volume},
 )
 class VoiceRAG:
