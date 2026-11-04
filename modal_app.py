@@ -1,51 +1,54 @@
 """
-Modal deployment for Voice RAG — Extractive QA (no generative LLM).
-Version: 3.0.0 (Reindexed with query+answer chunks, 58k vectors)
+Modal deployment for VoxLore — multilingual voice RAG with extractive QA (no generative LLM).
+
+13,020,220 FP16 passage vectors are held in GPU memory and searched exactly with a matrix
+multiply; answers are extracted spans from the retrieved passages (XLM-RoBERTa, SQuAD 2.0).
 """
 import modal
 
+# Model revisions on the Hugging Face Hub (pinned so a rebuild downloads the same weights).
+E5_REVISION = "d128750597153bb5987e10b1c3493a34e5a4502a"   # intfloat/multilingual-e5-base
+QA_REVISION = "a5fab9908c8d856e8c583fd41ba6d92444e46477"   # deepset/xlm-roberta-base-squad2
+
 # ── Image ─────────────────────────────────────────────────────────────────────
+# Versions are pinned to exactly what the v1 deployment (2026-08-25) runs, read from its
+# container with `pip freeze`, so a rebuild behaves the same.
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
-        "fastapi>=0.112.0",
-        "uvicorn[standard]>=0.30.5",
-        "pydantic>=2.8.2",
-        "python-dotenv>=1.0.1",
-        "httpx>=0.27.0",
-        "tenacity>=8.5.0",
-        "rank-bm25>=0.2.2",
-        "python-multipart>=0.0.9",
-        "tqdm>=4.66.4",
-        "sentence-transformers>=3.0.1",
-        "faiss-cpu>=1.9.0",
-        "numpy>=1.26,<3.0",
+        "fastapi==0.141.1",
+        "starlette==1.6.0",
+        "uvicorn[standard]==0.52.4",
+        "pydantic==2.13.4",
+        "httpx==0.28.1",
+        "rank-bm25==0.2.2",
+        "python-multipart==0.0.32",
+        "sentence-transformers==5.7.0",
+        "numpy==2.4.6",
+        "scipy==1.17.1",
+        "scikit-learn==1.9.0",
         "transformers==4.44.0",
-        "torch>=2.1.0",
-        "sentencepiece>=0.1.99",
-        "protobuf>=3.20.0",
-        "orjson>=3.10.0",
+        "tokenizers==0.19.1",
+        "huggingface_hub==0.36.2",
+        "safetensors==0.8.0",
+        "torch==2.13.0",
+        "sentencepiece==0.2.2",
+        "protobuf==7.36.0",
+        "orjson==3.12.0",
     )
     .run_commands(
         # Bake embedding model into image at build time
         "python -c \""
         "from sentence_transformers import SentenceTransformer; "
-        "SentenceTransformer('intfloat/multilingual-e5-base').save('/models/e5-base')"
+        f"SentenceTransformer('intfloat/multilingual-e5-base', revision='{E5_REVISION}').save('/models/e5-base')"
         "\"",
         # Bake extractive QA model into image at build time
         # xlm-roberta-base-squad2: multilingual, handles all 13 Indic languages, ~1.1GB
         "python -c \""
         "from transformers import AutoTokenizer, AutoModelForQuestionAnswering; "
-        "AutoTokenizer.from_pretrained('deepset/xlm-roberta-base-squad2').save_pretrained('/models/qa-model'); "
-        "AutoModelForQuestionAnswering.from_pretrained('deepset/xlm-roberta-base-squad2').save_pretrained('/models/qa-model')"
+        f"AutoTokenizer.from_pretrained('deepset/xlm-roberta-base-squad2', revision='{QA_REVISION}').save_pretrained('/models/qa-model'); "
+        f"AutoModelForQuestionAnswering.from_pretrained('deepset/xlm-roberta-base-squad2', revision='{QA_REVISION}').save_pretrained('/models/qa-model')"
         "\"",
-        # Bake NLI entailment model into image at build time
-        # MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7
-        "python -c \""
-        "from transformers import AutoTokenizer, AutoModelForSequenceClassification; "
-        "AutoTokenizer.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model'); "
-        "AutoModelForSequenceClassification.from_pretrained('MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7').save_pretrained('/models/nli-model')"
-        "\""
     )
     .add_local_dir("frontend", remote_path="/root/frontend")
 )
@@ -119,22 +122,13 @@ class VoiceRAG:
     def load(self):
         import os, torch, time
         from sentence_transformers import SentenceTransformer
-        from transformers import (
-            AutoTokenizer, AutoModelForQuestionAnswering, AutoModelForSequenceClassification, pipeline
-        )
-        import faiss, json
+        from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 
         device = 0 if torch.cuda.is_available() else -1
         print(f"Device: {'cuda' if device == 0 else 'cpu'}")
 
         volume.reload()
-        index_path = "/index/index.faiss"
         meta_path = "/index/metadata.jsonl"
-
-        # Set FAISS threads explicitly
-        n_threads = os.cpu_count() or 8
-        faiss.omp_set_num_threads(n_threads)
-        print(f"FAISS using {faiss.omp_get_max_threads()} threads (os.cpu_count()={os.cpu_count()})")
 
         # ── Embedding model ──
         print("Loading embedding model...")
@@ -178,19 +172,6 @@ class VoiceRAG:
         self._extract_best_answer("warmup question", [{"text": "warmup context 1"}, {"text": "warmup context 2"}, {"text": "warmup context 3"}, {"text": "warmup context 4"}])
         print("✅ Extractive QA model ready")
 
-        # ── NLI Entailment model (MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7) ──
-        print("Loading NLI entailment model...")
-        nli_path = "/models/nli-model"
-        self.nli_tokenizer = AutoTokenizer.from_pretrained(nli_path)
-        self.nli_model = AutoModelForSequenceClassification.from_pretrained(nli_path)
-        if device == 0:
-            self.nli_model = self.nli_model.cuda()
-        self.nli_model.eval()
-        self.nli_device = device
-        # Warmup pass
-        self._check_entailment("Premise text for warmup.", "Warmup question?", "Warmup answer.")
-        print("✅ NLI entailment model ready")
-
         # Config from Modal secrets
         # modal secret create voice-rag-secrets SARVAM_API_KEY=<key> OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.25 MIN_ANSWER_RELEVANCE=0.20 TOP_K=10 RERANK_TOP_N=50
         self.OFF_TOPIC_THRESHOLD      = float(os.getenv("OFF_TOPIC_THRESHOLD", "0.70"))
@@ -233,51 +214,9 @@ class VoiceRAG:
 
     # ── Extractive QA ─────────────────────────────────────────────────────────
 
-    def _extract_answer(self, question: str, context: str) -> dict:
-        """
-        Run XLM-RoBERTa QA over (question, context).
-        Returns {"answer": str, "score": float, "start": int, "end": int}
-        Score is the model's confidence in the extracted span.
-        This is the core of why we can hit sub-200ms on ALL percentiles:
-        one forward pass, no generation, no sampling.
-        """
-        import torch
-        inputs = self.qa_tokenizer(
-            question, context,
-            return_tensors="pt",
-            truncation=True,
-            max_length=512,
-            padding=True,
-        )
-        if self.qa_device == 0:
-            inputs = {k: v.cuda() for k, v in inputs.items()}
-
-        with torch.no_grad():
-            outputs = self.qa_model(**inputs)
-
-        start_logits = outputs.start_logits[0]
-        end_logits = outputs.end_logits[0]
-        start_idx = int(torch.argmax(start_logits))
-        end_idx = int(torch.argmax(end_logits))
-
-        # Clamp end to be >= start (edge case)
-        if end_idx < start_idx:
-            end_idx = start_idx
-
-        tokens = inputs["input_ids"][0][start_idx:end_idx + 1]
-        answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
-
-        # Confidence: softmax over start * softmax over end (joint probability)
-        import torch.nn.functional as F
-        start_prob = float(F.softmax(start_logits, dim=0)[start_idx])
-        end_prob = float(F.softmax(end_logits, dim=0)[end_idx])
-        score = round(start_prob * end_prob, 4)
-
-        return {"answer": answer, "score": score, "start": start_idx, "end": end_idx}
-
     def _postprocess(self, answer: str, query: str, source_text: str) -> str:
         """Pure string post-processing — zero latency cost."""
-        import re, unicodedata
+        import re
 
         # 1. Normalize ALL Indic script digits to Arabic numerals
         INDIC_DIGITS = {
@@ -317,7 +256,7 @@ class VoiceRAG:
         Run fast batched extractive QA over top retrieved candidate chunks with max_length=128.
         Batches candidates into a single GPU forward pass for ultra-fast (~18-22ms) inference.
         """
-        import time, re
+        import re
         import torch
         import torch.nn.functional as F
 
@@ -491,48 +430,6 @@ class VoiceRAG:
 
         return best
 
-    def _generate_answer(self, query: str, chunks: list, lang: str | None = "en") -> dict:
-        import time, torch
-        t0 = time.perf_counter()
-        if not chunks:
-            return {"answer": "", "gen_ms": 0.0}
-
-        # Build clean bullet points from top 3 chunks
-        facts = "\n".join([f"- {c['text'].strip()}" for c in chunks[:3] if c.get("text")])
-        lang_map = {"hi": "Hindi (हिंदी)", "mr": "Marathi (मराठी)", "en": "English"}
-        target_lang = lang_map.get(lang, "English")
-
-        system_msg = (
-            f"You are VoxLore, a strict factual voice assistant. "
-            f"Answer the question in under 15 words in {target_lang} using ONLY the facts provided below. "
-            f"If the facts do not contain the answer, reply EXACTLY: 'I do not have sufficient information in the knowledge base.' "
-            f"Do NOT invent facts."
-        )
-
-        messages = [
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": f"Retrieved facts:\n{facts}\n\nQuestion: {query}\nConcise {target_lang} answer:"}
-        ]
-
-        text_input = self.qwen_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        inputs = self.qwen_tokenizer([text_input], return_tensors="pt")
-        if torch.cuda.is_available():
-            inputs = {k: v.cuda() for k, v in inputs.items()}
-
-        with torch.inference_mode():
-            outputs = self.qwen_model.generate(
-                **inputs,
-                max_new_tokens=15,
-                do_sample=False,
-                use_cache=True,
-                pad_token_id=self.qwen_tokenizer.eos_token_id,
-            )
-
-        gen_tokens = outputs[0][inputs["input_ids"].shape[1]:]
-        answer = self.qwen_tokenizer.decode(gen_tokens, skip_special_tokens=True).strip()
-        gen_ms = round((time.perf_counter() - t0) * 1000, 2)
-        return {"answer": answer, "gen_ms": gen_ms}
-
     # ── Retrieval ─────────────────────────────────────────────────────────────
 
     def _embed(self, text: str):
@@ -564,17 +461,14 @@ class VoiceRAG:
         if norm > 0:
             qv = qv / norm
 
-        if getattr(self, "gpu_vectors", None) is not None:
-            with torch.no_grad():
-                qv_t = torch.from_numpy(qv).cuda().half()
-                sims = torch.matmul(self.gpu_vectors, qv_t.T).squeeze(1)
-                top_scores, top_ids = torch.topk(sims, k=min(k, len(self.metadata)))
-                scores_list = top_scores.float().cpu().numpy().tolist()
-                ids_list = top_ids.cpu().numpy().tolist()
-        else:
-            scores, ids = self.faiss_index.search(qv, k)
-            scores_list = scores[0].tolist()
-            ids_list = ids[0].tolist()
+        if getattr(self, "gpu_vectors", None) is None:
+            raise RuntimeError(f"Vectors are not loaded into GPU memory: {self.gpu_vector_err}")
+        with torch.no_grad():
+            qv_t = torch.from_numpy(qv).cuda().half()
+            sims = torch.matmul(self.gpu_vectors, qv_t.T).squeeze(1)
+            top_scores, top_ids = torch.topk(sims, k=min(k, len(self.metadata)))
+            scores_list = top_scores.float().cpu().numpy().tolist()
+            ids_list = top_ids.cpu().numpy().tolist()
 
         allowed_langs = self._resolve_lang_filter(lang_filter)
         results = []
@@ -873,32 +767,6 @@ class VoiceRAG:
 
         return True
 
-    # ── NLI Entailment Check ──────────────────────────────────────────────────
-
-    def _check_entailment(self, premise: str, query: str, answer: str) -> float:
-        """
-        Check contextual entailment of the extracted answer given the source premise.
-        Uses mDeBERTa-v3 multilingual NLI. Capped at 128 max tokens for sub-20ms inference.
-        """
-        import torch
-        if not premise or not answer:
-            return 0.0
-        hypothesis = f"{query} {answer}".strip()
-        inputs = self.nli_tokenizer(
-            premise,
-            hypothesis,
-            truncation=True,
-            max_length=128,
-            return_tensors="pt"
-        )
-        if getattr(self, "nli_device", -1) == 0:
-            inputs = {k: v.cuda() for k, v in inputs.items()}
-        with torch.no_grad():
-            outputs = self.nli_model(**inputs)
-            probs = torch.softmax(outputs.logits, dim=-1)[0]
-        ent_idx = self.nli_model.config.label2id.get("entailment", 0)
-        return float(probs[ent_idx].item())
-
     # ── Decline helper ────────────────────────────────────────────────────────
 
     def _decline(self, query, reason, timings, transcript=None, debug_score=None):
@@ -913,7 +781,6 @@ class VoiceRAG:
             "low_answer_relevance":   "The retrieved context doesn't appear relevant to your question.",
             "script_mismatch":        "The extracted answer was in a different script than your question.",
             "implausible_answer":     "The extracted answer failed domain plausibility checks.",
-            "not_entailed":           "The extracted answer could not be verified by contextual entailment.",
             "stt_failed":             "Couldn't transcribe audio -- please retry.",
         }
         return {
@@ -1043,7 +910,6 @@ class VoiceRAG:
         final_answer = best["answer"]
         timings["gen_ms"] = 0.0
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-        timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 
         return {
             "query": query,
@@ -1059,7 +925,9 @@ class VoiceRAG:
                      "pa": "Punjabi", "ta": "Tamil", "te": "Telugu",
                      "ur": "Urdu", "en": "English",
                  }.get(c.get("lang"), c.get("lang")),
-                 "strategy": c.get("strategy")}
+                 "strategy": c.get("strategy"),
+                 "chunk_id": c.get("chunk_id"),
+                 "query_id": c.get("query_id")}
                 for c in chunks
             ],
             "confidence": round(best["score"], 4),
@@ -1099,46 +967,6 @@ class VoiceRAG:
                     with open(p, "r", encoding="utf-8") as f:
                         return HTMLResponse(content=f.read())
             return HTMLResponse(content="<h1>VoxLore Live Backend</h1>")
-
-        @api.get("/debug-index")
-        def debug_index():
-            import numpy as np
-            # Check metadata count vs index count
-            n_meta = len(self.metadata)
-            n_vecs = self.faiss_index.ntotal
-            # Search with a zero vector to see raw scores
-            q = np.zeros((1, 768), dtype=np.float32)
-            q[0, 0] = 1.0
-            scores, ids = self.faiss_index.search(q, 3)
-            # Check first and last metadata entries
-            first_meta = {k: v for k, v in list(self.metadata[0].items()) if k != "text"}
-            last_meta = {k: v for k, v in list(self.metadata[-1].items()) if k != "text"}
-            return {
-                "n_metadata": n_meta,
-                "n_vectors": n_vecs,
-                "match": n_meta == n_vecs,
-                "gpu_vectors_active": getattr(self, "gpu_vectors", None) is not None,
-                "gpu_vector_err": getattr(self, "gpu_vector_err", None),
-                "metric_type": self.faiss_index.metric_type,
-                "test_scores": scores[0].tolist(),
-                "test_ids": ids[0].tolist(),
-                "first_metadata": first_meta,
-                "last_metadata": last_meta,
-            }
-
-        @api.get("/debug-qa")
-        def debug_qa(query: str = "हिरलूम टमाटर क्या है", context: str = "हिरलूम टमाटर एक पुरानी किस्म है जो खुले परागण से उगाई जाती है।"):
-            try:
-                result = self._extract_answer(query, context)
-                chunks, _, _ = self._retrieve(query)
-                chunk_results = []
-                for c in chunks[:3]:
-                    r = self._extract_answer(query, c.get("text", ""))
-                    chunk_results.append({"chunk_lang": c.get("lang"), "chunk_text": c.get("text", "")[:100], "answer": r.get("answer"), "score": r.get("score")})
-                return {"direct_test": result, "top_chunks": chunk_results}
-            except Exception as e:
-                import traceback
-                return {"error": str(e), "traceback": traceback.format_exc()}
 
         @api.get("/health")
         def health():

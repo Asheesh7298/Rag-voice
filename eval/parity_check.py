@@ -117,8 +117,8 @@ def percentile(values: list[float], q: float) -> float | None:
 
 
 def source_keys(resp: dict) -> list[str]:
-    """Identify sources by chunk_id when the server provides it, otherwise by their text."""
-    return [s.get("chunk_id") or s.get("text", "") for s in resp.get("sources") or []]
+    """Identify sources by their text: the v1 baseline has no chunk_id, so text is the common key."""
+    return [s.get("text", "") for s in resp.get("sources") or []]
 
 
 def latency_table(results: list[dict]) -> dict[str, dict[str, float | None]]:
