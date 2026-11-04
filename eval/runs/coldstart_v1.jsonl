@@ -1,0 +1,3 @@
+{"started_at": "2026-11-04T19:40:37+00:00", "idle_before_s": 0, "seconds_to_ready": 34.5, "attempts": 1, "ready": true}
+{"started_at": "2026-11-04T20:01:51+00:00", "idle_before_s": 540, "seconds_to_ready": 43.7, "attempts": 1, "ready": true}
+{"started_at": "2026-11-04T20:11:34+00:00", "idle_before_s": 540, "seconds_to_ready": 331.0, "attempts": null, "ready": true, "reconstructed_from_logs": true, "note": "PC restarted mid-measurement. From Modal logs: first container loaded vectors in 233.95s and was killed by the 300s startup limit at 20:16:41Z; second container ready at 20:17:05Z (vectors 9.95s)."}
