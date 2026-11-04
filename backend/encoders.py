@@ -58,6 +58,24 @@ class E5Encoder:
         vec = ((hidden * weights).sum(axis=1) / np.clip(weights.sum(axis=1), 1e-9, None))[0]
         return (vec / np.linalg.norm(vec)).astype(np.float32)
 
+    def embed_batch(self, texts: list[str]) -> np.ndarray:
+        """Embed many texts in one forward pass (padded to the longest). Used to build the index;
+        the server uses embed() for single questions."""
+        self.tokenizer.enable_padding(pad_id=self.tokenizer.token_to_id("<pad>"), pad_token="<pad>")
+        try:
+            encodings = self.tokenizer.encode_batch([t.strip() for t in texts])
+        finally:
+            self.tokenizer.no_padding()
+        ids = np.array([e.ids for e in encodings], dtype=np.int64)
+        mask = np.array([e.attention_mask for e in encodings], dtype=np.int64)
+        feeds = {"input_ids": ids, "attention_mask": mask}
+        if "token_type_ids" in self.input_names:
+            feeds["token_type_ids"] = np.zeros_like(ids)
+        hidden = self.session.run([self.output_name], feeds)[0]            # [batch, tokens, 768]
+        weights = mask[..., None].astype(np.float32)
+        vecs = (hidden * weights).sum(axis=1) / np.clip(weights.sum(axis=1), 1e-9, None)
+        return (vecs / np.linalg.norm(vecs, axis=1, keepdims=True)).astype(np.float32)
+
 
 class QAReader:
     def __init__(self, model_dir: str, max_length: int = 256):

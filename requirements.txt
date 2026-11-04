@@ -1,0 +1,3 @@
+# Local tools only. The backend's own packages are pinned in the image definition in modal_app.py,
+# the web app's in frontend/package.json, and the eval/ scripts use the Python standard library.
+modal==1.5.4

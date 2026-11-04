@@ -1,7 +1,7 @@
 // Typed client for the VoxLore backend (modal_app.py): GET /health, POST /query, POST /voice-query.
 
-/** The live backend; used when VITE_API_URL is not set at build time. */
-const DEFAULT_API_URL = "https://rawrmeinkayanosaurushun--voice-rag-voicerag-fastapi-app.modal.run";
+/** The backend this app was built and tested against (Modal app voice-rag-v4); used when VITE_API_URL is not set. */
+const DEFAULT_API_URL = "https://rawrmeinkayanosaurushun--voice-rag-v4-voicerag-fastapi-app.us-east.modal.run";
 
 export const API_URL: string = (
   import.meta.env.VITE_API_URL ??
