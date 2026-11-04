@@ -28,6 +28,12 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 STAGES = ("embed_ms", "search_ms", "rerank_ms", "qa_ms", "total_ms")
+# Answers to the unsafe test questions are compared like any other, but their text is never printed.
+REDACTED_CATEGORIES = {"unsafe"}
+
+
+def shown_answer(row: dict, answer) -> str:
+    return "(not shown: unsafe-category question)" if row.get("category") in REDACTED_CATEGORIES else repr(answer)
 
 
 # ── Capture ─────────────────────────────────────────────────────────────────
@@ -54,6 +60,19 @@ def post_query(url: str, query: str, timeout: float) -> tuple[int, dict | str, f
         return status, raw, ms
 
 
+def ask(url: str, query: str) -> tuple[int, dict | str, float, int]:
+    """post_query with retries for Modal infrastructure failures (e.g. GPU preemption returns a non-JSON
+    5xx while a new container boots, ~35s), so they don't show up as answer differences.
+    Returns (status, body, round_trip_ms, attempts)."""
+    for attempt in range(1, 5):
+        status, body, client_ms = post_query(url, query, timeout=120)
+        if status < 500 and isinstance(body, dict):
+            break
+        print(f"  attempt {attempt} got HTTP {status}, retrying in {15 * attempt}s")
+        time.sleep(15 * attempt)
+    return status, body, client_ms, attempt
+
+
 def git_commit() -> str | None:
     try:
         return subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
@@ -76,18 +95,11 @@ def capture(args) -> None:
     started = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     results = []
     for i, q in enumerate(queries, 1):
-        # Retry Modal infrastructure failures (e.g. GPU preemption returns a non-JSON 5xx while a new
-        # container boots, ~35s) so they don't show up as answer differences.
-        for attempt in range(1, 5):
-            status, body, client_ms = post_query(url, q["query"], timeout=120)
-            if status < 500 and isinstance(body, dict):
-                break
-            print(f"  {q['id']}: attempt {attempt} got HTTP {status}, retrying in {15 * attempt}s")
-            time.sleep(15 * attempt)
-        results.append({**q, "status": status, "attempts": attempt, "client_ms": client_ms, "response": body})
+        status, body, client_ms, attempts = ask(url, q["query"])
+        results.append({**q, "status": status, "attempts": attempts, "client_ms": client_ms, "response": body})
         answer = body.get("answer") if isinstance(body, dict) else body
         server = body.get("timings_ms", {}).get("total_ms") if isinstance(body, dict) else None
-        print(f"  [{i:03d}/{len(queries)}] {q['id']:<14} {status} {server!s:>8}ms  {str(answer)[:60]!r}")
+        print(f"  [{i:03d}/{len(queries)}] {q['id']:<14} {status} {server!s:>8}ms  {shown_answer(q, str(answer)[:60])}")
 
     out = {
         "meta": {
@@ -197,8 +209,8 @@ def compare(args) -> None:
         lines += [
             f"### {ra['id']} ({ra['category']}, {ra['lang']}): differs in {', '.join(failed)}",
             f"- Query: {ra['query'][:200]!r}",
-            f"- A: {(x.get('answer') if isinstance(x, dict) else x)!r} (guardrail={ga})",
-            f"- B: {(y.get('answer') if isinstance(y, dict) else y)!r} (guardrail={gb})",
+            f"- A: {shown_answer(ra, x.get('answer') if isinstance(x, dict) else x)} (guardrail={ga})",
+            f"- B: {shown_answer(ra, y.get('answer') if isinstance(y, dict) else y)} (guardrail={gb})",
             "",
         ]
 
