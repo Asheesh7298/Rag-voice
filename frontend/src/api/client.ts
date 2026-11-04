@@ -43,11 +43,32 @@ export interface QueryResponse {
 }
 
 async function parse(res: Response): Promise<QueryResponse> {
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
   if (!res.ok || typeof data?.answer !== "string") {
     throw new Error(data?.error ?? `server returned HTTP ${res.status}`);
   }
   return data as QueryResponse;
+}
+
+class ServerError extends Error {}
+const RETRY_DELAYS_MS = [3000, 6000];
+
+/**
+ * POST with retries for temporary failures: network errors and 5xx responses (for example while Modal
+ * replaces a preempted GPU container). 4xx responses are real errors and are not retried.
+ */
+async function post(path: string, makeBody: () => FormData): Promise<QueryResponse> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const res = await fetch(`${API_URL}${path}`, { method: "POST", body: makeBody() });
+      if (res.status >= 500) throw new ServerError(`server returned HTTP ${res.status}`);
+      return await parse(res);
+    } catch (err) {
+      const temporary = err instanceof ServerError || err instanceof TypeError; // TypeError: network failure
+      if (!temporary || attempt >= RETRY_DELAYS_MS.length) throw err;
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt]));
+    }
+  }
 }
 
 export async function getHealth(): Promise<{ status: string }> {
@@ -56,16 +77,20 @@ export async function getHealth(): Promise<{ status: string }> {
 }
 
 export async function askText(query: string): Promise<QueryResponse> {
-  const form = new FormData();
-  form.append("query", query);
-  return parse(await fetch(`${API_URL}/query`, { method: "POST", body: form }));
+  return post("/query", () => {
+    const form = new FormData();
+    form.append("query", query);
+    return form;
+  });
 }
 
 export async function askVoice(audio: Blob): Promise<QueryResponse> {
   const extension = audio.type.includes("mp4") ? "m4a" : audio.type.includes("ogg") ? "ogg" : "webm";
-  const form = new FormData();
-  form.append("file", audio, `question.${extension}`);
-  return parse(await fetch(`${API_URL}/voice-query`, { method: "POST", body: form }));
+  return post("/voice-query", () => {
+    const form = new FormData();
+    form.append("file", audio, `question.${extension}`);
+    return form;
+  });
 }
 
 /** Total server time: the reported total, or the sum of the stages. */

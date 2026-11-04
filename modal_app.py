@@ -59,6 +59,19 @@ secrets = [modal.Secret.from_name("voice-rag-secrets")]
 app = modal.App("voice-rag", image=image, secrets=secrets)
 
 
+def _is_unsafe_devanagari(query: str) -> bool:
+    """Hindi/Marathi version of the unsafe-input check: a weapon or explosive word together with a
+    "make" verb, or self-harm phrasing. Words are matched by their start (Devanagari words inflect), never
+    as raw substrings, so e.g. "एल्बम" (album) does not match "बम" (bomb)."""
+    tokens = query.split()
+    starts = lambda roots: any(t.startswith(r) for t in tokens for r in roots)
+    weapon = starts(("बम", "बॉम्ब", "विस्फोटक", "स्फोटक", "हथियार", "बंदूक", "पिस्तौल"))
+    making = starts(("बना", "बनव")) or "तयार कर" in query
+    self_harm = starts(("आत्महत्या",)) or any(
+        p in query for p in ("खुद को नुकसान", "खुद को चोट", "स्वतःला इजा", "स्वतःला दुखापत"))
+    return (weapon and making) or self_harm
+
+
 class MetadataStore:
     def __init__(self, meta_path: str, offsets_path: str = "/index/metadata.offsets"):
         import time, os, numpy as np
@@ -115,15 +128,19 @@ class MetadataStore:
     # Startup gets its own, longer limit: on slow storage days the vector load alone once took 234 s, and a
     # start that passes the limit is killed and begins again from zero (a ~5.5 minute wait in Phase 0).
     startup_timeout=600,
+    # One GPU at most: extra simultaneous requests queue on it instead of starting more A100s (each
+    # start costs a cold start plus idle time). Requests still run one at a time inside the container.
+    max_containers=1,
     volumes={"/index": volume},
 )
+@modal.concurrent(max_inputs=8)
 class VoiceRAG:
 
-    # v1 meant to stop answer spans from covering the question tokens, but on the GPU that masking never
-    # ran: moving the tokenizer output to CUDA made it a plain dict without .sequence_ids(), and the error
-    # was silently ignored. Off by default so this version reproduces v1's answers exactly; turning it on
-    # is a deliberate behavior change (it shortens answers that repeat the question).
-    MASK_QUESTION_TOKENS = False
+    # Keep answer spans inside the passage (not the question or special tokens). v1 meant to do this but on
+    # the GPU the masking never ran: moving the tokenizer output to CUDA made it a plain dict without
+    # .sequence_ids(), and the error was silently ignored, so many v1 answers repeat the question.
+    # v3 kept it off to reproduce v1 exactly; v4 turns it on (Phase 6).
+    MASK_QUESTION_TOKENS = True
 
     @modal.enter()
     def load(self):
@@ -162,6 +179,8 @@ class VoiceRAG:
         # ── Fast Offset-Based Metadata Store ──
         print("Loading metadata store into RAM...")
         self.metadata = MetadataStore(meta_path)
+        self.lang_ranges = self._find_language_ranges()
+        print(f"Language row ranges: {self.lang_ranges}")
 
         # ── Extractive QA model ──
         print("Loading extractive QA model...")
@@ -172,7 +191,8 @@ class VoiceRAG:
 
         # Config from Modal secrets
         # modal secret create voice-rag-secrets SARVAM_API_KEY=<key> OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.25 MIN_ANSWER_RELEVANCE=0.20 TOP_K=10 RERANK_TOP_N=50
-        self.OFF_TOPIC_THRESHOLD      = float(os.getenv("OFF_TOPIC_THRESHOLD", "0.70"))
+        self.OFF_TOPIC_THRESHOLD      = float(os.getenv("OFF_TOPIC_THRESHOLD", "0.70"))   # unused since v4, see OFF_TOPIC_COSINE
+        self.OFF_TOPIC_COSINE         = float(os.getenv("OFF_TOPIC_COSINE", "0"))        # raw-cosine off-topic gate; 0 = off
         self.MIN_RETRIEVAL_SCORE      = float(os.getenv("MIN_RETRIEVAL_SCORE", "0.65"))
         self.MIN_QA_SCORE             = float(os.getenv("MIN_QA_SCORE", "0.0005"))
         self.MIN_ANSWER_RELEVANCE     = float(os.getenv("MIN_ANSWER_RELEVANCE", "0.20"))
@@ -448,9 +468,16 @@ class VoiceRAG:
 
         if getattr(self, "index", None) is None:
             raise RuntimeError(f"Vectors are not loaded into GPU memory: {self.gpu_vector_err}")
-        scores_list, ids_list = self.index.search(qv[0], min(k, len(self.metadata)))
 
+        # Search only the question's language block when the index is laid out in one block per language.
+        # (v1 searched all languages and filtered afterwards, so Hindi/Marathi translations of the same
+        # passage could crowd out most same-language candidates.)
         allowed_langs = self._resolve_lang_filter(lang_filter)
+        start, end = 0, None
+        if self.lang_ranges and allowed_langs and len(allowed_langs) == 1:
+            start, end = self.lang_ranges.get(next(iter(allowed_langs)), (0, None))
+        scores_list, ids_list = self.index.search(qv[0], min(k, len(self.metadata)), start=start, end=end)
+
         results = []
         for score, idx in zip(scores_list, ids_list):
             idx = int(idx)
@@ -462,6 +489,34 @@ class VoiceRAG:
             results.append((meta, float(score)))
 
         return results
+
+    def _find_language_ranges(self) -> dict | None:
+        """Row range of each language, if the index stores one contiguous block per language (it does:
+        hi, then mr, then en). Found by binary search, then spot-checked; None means "not contiguous"."""
+        import random
+        n = len(self.metadata)
+        lang = lambda i: self.metadata[i].get("lang")
+        ranges, start = {}, 0
+        while start < n:
+            current = lang(start)
+            if current in ranges:
+                return None
+            lo, hi = start, n          # first row after `start` in a different language
+            while lo < hi:
+                mid = (lo + hi) // 2
+                if lang(mid) == current:
+                    lo = mid + 1
+                else:
+                    hi = mid
+            ranges[current] = (start, lo)
+            start = lo
+        rng = random.Random(0)
+        for _ in range(200):
+            i = rng.randrange(n)
+            s, e = ranges.get(lang(i), (0, 0))
+            if not s <= i < e:
+                return None
+        return ranges
 
     def _filter_stopwords(self, tokens: list) -> list:
         """Remove stopwords from token list for cleaner BM25 matching."""
@@ -545,12 +600,20 @@ class VoiceRAG:
                 "text": meta.get("text", ""),
                 "score": round(rerank_score, 4),
                 "lang": meta.get("lang"),
-                "strategy": meta.get("strategy", "passage_native"),
+                "strategy": meta.get("chunk_strategy") or meta.get("strategy", "passage_native"),
                 "chunk_id": meta.get("chunk_id"),
                 "query_id": meta.get("query_id"),
             })
         combined.sort(key=lambda c: c["score"], reverse=True)
-        return combined
+
+        # Short passages are stored up to three times (one per chunking strategy) with identical text;
+        # keep the best-scored copy so the results show distinct passages.
+        seen, distinct = set(), []
+        for c in combined:
+            if c["text"] not in seen:
+                seen.add(c["text"])
+                distinct.append(c)
+        return distinct
 
     def _is_english_query(self, query: str) -> bool:
         """Return True if >60% of alphabetic characters in query are ASCII."""
@@ -617,6 +680,8 @@ class VoiceRAG:
             # Fall back to unfiltered candidates if 0 candidates remain
             candidates = filtered if filtered else candidates
         t2 = time.perf_counter()
+        # Raw cosine similarity of the best match, before any rerank boosts: what the off-topic gate uses.
+        top_dense = max((score for _, score in candidates), default=0.0)
         chunks = self._hybrid_rerank(query, candidates, lang_filter=lang_filter)[:top_k]
         t3 = time.perf_counter()
         return chunks, {
@@ -624,11 +689,11 @@ class VoiceRAG:
             "search_ms": round((t2 - t1) * 1000, 2),
             "rerank_ms": round((t3 - t2) * 1000, 2),
             "total_ms": round((t3 - t0) * 1000, 2),
-        }, qvec
+        }, qvec, top_dense
 
     # ── STT ───────────────────────────────────────────────────────────────────
 
-    def _transcribe(self, audio_bytes: bytes, lang=None):
+    def _transcribe(self, audio_bytes: bytes, lang=None, filename=None, content_type=None):
         import time, httpx
         LANG_MAP = {
             "as": "as-IN", "bn": "bn-IN", "gu": "gu-IN", "hi": "hi-IN",
@@ -638,7 +703,9 @@ class VoiceRAG:
         }
         bcp47 = LANG_MAP.get(lang) if lang else None
         headers = {"api-subscription-key": self.SARVAM_KEY}
-        files = {"file": ("audio.wav", audio_bytes, "audio/wav")}
+        # Forward the recording with its real name and type (browsers record WebM/Ogg/MP4, not WAV;
+        # v1 labeled every upload "audio/wav").
+        files = {"file": (filename or "audio.webm", audio_bytes, content_type or "application/octet-stream")}
         data = {"model": "saaras:v3", "mode": "transcribe"}
         if bcp47: data["language_code"] = bcp47
         t0 = time.perf_counter()
@@ -662,7 +729,7 @@ class VoiceRAG:
             r"|\b(ignore (all )?instructions|system override|print (secret|api key|credentials)|root system access)\b",
             re.IGNORECASE
         )
-        return bool(pattern.search(query))
+        return bool(pattern.search(query)) or _is_unsafe_devanagari(query)
 
     def _is_current_events_query(self, query: str) -> bool:
         """
@@ -749,7 +816,7 @@ class VoiceRAG:
 
     # ── Decline helper ────────────────────────────────────────────────────────
 
-    def _decline(self, query, reason, timings, transcript=None, debug_score=None):
+    def _decline(self, query, reason, timings, transcript=None, debug_score=None, retrieval_score=None):
         print(f"[GUARDRAIL DECLINE] Query: {query!r} | Reason: {reason!r} | Score: {debug_score} | Timings: {timings}")
         msgs = {
             "unsafe_input":           "I can't help with that request.",
@@ -770,6 +837,7 @@ class VoiceRAG:
             "guardrail_triggered": reason, "timings_ms": timings,
             "lang_detected": None,
             "debug_qa_score": debug_score,
+            "retrieval_score": retrieval_score,
         }
 
     # ── Main query pipeline ───────────────────────────────────────────────────
@@ -791,19 +859,22 @@ class VoiceRAG:
 
         # Retrieval — embed + FAISS + hybrid rerank
         detected_lang = "en" if self._is_english_query(query) else self._detect_lang(query)
-        chunks, ret_timings, query_vec_cached = self._retrieve(query, lang_filter=detected_lang)
+        chunks, ret_timings, query_vec_cached, top_dense = self._retrieve(query, lang_filter=detected_lang)
         timings.update(ret_timings)
 
-        # Guardrail 2 — off-topic (top retrieval score too low)
+        # Guardrail 2 — off-topic: the best raw cosine similarity is too low. (v1 compared the reranked
+        # score, which boosts lift to ~1.0 or more, so it never fired.) The threshold comes from the Phase 6
+        # evaluation; 0 disables the gate.
         top_score = chunks[0]["score"] if chunks else 0.0
-        if top_score < self.OFF_TOPIC_THRESHOLD:
+        if top_dense < self.OFF_TOPIC_COSINE:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "off_topic", timings, debug_score=top_score)
+            return self._decline(query, "off_topic", timings, debug_score=top_dense, retrieval_score=top_dense)
 
         # Guardrail 3 — retrieval confidence
         if not chunks or top_score < self.MIN_RETRIEVAL_SCORE:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "low_retrieval_confidence", timings, debug_score=top_score)
+            return self._decline(query, "low_retrieval_confidence", timings, debug_score=top_score,
+                                 retrieval_score=top_dense)
 
         # Open-ended conversational prompt handler (Zero Latency)
         q_lower = query.lower().strip()
@@ -863,7 +934,7 @@ class VoiceRAG:
             or not any(c.isalnum() for c in ans_clean)
         ):
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "low_qa_confidence", timings, debug_score=best["score"])
+            return self._decline(query, "low_qa_confidence", timings, debug_score=best["score"], retrieval_score=top_dense)
 
         # Guardrail 5 — Query-answer semantic relevance
         # Fast path: Skip re-embedding if QA score is high or lexical overlap is strong
@@ -873,18 +944,18 @@ class VoiceRAG:
             relevance = float(np.dot(query_vec_cached.astype(np.float32), answer_vec.astype(np.float32)))
             if relevance < self.MIN_ANSWER_RELEVANCE:
                 timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-                return self._decline(query, "low_answer_relevance", timings, debug_score=relevance)
+                return self._decline(query, "low_answer_relevance", timings, debug_score=relevance, retrieval_score=top_dense)
 
         # Guardrail 6 — Script match
         if not self._scripts_match(query, best["answer"]):
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "script_mismatch", timings)
+            return self._decline(query, "script_mismatch", timings, retrieval_score=top_dense)
 
         # Guardrail 7 — Domain plausibility check
         source_text = best.get("source_text", "")
         if not self._is_plausible_answer(query, best["answer"], source_text):
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
-            return self._decline(query, "implausible_answer", timings)
+            return self._decline(query, "implausible_answer", timings, retrieval_score=top_dense)
 
         # Final answer formulation
         final_answer = best["answer"]
@@ -915,6 +986,7 @@ class VoiceRAG:
             "guardrail_triggered": None,
             "timings_ms": timings,
             "lang_detected": detected_lang,
+            "retrieval_score": top_dense,
         }
 
     # ── FastAPI app ───────────────────────────────────────────────────────────
@@ -923,7 +995,8 @@ class VoiceRAG:
     def fastapi_app(self):
         from fastapi import FastAPI, UploadFile, File, Form, Request
         from fastapi.middleware.cors import CORSMiddleware
-        import time
+        from fastapi.responses import JSONResponse
+        import time, traceback
 
         # API only: the web app (frontend/, React) is hosted separately and calls these endpoints.
         api = FastAPI(title="VoxLore — Multilingual Voice RAG")
@@ -968,13 +1041,13 @@ class VoiceRAG:
                 except Exception:
                     pass
             if not q:
-                return {"error": "Missing query parameter"}
+                return JSONResponse({"error": "Missing query parameter"}, status_code=400)
             try:
                 return self._run_query(q)
-            except Exception as e:
-                import traceback
+            except Exception:
+                # Details go to the server log only; clients get no stack trace.
                 print(f"[ERROR in _run_query] {traceback.format_exc()}")
-                return {"error": str(e), "traceback": traceback.format_exc()}
+                return JSONResponse({"error": "Internal server error"}, status_code=500)
 
         @api.post("/voice-query")
         async def voice_query(
@@ -984,7 +1057,7 @@ class VoiceRAG:
             t_start = time.perf_counter()
             try:
                 audio_bytes = await file.read()
-                stt = self._transcribe(audio_bytes, language_code)
+                stt = self._transcribe(audio_bytes, language_code, file.filename, file.content_type)
             except Exception as e:
                 print(f"STT error: {e}")
                 return self._decline(

@@ -19,6 +19,7 @@ import collections
 import datetime as dt
 import json
 import unicodedata
+from concurrent.futures import ThreadPoolExecutor
 
 from parity_check import ask, git_commit, http_get_json, percentile
 
@@ -199,6 +200,7 @@ def main() -> None:
     p.add_argument("--url", help="deployment base URL")
     p.add_argument("--from-raw", help="re-score a saved raw file instead of querying")
     p.add_argument("--limit", type=int, help="only the first N questions (smoke test)")
+    p.add_argument("--workers", type=int, default=1, help="questions in flight at once (server must allow it)")
     args = p.parse_args()
 
     if args.from_raw:
@@ -209,13 +211,17 @@ def main() -> None:
         http_get_json(f"{url}/health", timeout=600)
         meta = {"label": args.label, "url": url, "git_commit": git_commit(),
                 "started_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
-        results = []
-        for i, row in enumerate(rows, 1):
+        def one(row: dict) -> dict:
             status, body, client_ms, attempts = ask(url, row["query"])
-            results.append({"row": row, "status": status, "attempts": attempts, "client_ms": client_ms, "response": body})
-            if i % 25 == 0 or i == len(rows):
-                print(f"  {i}/{len(rows)}", flush=True)
-        raw = {"meta": meta, "results": results}
+            return {"row": row, "status": status, "attempts": attempts, "client_ms": client_ms, "response": body}
+
+        # Several requests in flight hide the network round trip (~1.3 s from India vs ~50 ms on the server),
+        # so the GPU is busy instead of idle. The server still answers one at a time, and its timings_ms are
+        # measured inside the server, so they are unaffected. Results keep the input order.
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            results = list(pool.map(one, rows))
+        print(f"  {len(results)}/{len(rows)} answered", flush=True)
+        raw = {"meta": {**meta, "workers": args.workers}, "results": results}
         with open(f"eval/runs/eval_{args.label}.json", "w", encoding="utf-8", newline="\n") as f:
             json.dump(raw, f, ensure_ascii=False, indent=1)
 

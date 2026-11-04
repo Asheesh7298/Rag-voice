@@ -57,30 +57,33 @@ class VectorIndex:
             os.close(fd)
         return cls(vectors)
 
-    def search(self, query: np.ndarray, k: int) -> tuple[list[float], list[int]]:
+    def search(self, query: np.ndarray, k: int, start: int = 0, end: int | None = None) -> tuple[list[float], list[int]]:
         """Return (scores, row ids) of the k most similar vectors, highest score first.
 
         `query` must be L2-normalized (all stored vectors are), so the dot product is cosine similarity.
+        `start`/`end` limit the search to a block of rows (e.g. one language); ids are still global rows.
         """
-        k = min(k, self.n)
-        scores = self.vectors @ cp.asarray(query.astype(np.float16))      # [N] float16
+        rows = self.vectors[start:end]                                   # a view, no copy
+        n = int(rows.shape[0])
+        k = min(k, n)
+        scores = rows @ cp.asarray(query.astype(np.float16))            # [n] float16
 
-        # Exact top-k without sorting all N scores: take the best score of every block of 1,024, keep
+        # Exact top-k without sorting all n scores: take the best score of every block of 1,024, keep
         # the blocks with the highest block-best, and pick the top k inside them. Every one of the k best
         # scores sits in a block whose best is at least as high, so those blocks contain them all
         # (2k blocks leave a margin for FP16 ties). CuPy's argpartition would sort the whole array.
-        n_full = (self.n // BLOCK) * BLOCK
+        n_full = (n // BLOCK) * BLOCK
         block_best = scores[:n_full].reshape(-1, BLOCK).max(axis=1)
-        if n_full < self.n:
+        if n_full < n:
             block_best = cp.concatenate([block_best, scores[n_full:].max(keepdims=True)])
         top_blocks = cp.argsort(-block_best.astype(cp.float32))[: min(2 * k, int(block_best.shape[0]))]
         candidates = (top_blocks[:, None] * BLOCK + cp.arange(BLOCK)[None, :]).ravel()
-        candidates = candidates[candidates < self.n]
+        candidates = candidates[candidates < n]
 
         ids = cp.asnumpy(candidates)
         vals = cp.asnumpy(scores[candidates]).astype(np.float32)
         order = np.lexsort((ids, -vals))[:k]          # highest score first; ties go to the lower row id
-        return vals[order].tolist(), ids[order].tolist()
+        return vals[order].tolist(), (ids[order] + start).tolist()
 
 
 def _spot_check(vectors: cp.ndarray, on_disk: np.ndarray, samples: int = 64) -> None:
