@@ -2,17 +2,36 @@
 Modal deployment for VoxLore — multilingual voice RAG with extractive QA (no generative LLM).
 
 13,020,220 FP16 passage vectors are held in GPU memory and searched exactly with a matrix
-multiply; answers are extracted spans from the retrieved passages (XLM-RoBERTa, SQuAD 2.0).
+multiply (CuPy); answers are extracted spans from the retrieved passages (XLM-RoBERTa, SQuAD 2.0).
+Both models run with ONNX Runtime — see backend/encoders.py and backend/search.py.
 """
 import modal
 
-# Model revisions on the Hugging Face Hub (pinned so a rebuild downloads the same weights).
+volume = modal.Volume.from_name("voice-rag-index", create_if_missing=True)
+
+# Models. e5 uses the official ONNX export published by its authors, pinned to a revision.
+# The QA model (deepset/xlm-roberta-base-squad2, revision a5fab99) was converted to ONNX once and
+# stored on the Volume; export_info.json next to it records how, and its check against the original.
 E5_REVISION = "d128750597153bb5987e10b1c3493a34e5a4502a"   # intfloat/multilingual-e5-base
-QA_REVISION = "a5fab9908c8d856e8c583fd41ba6d92444e46477"   # deepset/xlm-roberta-base-squad2
+E5_URL = f"https://huggingface.co/intfloat/multilingual-e5-base/resolve/{E5_REVISION}"
+QA_ONNX_DIR = "/index/onnx/xlm-roberta-base-squad2"
+
+
+def fetch_models():
+    """Image build step: download e5's ONNX files and copy the QA model from the Volume into /models."""
+    import os
+    import shutil
+    import urllib.request
+
+    os.makedirs("/models/e5", exist_ok=True)
+    for local, remote in (("model.onnx", "onnx/model.onnx"), ("tokenizer.json", "tokenizer.json")):
+        urllib.request.urlretrieve(f"{E5_URL}/{remote}", f"/models/e5/{local}")
+    shutil.copytree(QA_ONNX_DIR, "/models/qa", dirs_exist_ok=True)
+
 
 # ── Image ─────────────────────────────────────────────────────────────────────
-# Versions are pinned to exactly what the v1 deployment (2026-08-25) runs, read from its
-# container with `pip freeze`, so a rebuild behaves the same.
+# No PyTorch: ONNX Runtime runs the models and CuPy does the vector search. Both use the CUDA 13
+# libraries installed from pip. tokenizers stays at the version v1 used, so text is tokenized identically.
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
@@ -23,37 +42,17 @@ image = (
         "httpx==0.28.1",
         "rank-bm25==0.2.2",
         "python-multipart==0.0.32",
-        "sentence-transformers==5.7.0",
         "numpy==2.4.6",
-        "scipy==1.17.1",
-        "scikit-learn==1.9.0",
-        "transformers==4.44.0",
-        "tokenizers==0.19.1",
-        "huggingface_hub==0.36.2",
-        "safetensors==0.8.0",
-        "torch==2.13.0",
-        "sentencepiece==0.2.2",
-        "protobuf==7.36.0",
         "orjson==3.12.0",
+        "tokenizers==0.19.1",
+        "onnxruntime-gpu[cuda,cudnn]==1.31.1",
+        "cupy-cuda13x[ctk]==14.2.0",
     )
-    .run_commands(
-        # Bake embedding model into image at build time
-        "python -c \""
-        "from sentence_transformers import SentenceTransformer; "
-        f"SentenceTransformer('intfloat/multilingual-e5-base', revision='{E5_REVISION}').save('/models/e5-base')"
-        "\"",
-        # Bake extractive QA model into image at build time
-        # xlm-roberta-base-squad2: multilingual, handles all 13 Indic languages, ~1.1GB
-        "python -c \""
-        "from transformers import AutoTokenizer, AutoModelForQuestionAnswering; "
-        f"AutoTokenizer.from_pretrained('deepset/xlm-roberta-base-squad2', revision='{QA_REVISION}').save_pretrained('/models/qa-model'); "
-        f"AutoModelForQuestionAnswering.from_pretrained('deepset/xlm-roberta-base-squad2', revision='{QA_REVISION}').save_pretrained('/models/qa-model')"
-        "\"",
-    )
+    .run_function(fetch_models, volumes={"/index": volume})
+    .add_local_python_source("backend")
     .add_local_dir("frontend", remote_path="/root/frontend")
 )
 
-volume = modal.Volume.from_name("voice-rag-index", create_if_missing=True)
 # Modal secrets command:
 # modal secret create voice-rag-secrets SARVAM_API_KEY=<key> OFF_TOPIC_THRESHOLD=0.70 MIN_RETRIEVAL_SCORE=0.65 MIN_QA_SCORE=0.25 MIN_ANSWER_RELEVANCE=0.20 TOP_K=10 RERANK_TOP_N=50
 secrets = [modal.Secret.from_name("voice-rag-secrets")]
@@ -118,41 +117,45 @@ class MetadataStore:
 )
 class VoiceRAG:
 
+    # v1 meant to stop answer spans from covering the question tokens, but on the GPU that masking never
+    # ran: moving the tokenizer output to CUDA made it a plain dict without .sequence_ids(), and the error
+    # was silently ignored. Off by default so this version reproduces v1's answers exactly; turning it on
+    # is a deliberate behavior change (it shortens answers that repeat the question).
+    MASK_QUESTION_TOKENS = False
+
     @modal.enter()
     def load(self):
-        import os, torch, time
-        from sentence_transformers import SentenceTransformer
-        from transformers import AutoTokenizer, AutoModelForQuestionAnswering
+        import os, time
+        import onnxruntime as ort
+        ort.preload_dlls()   # load the pip-installed CUDA/cuDNN libraries before creating GPU sessions
+        from backend.encoders import E5Encoder, QAReader
+        from backend.search import VectorIndex
 
-        device = 0 if torch.cuda.is_available() else -1
-        print(f"Device: {'cuda' if device == 0 else 'cpu'}")
+        self.gpu = "CUDAExecutionProvider" in ort.get_available_providers()
+        print(f"Device: {'cuda' if self.gpu else 'cpu'}")
 
         volume.reload()
         meta_path = "/index/metadata.jsonl"
 
         # ── Embedding model ──
         print("Loading embedding model...")
-        self.embed_model = SentenceTransformer("/models/e5-base", device="cuda" if device == 0 else "cpu")
-        self.embed_model.max_seq_length = 64
-        self.embed_model.encode(["warmup"], normalize_embeddings=True)
+        self.encoder = E5Encoder("/models/e5", max_length=64)
+        self.encoder.embed("warmup")
         print("✅ Embedding model ready")
 
-        # ── Raw 13M Vectors (Direct FP16 load to A100 Tensor memory in ~2s) ──
+        # ── Raw 13M Vectors → GPU memory (CuPy) ──
         fp16_bin = "/index/vectors_fp16.bin"
-        self.gpu_vectors = None
+        self.index = None
         self.gpu_vector_err = None
-        if os.path.exists(fp16_bin) and device == 0:
-            try:
-                import numpy as np
-                t_vecs = time.perf_counter()
-                print(f"Loading 13M vectors directly from {fp16_bin} into GPU VRAM...")
-                mmap_vecs = np.memmap(fp16_bin, dtype=np.float16, mode="r", shape=(13020220, 768))
-                self.gpu_vectors = torch.from_numpy(mmap_vecs).cuda()
-                print(f"✅ Loaded 13,020,220 vectors into A100 GPU VRAM in {time.perf_counter()-t_vecs:.2f}s!")
-            except Exception as e:
-                import traceback
-                self.gpu_vector_err = f"{e}\n{traceback.format_exc()}"
-                print(f"GPU vector load error: {self.gpu_vector_err}")
+        try:
+            t_vecs = time.perf_counter()
+            print(f"Loading vectors from {fp16_bin} into GPU VRAM...")
+            self.index = VectorIndex.load(fp16_bin)
+            print(f"✅ Loaded {self.index.n:,} vectors into A100 GPU VRAM in {time.perf_counter()-t_vecs:.2f}s!")
+        except Exception as e:
+            import traceback
+            self.gpu_vector_err = f"{e}\n{traceback.format_exc()}"
+            print(f"GPU vector load error: {self.gpu_vector_err}")
 
         # ── Fast Offset-Based Metadata Store ──
         print("Loading metadata store into RAM...")
@@ -160,15 +163,8 @@ class VoiceRAG:
 
         # ── Extractive QA model ──
         print("Loading extractive QA model...")
-        qa_path = "/models/qa-model"
-        print(f"Loading QA model from {qa_path}...")
-        self.qa_tokenizer = AutoTokenizer.from_pretrained(qa_path)
-        self.qa_model = AutoModelForQuestionAnswering.from_pretrained(qa_path)
-        if device == 0:
-            self.qa_model = self.qa_model.cuda()
-        self.qa_model.eval()
-        self.qa_device = device
-        # Warmup pass to absorb JIT cost and cuda memory allocation
+        self.qa = QAReader("/models/qa", max_length=256)
+        # Warmup pass to absorb first-run GPU setup and memory allocation
         self._extract_best_answer("warmup question", [{"text": "warmup context 1"}, {"text": "warmup context 2"}, {"text": "warmup context 3"}, {"text": "warmup context 4"}])
         print("✅ Extractive QA model ready")
 
@@ -253,12 +249,15 @@ class VoiceRAG:
 
     def _extract_best_answer(self, question: str, chunks: list) -> dict:
         """
-        Run fast batched extractive QA over top retrieved candidate chunks with max_length=128.
+        Run fast batched extractive QA over top retrieved candidate chunks with max_length=256.
         Batches candidates into a single GPU forward pass for ultra-fast (~18-22ms) inference.
         """
         import re
-        import torch
-        import torch.nn.functional as F
+        import numpy as np
+
+        def _softmax(x):
+            e = np.exp(x - x.max(axis=-1, keepdims=True))
+            return e / e.sum(axis=-1, keepdims=True)
 
         if not chunks:
             return {"answer": "", "score": 0.0, "chunk_idx": 0, "source_text": ""}
@@ -285,73 +284,57 @@ class VoiceRAG:
             batch_texts = [c["text"] for c in candidate_chunks]
             batch_q = [question] * len(candidate_chunks)
 
-            inputs = self.qa_tokenizer(
-                batch_q, batch_texts,
-                padding=True,
-                truncation=True,
-                max_length=256,
-                return_tensors="pt",
-            )
-            if self.qa_device == 0:
-                inputs = {k: v.cuda() for k, v in inputs.items()}
+            encodings = self.qa.encode_pairs(batch_q, batch_texts)   # padded, truncated to 256 tokens
+            s_logits, e_logits = self.qa.logits(encodings)            # [batch, tokens] float32
 
-            with torch.no_grad():
-                outputs = self.qa_model(**inputs)
-
-            s_logits = outputs.start_logits
-            e_logits = outputs.end_logits
-
-            s_probs = F.softmax(s_logits, dim=-1)
-            e_probs = F.softmax(e_logits, dim=-1)
+            # Probabilities come from the raw scores, before the question tokens are masked below
+            s_probs = _softmax(s_logits)
+            e_probs = _softmax(e_logits)
 
             best_cand = {"answer": "", "score": -1.0, "chunk_idx": 0, "source_text": "", "lang": None}
 
             for i, chunk in enumerate(candidate_chunks):
-                input_id_seq = inputs["input_ids"][i]
-                seq_len = input_id_seq.shape[0]
+                input_id_seq = encodings[i].ids
+                seq_len = len(input_id_seq)
 
-                # Mask non-context tokens (question & special tokens)
-                try:
-                    seq_ids = inputs.sequence_ids(i)
-                    for k_idx, s_id in enumerate(seq_ids):
-                        if s_id != 1:  # 1 corresponds to passage context
-                            s_logits[i][k_idx] = -10000.0
-                            e_logits[i][k_idx] = -10000.0
-                except Exception:
-                    pass
+                # Mask non-context tokens (question, special tokens and padding). See MASK_QUESTION_TOKENS.
+                if self.MASK_QUESTION_TOKENS:
+                    not_context = np.array([s_id != 1 for s_id in encodings[i].sequence_ids])  # 1 = passage
+                    s_logits[i][not_context] = -10000.0
+                    e_logits[i][not_context] = -10000.0
 
                 # Exact 2D matrix span search over bounded lengths (1 <= start <= end <= start + 35)
                 if seq_len > 1:
                     s_sub = s_logits[i]
                     e_sub = e_logits[i]
-                    L = s_sub.size(0)
+                    L = s_sub.shape[0]
 
-                    score_matrix = s_sub.unsqueeze(1) + e_sub.unsqueeze(0)
-                    indices = torch.arange(L, device=s_logits.device)
-                    span_lens = indices.unsqueeze(0) - indices.unsqueeze(1)
+                    score_matrix = s_sub[:, None] + e_sub[None, :]
+                    indices = np.arange(L)
+                    span_lens = indices[None, :] - indices[:, None]
 
                     valid_mask = (span_lens >= 0) & (span_lens <= 35)
-                    score_matrix = torch.where(valid_mask, score_matrix, torch.tensor(-1e9, device=s_logits.device))
+                    score_matrix = np.where(valid_mask, score_matrix, np.float32(-1e9))
 
                     # Sort top candidates from score matrix and pick the best non-trivial span (length >= 3 chars)
-                    flat_sorted = torch.argsort(score_matrix.view(-1), descending=True)
+                    flat_sorted = np.argsort(-score_matrix.ravel(), kind="stable")
                     answer = ""
                     best_s, best_e = 0, 0
                     for flat_idx in flat_sorted[:10]:
                         s_cand = int(flat_idx // L)
                         e_cand = int(flat_idx % L)
                         toks = input_id_seq[s_cand : e_cand + 1]
-                        ans_cand = self.qa_tokenizer.decode(toks, skip_special_tokens=True).strip()
+                        ans_cand = self.qa.decode(toks).strip()
                         if len(ans_cand) >= 3 and not ans_cand.startswith(("<s>", "</s>", "<pad>")):
                             answer = ans_cand
                             best_s, best_e = s_cand, e_cand
                             break
                     if not answer:
-                        best_flat_idx = int(torch.argmax(score_matrix))
+                        best_flat_idx = int(np.argmax(score_matrix))
                         best_s = int(best_flat_idx // L)
                         best_e = int(best_flat_idx % L)
                         tokens = input_id_seq[best_s : best_e + 1]
-                        answer = self.qa_tokenizer.decode(tokens, skip_special_tokens=True).strip()
+                        answer = self.qa.decode(tokens).strip()
 
                     start_prob = float(s_probs[i][best_s])
                     end_prob = float(e_probs[i][best_e])
@@ -433,7 +416,7 @@ class VoiceRAG:
     # ── Retrieval ─────────────────────────────────────────────────────────────
 
     def _embed(self, text: str):
-        vec = self.embed_model.encode([text], normalize_embeddings=True)[0]
+        vec = self.encoder.embed(text)
         # Explicitly re-normalize to guard against any float precision drift
         import numpy as np
         vec = vec.astype(np.float32)
@@ -455,20 +438,15 @@ class VoiceRAG:
         return {lang_filter}
 
     def _search(self, query_vec, k: int, lang_filter: str | list | None = None):
-        import torch, numpy as np
+        import numpy as np
         qv = query_vec.astype("float32").reshape(1, -1)
         norm = np.linalg.norm(qv)
         if norm > 0:
             qv = qv / norm
 
-        if getattr(self, "gpu_vectors", None) is None:
+        if getattr(self, "index", None) is None:
             raise RuntimeError(f"Vectors are not loaded into GPU memory: {self.gpu_vector_err}")
-        with torch.no_grad():
-            qv_t = torch.from_numpy(qv).cuda().half()
-            sims = torch.matmul(self.gpu_vectors, qv_t.T).squeeze(1)
-            top_scores, top_ids = torch.topk(sims, k=min(k, len(self.metadata)))
-            scores_list = top_scores.float().cpu().numpy().tolist()
-            ids_list = top_ids.cpu().numpy().tolist()
+        scores_list, ids_list = self.index.search(qv[0], min(k, len(self.metadata)))
 
         allowed_langs = self._resolve_lang_filter(lang_filter)
         results = []
@@ -889,7 +867,7 @@ class VoiceRAG:
         # Fast path: Skip re-embedding if QA score is high or lexical overlap is strong
         if best["score"] < 0.35 and self._token_overlap(query, best["answer"]) < 0.20:
             import numpy as np
-            answer_vec = self.embed_model.encode([best["answer"]], normalize_embeddings=True)[0]
+            answer_vec = self.encoder.embed(best["answer"])
             relevance = float(np.dot(query_vec_cached.astype(np.float32), answer_vec.astype(np.float32)))
             if relevance < self.MIN_ANSWER_RELEVANCE:
                 timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
@@ -944,7 +922,7 @@ class VoiceRAG:
         from fastapi import FastAPI, UploadFile, File, Form, Request
         from fastapi.responses import HTMLResponse
         from fastapi.middleware.cors import CORSMiddleware
-        import torch, time, os
+        import time, os
 
         api = FastAPI(title="VoxLore — Multilingual Voice RAG")
         api.add_middleware(
@@ -983,7 +961,7 @@ class VoiceRAG:
                 "supported_languages": list(supported.values()),
                 "language_codes": list(supported),
                 "index_size": len(self.metadata),
-                "gpu": torch.cuda.is_available(),
+                "gpu": self.gpu,
                 "model": "xlm-roberta-base-squad2 (extractive QA)",
                 "embed": "multilingual-e5-base",
             }
