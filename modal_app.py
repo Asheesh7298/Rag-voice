@@ -703,13 +703,19 @@ class VoiceRAG:
         }
         bcp47 = LANG_MAP.get(lang) if lang else None
         headers = {"api-subscription-key": self.SARVAM_KEY}
-        # Forward the recording with its real name and type (browsers record WebM/Ogg/MP4, not WAV;
-        # v1 labeled every upload "audio/wav").
-        files = {"file": (filename or "audio.webm", audio_bytes, content_type or "application/octet-stream")}
+        # Forward the recording with its real type (browsers record WebM/Ogg/MP4, not WAV; v1 labeled every
+        # upload "audio/wav"). Browsers add codec parameters ("audio/webm;codecs=opus"), which Sarvam rejects
+        # with HTTP 400; it accepts the bare type, and application/octet-stream for anything else.
+        mime = (content_type or "").split(";")[0].strip().lower()
+        if not mime.startswith(("audio/", "video/webm")):
+            mime = "application/octet-stream"
+        files = {"file": (filename or "audio.webm", audio_bytes, mime)}
         data = {"model": "saaras:v3", "mode": "transcribe"}
         if bcp47: data["language_code"] = bcp47
         t0 = time.perf_counter()
         r = httpx.post(self.SARVAM_URL, headers=headers, files=files, data=data, timeout=10)
+        if r.status_code >= 400:   # Sarvam explains rejections in the body; keep it in the server log
+            print(f"Sarvam STT HTTP {r.status_code} for {mime}: {r.text[:300]}")
         r.raise_for_status()
         stt_ms = round((time.perf_counter() - t0) * 1000, 2)
         result = r.json()

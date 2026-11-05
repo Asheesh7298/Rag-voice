@@ -15,7 +15,7 @@ Deployed as a **separate** Modal app, `voice-rag-v4`, on 2026-11-04 (UTC); `voic
 | Raw-cosine off-topic gate (`OFF_TOPIC_COSINE`), reported as `retrieval_score` | no: left off, see below |
 | `strategy` field reads the stored `chunk_strategy` | API field only |
 | `/query` returns HTTP 400 / 500 with no stack trace | errors only |
-| Voice uploads forwarded to Sarvam with their real file name and type (not always `audio/wav`) | voice only (not tested with real speech) |
+| Voice uploads forwarded to Sarvam with their real file name and type (not always `audio/wav`) | voice only |
 | One container at most (`max_containers=1`), up to 8 requests queued on it (`@modal.concurrent`) | no |
 | Frontend retries network errors and HTTP 5xx twice (3 s, 6 s) | no |
 
@@ -40,6 +40,15 @@ the evaluation and parity sets.
 198 of 600 v1 answers began by repeating the whole question; v4 answers are shorter (about 4.8 words vs 7.9).
 Word precision held (Set A 0.24 → 0.26, Set B 0.19 → 0.18) while recall against the long dataset answers fell
 (Set B 0.12 → 0.08), which is most of the F1 drop. Some v4 answers are terse single words.
+
+## Voice regression found in the browser test, and fixed
+
+The first browser test of voice failed with "Couldn't transcribe audio": Sarvam answered HTTP 400 `Invalid file
+type: audio/webm;codecs=opus`. Browsers label recordings with codec parameters, and Sarvam only accepts bare types
+(`audio/webm`, `audio/ogg`, `audio/mp4`, ...). The backend now strips the parameter (unknown types are sent as
+`application/octet-stream`) and logs Sarvam's error text. Checked end to end on `voice-rag-v4` with a WebM/Opus
+recording labeled exactly as the browser does: transcript "What county is Columbus City in?", answered in 46 ms
+on the server (speech-to-text 2.3 s).
 
 ## Off-topic gate: does not work with these scores
 
