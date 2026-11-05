@@ -10,6 +10,9 @@
 > an answer **extracted from retrieved passages** (no text generation), searched across **13,020,220 passage vectors**
 > held in GPU memory on an NVIDIA A100.
 
+**🌐 Live demo: [rag-voice-frontend.vercel.app](https://rag-voice-frontend.vercel.app)** — the first question after the
+server has been idle takes about 30 s while it starts; after that answers come back in well under a second.
+
 - **Scale:** 13,020,220 vectors from MS MARCO training passages (Hindi 4.60M, Marathi 4.27M, English 4.16M), three chunking strategies.
 - **Stack:** React + TypeScript frontend; FastAPI on Modal; models on ONNX Runtime and vector search with CuPy (no PyTorch, no FAISS).
 - **Server latency:** P50 46.6 ms, P90 56.3 ms over 627 evaluation questions (2026-11-04).
