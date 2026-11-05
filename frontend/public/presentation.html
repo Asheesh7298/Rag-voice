@@ -354,7 +354,6 @@
   </style>
 </head>
 <body>
-
   <!-- Top Navigation Header -->
   <header class="nav-bar">
     <div class="nav-inner">
@@ -362,11 +361,11 @@
         <div class="brand-avatar">V</div>
         <div class="brand-text">
           <h1>VoxLore — Architecture &amp; Benchmarks</h1>
-          <p>HH Goa 2026 · Qwen2.5-1.5B · RTX 4050 GPU · Voice RAG</p>
+          <p>HH Goa 2026 · ONNX Runtime + CuPy · Modal A100 · Voice RAG</p>
         </div>
       </div>
       <div class="nav-buttons">
-        <a href="index.html" class="btn-nav primary">← Back to Voice Assistant</a>
+        <a href="/" class="btn-nav primary">← Back to Voice Assistant</a>
         <a href="https://github.com/Asheesh7298/Rag-voice" target="_blank" class="btn-nav">GitHub Repository ↗</a>
       </div>
     </div>
@@ -376,474 +375,278 @@
 
     <div class="hero-banner">
       <div class="badge-pill">HH Goa 2026 — Shortlisting Task 2</div>
-      <h2 class="hero-title">Voice-Enabled RAG with 74% Correctness</h2>
-      <p class="hero-desc">Complete architecture pipeline, GPU-accelerated generation, Cross-Encoder precision gating, and verified benchmark scorecard for Hindi &amp; English voice RAG.</p>
+      <h2 class="hero-title">Multilingual Voice RAG over 13.02M Passages</h2>
+      <p class="hero-desc">Speak or type a question in Hindi, Marathi or English and get an answer extracted from retrieved passages on a Modal A100 GPU. Models run on ONNX Runtime and vector search on CuPy. Every number on this page was measured on the deployed system (November 2026).</p>
     </div>
 
     <!-- KPI Grid -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-num">74%</div>
-        <div class="kpi-label">Correctness (LLM-as-Judge)</div>
+        <div class="kpi-num">13.02M</div>
+        <div class="kpi-label">Passage vectors (hi · mr · en)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--emerald);">90%</div>
-        <div class="kpi-label">Faithfulness Rate</div>
+        <div class="kpi-num" style="color: var(--emerald);">46.6 ms</div>
+        <div class="kpi-label">Server latency P50 (P90 56.3 ms)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--cyan);">11.5 ms</div>
-        <div class="kpi-label">Retrieval P95 (Budget: 50ms)</div>
+        <div class="kpi-num" style="color: var(--cyan);">34%</div>
+        <div class="kpi-label">Recall@5, in-index questions (English 55%)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--amber);">1,277 ms</div>
-        <div class="kpi-label">Generation P95 (Target: 1500ms)</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--purple-primary);">92%</div>
-        <div class="kpi-label">Recall@5 (46/50 Queries)</div>
+        <div class="kpi-num" style="color: var(--amber);">224/224</div>
+        <div class="kpi-label">Identical answers after removing PyTorch</div>
       </div>
     </div>
 
     <!-- Section 1: End-to-End Architecture -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>🏛️ 1. End-to-End Pipeline Architecture</h2>
-        <span class="tag tag-purple">5-Phase Flow</span>
+        <h2>🏛️ 1. End-to-End Pipeline</h2>
+        <span class="tag tag-purple">Extractive, no text generation</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
-        Every query traverses 5 synchronous phases: Voice transcription via Sarvam AI, dense embedding with E5-Small, FAISS vector search, Cross-Encoder precision gating, and GPU-accelerated Qwen2.5-1.5B generation.
+        A question is checked, embedded, matched against its own language's passages, reranked, and answered with the best span from the top passages. Every stage is timed and returned with the answer.
       </p>
       <div class="mermaid">
 graph TD
-    User(["🎙️ Voice / Text Query"]) --> Ingest{Input Mode}
-    Ingest -->|Voice Stream| STT["Sarvam AI STT API"]
-    Ingest -->|Text Input| Pipeline["RAG Pipeline Entry"]
-    STT -->|Transcribed Text| Pipeline
-
-    Pipeline --> G1["Guardrail 1: Unsafe Input Filter &lt;0.1ms"]
-    G1 --> G2["Guardrail 2: Out-of-Scope Detector &lt;0.1ms"]
-    
-    G2 --> Embed["E5-Small Embedding (384-dim, NFC Norm, ~8ms CPU)"]
-    Embed --> FAISS["FAISS IndexFlatIP Search (top_k=5, ~0.1ms)"]
-    
-    FAISS --> CE["Cross-Encoder Gate: ms-marco-MiniLM-L-6-v2 (~2ms)"]
-    CE -->|"Score &lt; 4.6"| Decline["🛡️ Decline: Irrelevant Context"]
-    CE -->|"Score &gt;= 4.6"| Merge["Dual-Chunk Context Merge (Top 2, 800 chars)"]
-    
-    Merge --> LLM["Qwen2.5-1.5B-Instruct (FP16, RTX 4050, TF32)"]
-    LLM --> PostGuard["Post-Gen Guardrails: Refusal Detection + Intent Validation"]
-    
-    PostGuard --> Response["Structured Answer (text, grounded, generation_ms)"]
-    Response --> TTS["Web Speech Synthesis (Browser Audio)"]
-    TTS --> FinalUser(["🔊 Grounded Factual Answer"])
+    User(["🎙️ Voice or text question"]) --> Mode{Input}
+    Mode -->|Voice| STT["Sarvam AI speech-to-text, saaras:v3"]
+    Mode -->|Text| Entry["POST /query"]
+    STT --> Entry
+    Entry --> G1["Guardrails 1-2: unsafe input in en, hi, mr · current events"]
+    G1 --> Lang["Language detection: hi, mr or en"]
+    Lang --> Embed["e5-base embedding · ONNX Runtime GPU · ~4.6 ms"]
+    Embed --> Search["Exact FP16 scan of the language block · CuPy · ~15 ms"]
+    Search --> Rerank["Rerank: dense + BM25 + word overlap · duplicates removed · ~4 ms"]
+    Rerank --> G3{"Retrieval confident?"}
+    G3 -->|No| D1["🛡️ Decline"]
+    G3 -->|Yes| QA["XLM-RoBERTa SQuAD 2.0 reader · ONNX Runtime · ~19 ms"]
+    QA --> G4{"QA confidence, relevance, script, non-answer checks"}
+    G4 -->|Fail| D2["🛡️ Decline"]
+    G4 -->|Pass| Out(["🔊 Answer + sources + timings"])
 
     style Embed fill:#131B2E,stroke:#7C74EA,stroke-width:2px,color:#fff
-    style FAISS fill:#131B2E,stroke:#38BDF8,stroke-width:2px,color:#fff
-    style CE fill:#131B2E,stroke:#F59E0B,stroke-width:2px,color:#fff
-    style LLM fill:#131B2E,stroke:#10B981,stroke-width:2px,color:#fff
-    style Response fill:#0F172A,stroke:#C4B5FD,stroke-width:2px,color:#fff
+    style Search fill:#131B2E,stroke:#38BDF8,stroke-width:2px,color:#fff
+    style Rerank fill:#131B2E,stroke:#F59E0B,stroke-width:2px,color:#fff
+    style QA fill:#131B2E,stroke:#10B981,stroke-width:2px,color:#fff
+    style Out fill:#0F172A,stroke:#C4B5FD,stroke-width:2px,color:#fff
       </div>
     </div>
 
-    <!-- Section 2: RTX 4050 Hardware Layout -->
+    <!-- Section 2: Hardware Layout -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>💾 2. NVIDIA RTX 4050 GPU Memory Layout (6.44 GB VRAM)</h2>
-        <span class="tag tag-green">Hardware Specs</span>
+        <h2>💾 2. What Runs Where (Modal NVIDIA A100)</h2>
+        <span class="tag tag-green">One container at most</span>
       </div>
       <table>
         <thead>
           <tr>
             <th>Component</th>
-            <th>VRAM / Memory</th>
-            <th>Compute Device</th>
-            <th>Execution Speed</th>
+            <th>Size</th>
+            <th>Device</th>
+            <th>Notes</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Qwen2.5-1.5B-Instruct (FP16)</strong></td>
-            <td>3.2 GB</td>
-            <td>RTX 4050 CUDA (cuda:0)</td>
-            <td><span class="tag tag-green">~450ms median, ~1,277ms P95</span></td>
+            <td><strong>13,020,220 passage vectors (FP16)</strong></td>
+            <td>20 GB</td>
+            <td>A100 GPU memory (CuPy)</td>
+            <td><span class="tag tag-cyan">Stored as hi | mr | en blocks; read by 16 parallel readers and spot-checked at startup</span></td>
           </tr>
           <tr>
-            <td><strong>Cross-Encoder MiniLM-L-6-v2</strong></td>
-            <td>~0.1 GB</td>
-            <td>CPU (sentence-transformers)</td>
-            <td><span class="tag tag-amber">~15ms per 5-pair batch</span></td>
+            <td><strong>multilingual-e5-base (ONNX, FP32)</strong></td>
+            <td>~1.1 GB</td>
+            <td>A100 via ONNX Runtime</td>
+            <td><span class="tag tag-green">Official ONNX export, pinned revision</span></td>
           </tr>
           <tr>
-            <td><strong>multilingual-e5-small</strong></td>
-            <td>~0.13 GB</td>
-            <td>CPU (sentence-transformers)</td>
-            <td><span class="tag tag-purple">~8ms per query embedding</span></td>
+            <td><strong>xlm-roberta-base-squad2 (ONNX, FP32)</strong></td>
+            <td>~1.1 GB</td>
+            <td>A100 via ONNX Runtime</td>
+            <td><span class="tag tag-green">Converted once; largest logit difference vs PyTorch 2.6e-5</span></td>
           </tr>
           <tr>
-            <td><strong>Free VRAM Headroom</strong></td>
-            <td>~3.0 GB</td>
-            <td>RTX 4050 VRAM</td>
-            <td><span class="tag tag-cyan">Zero OOM Risk</span></td>
+            <td><strong>Metadata + byte offsets</strong></td>
+            <td>104 MB offsets</td>
+            <td>RAM; text read on demand</td>
+            <td><span class="tag tag-amber">One seek per returned passage</span></td>
           </tr>
           <tr>
-            <td><strong>Total VRAM</strong></td>
-            <td><strong>6.44 GB</strong></td>
-            <td><strong>NVIDIA GeForce RTX 4050 Laptop</strong></td>
-            <td><span class="tag tag-green">Stable &amp; Tested</span></td>
+            <td><strong>Cold start</strong></td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="tag tag-purple">Usually 26–44 s; separate 600 s startup limit so a slow storage day finishes instead of restarting</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Section 3: Verified Benchmark Scorecard -->
+    <!-- Section 3: Evaluation -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>📊 3. Official Benchmark Scorecard (rag-local-eval-loop)</h2>
-        <span class="tag tag-purple">100 Queries</span>
-      </div>
-      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:20px;">
-        Evaluated on <code>ai4bharat/MSMARCO-XI</code> Hindi validation split: 50 answerable + 50 unanswerable queries (seed=42), 2,391 indexed chunks, top_k=5. Judge: OpenAI GPT-4o-mini LLM-as-Judge.
-      </p>
-
-      <!-- Retrieval Metrics -->
-      <h3 style="color: var(--cyan); margin-bottom: 14px; font-size: 1.1rem;">📡 Retrieval Performance</h3>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">Recall@1</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 56%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">56.0%</div>
-        </div>
-      </div>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">Recall@3</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 80%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">80.0%</div>
-        </div>
-      </div>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">Recall@5</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 92%; background: linear-gradient(90deg, #7C74EA, #10B981);">92.0%</div>
-        </div>
-      </div>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">MRR</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 69.8%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">0.698</div>
-        </div>
-      </div>
-
-      <br/>
-
-      <!-- Quality Metrics -->
-      <h3 style="color: var(--emerald); margin-bottom: 14px; font-size: 1.1rem;">✅ Quality Metrics</h3>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">Correctness</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 74%; background: linear-gradient(90deg, #10B981, #34D399);">70–74%</div>
-        </div>
-      </div>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">Faithfulness</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 90%; background: linear-gradient(90deg, #10B981, #34D399);">87–90%</div>
-        </div>
-      </div>
-      <div class="metric-bar-wrap">
-        <div class="metric-bar-label">Hallucination</div>
-        <div class="metric-bar-track">
-          <div class="metric-bar-fill" style="width: 13%; background: linear-gradient(90deg, #F43F5E, #FB7185);">10–13%</div>
-        </div>
-      </div>
-
-      <br/>
-
-      <!-- Latency Table -->
-      <h3 style="color: var(--amber); margin-bottom: 14px; font-size: 1.1rem;">⚡ Latency SLA by Profile</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Profile</th>
-            <th>Target SLA</th>
-            <th>P50 Latency</th>
-            <th>P95 Latency</th>
-            <th>Suite Budget</th>
-            <th>Correctness</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="champion-row">
-            <td>🏆 <strong>CHAMPION Profile</strong></td>
-            <td>Deep Factual Reasoning</td>
-            <td>466 ms</td>
-            <td><strong>1,150 ms</strong></td>
-            <td>1,500 ms</td>
-            <td><strong>74.0%</strong></td>
-            <td><span class="pass-check">✅ PASS (350ms Headroom)</span></td>
-          </tr>
-          <tr>
-            <td>⚡ <strong>TURBO Profile</strong></td>
-            <td>Real-Time Conversational Voice</td>
-            <td><strong>9.64 ms</strong></td>
-            <td><strong>177.04 ms</strong></td>
-            <td>1,500 ms</td>
-            <td>High Precision (0.000 Hallucination)</td>
-            <td><span class="pass-check">✅ PASS (Sub-200ms)</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Section 4: Adaptive Dual-Tier Inference Profile -->
-    <div class="diagram-card">
-      <div class="card-head">
-        <h2>⚡ 4. Adaptive Dual-Tier Inference Architecture</h2>
-        <span class="tag tag-cyan">Enterprise Flexibility</span>
+        <h2>📊 3. Evaluation Scorecard</h2>
+        <span class="tag tag-cyan">627 questions, automatic scoring</span>
       </div>
       <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
-        To support both deep analytical reasoning and ultra-responsive real-time voice streaming, VoxLore features two calibrated operational profiles:
+        Set A: 300 training questions whose gold passage is in the index. Set B: 300 validation questions the index never saw. Set C: 27 unsafe, current-events and off-topic questions. Recall@5 = the exact gold passage is among the top 5 sources.
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Architectural Feature</th>
-            <th>🏆 CHAMPION Profile</th>
-            <th>⚡ TURBO Profile</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Primary Target</strong></td>
-            <td>Maximum Factual Correctness (74%) &amp; Faithfulness (90%)</td>
-            <td>Sub-200ms Turnaround (<188ms Total P95)</td>
-          </tr>
-          <tr>
-            <td><strong>Context Window Clamping</strong></td>
-            <td>800–850 characters (Top 2 candidate chunks)</td>
-            <td>160 characters (Clamped high-relevance clause)</td>
-          </tr>
-          <tr>
-            <td><strong>Token Budget</strong></td>
-            <td><code>max_new_tokens = 34–38</code> (Full sentence synthesis)</td>
-            <td><code>max_new_tokens = 4</code> (Fast token clamping)</td>
-          </tr>
-          <tr>
-            <td><strong>Precision Refusal Gate</strong></td>
-            <td>Cross-Encoder Threshold <code>4.6</code> (Inspects 5 chunks)</td>
-            <td>Cosine <code>0.85</code> + CE <code>8.5</code> Dual Refusal Gate</td>
-          </tr>
-          <tr>
-            <td><strong>P50 / P95 Generation</strong></td>
-            <td>466 ms / ~1,150 ms</td>
-            <td><strong>9.64 ms / 177.04 ms</strong></td>
-          </tr>
-          <tr>
-            <td><strong>Best Production Fit</strong></td>
-            <td>Complex medical timeframes, historical synthesis, lists</td>
-            <td>Real-time voice turn-taking with zero conversational lag</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Section 5: Model Selection Rationale -->
-    <div class="diagram-card">
-      <div class="card-head">
-        <h2>🧪 5. Model Selection — Empirical Head-to-Head</h2>
-        <span class="tag tag-amber">5 Models Tested</span>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@5 English</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 55%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">55%</div>
+        </div>
       </div>
-      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
-        We benchmarked 5 model architectures on the RTX 4050 GPU to find the optimal correctness-latency tradeoff. Qwen2.5-1.5B-Instruct (FP16) emerged as the clear champion.
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Model</th>
-            <th>Correctness</th>
-            <th>Faithfulness</th>
-            <th>Gen P95</th>
-            <th>VRAM</th>
-            <th>Verdict</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Extractive XLM-RoBERTa</td>
-            <td>42.0%</td>
-            <td>97.0%</td>
-            <td>484 ms</td>
-            <td>1.1 GB</td>
-            <td><span class="tag tag-rose">Too low correctness</span></td>
-          </tr>
-          <tr>
-            <td>Qwen2.5-0.5B-Instruct</td>
-            <td>58.0%</td>
-            <td>63.0%</td>
-            <td>1,304 ms</td>
-            <td>1.2 GB</td>
-            <td><span class="tag tag-rose">Too many hallucinations</span></td>
-          </tr>
-          <tr class="champion-row">
-            <td>🏆 <strong>Qwen2.5-1.5B-Instruct (FP16)</strong></td>
-            <td><strong>74.0%</strong></td>
-            <td><strong>90.0%</strong></td>
-            <td><strong>1,234 ms</strong></td>
-            <td><strong>3.2 GB</strong></td>
-            <td><span class="tag tag-green">🏆 CHAMPION</span></td>
-          </tr>
-          <tr>
-            <td>Google Gemma-2-2B-It (FP16)</td>
-            <td>70.0%</td>
-            <td>86.0%</td>
-            <td>1,881 ms</td>
-            <td>4.9 GB</td>
-            <td><span class="tag tag-rose">Over latency budget</span></td>
-          </tr>
-          <tr>
-            <td>Qwen2.5-7B-Instruct (4-bit)</td>
-            <td>72.0%</td>
-            <td>90.0%</td>
-            <td>7,500 ms</td>
-            <td>5.8 GB</td>
-            <td><span class="tag tag-rose">Way too slow</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Section 6: Embedding Model Selection -->
-    <div class="diagram-card">
-      <div class="card-head">
-        <h2>🔬 6. Embedding Model Selection</h2>
-        <span class="tag tag-cyan">2 Models Tested</span>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@5 Hindi</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 27%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">27%</div>
+        </div>
       </div>
-      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
-        We benchmarked <code>multilingual-e5-small</code> vs <code>multilingual-e5-base</code>. Despite e5-base having better Recall@1, the overall downstream quality (correctness, faithfulness) was worse.
-      </p>
-      <table>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@5 Marathi</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 20%; background: linear-gradient(90deg, #7C74EA, #38BDF8);">20%</div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <div class="metric-bar-label">Recall@5 all</div>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill" style="width: 34%; background: linear-gradient(90deg, #10B981, #38BDF8);">34%</div>
+        </div>
+      </div>
+      <table style="margin-top: 18px;">
         <thead>
-          <tr>
-            <th>Embedding Model</th>
-            <th>Recall@1</th>
-            <th>Recall@5</th>
-            <th>MRR</th>
-            <th>Correctness</th>
-            <th>Retrieval P95</th>
-            <th>Verdict</th>
-          </tr>
+          <tr><th>Check</th><th>Result</th></tr>
         </thead>
         <tbody>
-          <tr class="champion-row">
-            <td>🏆 <strong>multilingual-e5-small (384-dim)</strong></td>
-            <td>0.560</td>
-            <td><strong>0.920</strong></td>
-            <td>0.698</td>
-            <td><strong>74.0%</strong></td>
-            <td><strong>11.5 ms</strong></td>
-            <td><span class="tag tag-green">🏆 CHAMPION</span></td>
-          </tr>
-          <tr>
-            <td>multilingual-e5-base (768-dim)</td>
-            <td><strong>0.640</strong></td>
-            <td>0.900</td>
-            <td><strong>0.747</strong></td>
-            <td>68.0%</td>
-            <td>11.7 ms</td>
-            <td><span class="tag tag-rose">Worse downstream</span></td>
-          </tr>
+          <tr><td>Set A MRR (hi / mr / en)</td><td>0.19 / 0.11 / 0.40</td></tr>
+          <tr><td>Set B questions answered (not refused)</td><td>94%</td></tr>
+          <tr><td>Unsafe questions declined (English + Hindi/Marathi)</td><td><span class="pass-check">8 / 8</span></td></tr>
+          <tr><td>Current-events questions declined</td><td><span class="pass-check">11 / 11</span></td></tr>
+          <tr><td>Off-topic questions declined</td><td><span class="fail-check">3 / 8</span></td></tr>
+          <tr><td>Server latency P50 / P90</td><td>46.6 / 56.3 ms (embed 4.6, search 15.4, rerank 4.0, QA 19.3 at P50)</td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Section 7: Guardrail Pipeline -->
+    <!-- Section 4: Migration -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>🛡️ 7. Guardrail Defense Pipeline</h2>
-        <span class="tag tag-green">5-Stage Defense</span>
+        <h2>🔁 4. From PyTorch to ONNX Runtime, Measured Step by Step</h2>
+        <span class="tag tag-amber">7 phases</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Phase</th><th>Change</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0 · Baseline</td><td>Captured 224 answers of the original version</td><td>Fully repeatable; P50 59 ms</td></tr>
+          <tr><td>1 · Cleanup</td><td>Removed FAISS, an unused NLI model, dead code</td><td><span class="pass-check">224/224 identical</span></td></tr>
+          <tr><td>2 · Evaluation</td><td>Built the A/B/C question sets</td><td>Recall@5 28%; misses traced to duplicates and a small cross-language candidate pool</td></tr>
+          <tr><td>3 · No PyTorch</td><td>ONNX Runtime for both models, CuPy for search</td><td><span class="pass-check">224/224 identical</span>; P50 50 ms</td></tr>
+          <tr><td>4 · Startup</td><td>Separate startup limit, parallel vector loading</td><td>Slow starts (up to 10 min) finish instead of restarting from zero</td></tr>
+          <tr><td>5 · Frontend</td><td>React + TypeScript; API-only backend</td><td>Same look; six UI bugs fixed</td></tr>
+          <tr class="champion-row"><td>6 · Fixes</td><td>Language-block search, duplicate removal, question-token masking, Hindi/Marathi unsafe check</td><td>Recall@5 34%; P50 47 ms</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 5: Design choices -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>🧪 5. Design Choices</h2>
+        <span class="tag tag-purple">Why it is built this way</span>
+      </div>
+      <ul style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; padding-left:20px;">
+        <li><strong>Extractive answers, no text generation:</strong> every answer is a span copied from a retrieved passage, and the QA step takes about 19 ms.</li>
+        <li><strong>One multilingual embedding model:</strong> multilingual-e5-base covers Hindi, Marathi and English in one 768-dimensional space.</li>
+        <li><strong>ONNX Runtime instead of PyTorch:</strong> the system only runs trained models. The switch was verified against the original: stored-vector cosine 0.99999 over 1,000 passages, and 224/224 identical answers.</li>
+        <li><strong>Exact search instead of an approximate index:</strong> all 13M vectors fit in GPU memory, and scanning one language block takes about 15 ms, so results are exact.</li>
+        <li><strong>Scale to zero, one container:</strong> no cost while idle; simultaneous requests queue on a single GPU instead of starting more.</li>
+      </ul>
+    </div>
+
+    <!-- Section 6: Guardrails -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>🛡️ 6. Guardrails</h2>
+        <span class="tag tag-green">Know when not to answer</span>
       </div>
       <div class="mermaid">
 flowchart TD
-    Q["Incoming Query"] --> C1{"Guardrail 1: Unsafe / Injections?"}
-    C1 -- Yes --> R1["Decline: Unsafe Input (&lt;0.1ms)"]
-    C1 -- No --> C2{"Guardrail 2: Out-of-Scope / Real-Time?"}
-    
-    C2 -- Yes --> R2["Decline: Out-of-Scope (&lt;0.1ms)"]
-    C2 -- No --> VSearch["Dense Retrieval: E5-Small + FAISS (top_k=5)"]
-    
-    VSearch --> C3{"Guardrail 3: Cross-Encoder Score &gt;= 4.6?"}
-    C3 -- No --> R3["Decline: Irrelevant Context (~15ms)"]
-    C3 -- Yes --> LLM["Qwen2.5-1.5B Generation (RTX 4050 FP16)"]
-    
-    LLM --> C4{"Guardrail 4: Refusal Pattern Detected?"}
-    C4 -- Yes --> R4["Decline: Model Self-Refused"]
-    C4 -- No --> C5{"Guardrail 5: Intent Validates?"}
-    
-    C5 -- No --> R5["Decline: Intent Mismatch"]
-    C5 -- Yes --> Out(["✅ Return Grounded Factual Answer"])
+    Q["Incoming question"] --> C1{"Unsafe input? English patterns, Hindi/Marathi word check"}
+    C1 -- Yes --> R1["Decline: unsafe input"]
+    C1 -- No --> C2{"Current events or real time?"}
+    C2 -- Yes --> R2["Decline: out of scope"]
+    C2 -- No --> S["Search the question's language block, rerank"]
+    S --> C3{"Retrieval confident?"}
+    C3 -- No --> R3["Decline: low retrieval confidence"]
+    C3 -- Yes --> QA["Extract best answer span"]
+    QA --> C4{"Span confident, relevant, same script, not a non-answer?"}
+    C4 -- No --> R4["Decline"]
+    C4 -- Yes --> Out(["✅ Answer with sources"])
 
     style Out fill:#166534,stroke:#22c55e,stroke-width:2px,color:#fff
     style R1 fill:#991b1b,stroke:#ef4444,color:#fff
     style R2 fill:#991b1b,stroke:#ef4444,color:#fff
     style R3 fill:#991b1b,stroke:#ef4444,color:#fff
     style R4 fill:#991b1b,stroke:#ef4444,color:#fff
-    style R5 fill:#991b1b,stroke:#ef4444,color:#fff
       </div>
     </div>
 
-    <!-- Section 8: Multi-Strategy Chunking -->
+    <!-- Section 7: Chunking -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>📚 8. Multi-Strategy Chunking Pipeline</h2>
-        <span class="tag tag-purple">3.52x Expansion</span>
+        <h2>📚 7. Multi-Strategy Chunking and Index Layout</h2>
+        <span class="tag tag-purple">3 strategies per passage</span>
       </div>
       <div class="mermaid">
 graph LR
-    subgraph "Raw Dataset Sources"
-        D1["ai4bharat/MSMARCO-XI (Hindi)"]
-        D2["ai4bharat/MSMARCO-XI (English)"]
-    end
+    P["Passage (MS MARCO / MSMARCO-XI)"] --> N["passage_native: whole passage"]
+    P --> F["fixed_overlap: 60-word windows every 45 words"]
+    P --> S["semantic_window: up to 4 sentences"]
+    N --> E["e5-base embeddings, FP16"]
+    F --> E
+    S --> E
+    E --> I["13,020,220 rows: Hindi 4.60M · Marathi 4.27M · English 4.16M"]
 
-    subgraph "Multi-Strategy Chunking (3.52x Expansion)"
-        D1 & D2 --> S1["Strategy 1: Native Passage (1.00x)"]
-        D1 & D2 --> S2["Strategy 2: Fixed Overlap (60 tok / 15 overlap, 1.41x)"]
-        D1 & D2 --> S3["Strategy 3: Semantic Window (Cosine &gt;= 0.55, 1.11x)"]
-    end
-
-    subgraph "Indexing"
-        S1 & S2 & S3 --> Chunks["Expanded Chunk Corpus"]
-        Chunks --> Embed["E5-Small Embedding (384-dim)"]
-        Embed --> Index["FAISS IndexFlatIP"]
-    end
-
-    style S1 fill:#1e40af,stroke:#60a5fa,color:#fff
-    style S2 fill:#7c3aed,stroke:#a78bfa,color:#fff
-    style S3 fill:#059669,stroke:#34d399,color:#fff
+    style I fill:#131B2E,stroke:#38BDF8,stroke-width:2px,color:#fff
       </div>
     </div>
 
-    <!-- Section 9: How to Reproduce -->
+    <!-- Section 8: Limitations -->
     <div class="diagram-card">
       <div class="card-head">
-        <h2>⚖️ 9. Reproduce the Benchmark</h2>
-        <span class="tag tag-cyan">Judges' Guide</span>
+        <h2>⚠️ 8. Known Limitations</h2>
+        <span class="tag tag-rose">Measured, not hidden</span>
       </div>
-      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">
-        Judges can reproduce the complete automated benchmark scorecard with 1 command:
-      </p>
-      <div style="background: #070B13; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 20px; overflow-x: auto;">
-        <pre style="color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.7; margin: 0;"><code><span style="color: var(--text-dim);"># 1. Set environment variables</span>
-<span style="color: var(--cyan);">$env:OPENAI_API_KEY</span> = <span style="color: var(--emerald);">"&lt;YOUR_OPENAI_KEY&gt;"</span>
-<span style="color: var(--cyan);">$env:EVAL_EMBEDDER_MODULE</span> = <span style="color: var(--emerald);">"main"</span>
-<span style="color: var(--cyan);">$env:EVAL_GENERATOR_MODULE</span> = <span style="color: var(--emerald);">"main"</span>
-<span style="color: var(--cyan);">$env:PYTHONPATH</span> = <span style="color: var(--emerald);">"&lt;path-to-rag-local-eval-loop&gt;;&lt;path-to-voice-rag&gt;"</span>
+      <ul style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; padding-left:20px;">
+        <li><strong>Off-topic questions:</strong> a similarity-based gate cannot separate them; off-topic questions score 0.86–0.92, as high as answerable ones (median 0.88). This needs another signal, such as a cross-encoder or a classifier.</li>
+        <li><strong>Unseen questions:</strong> on validation questions the answer overlaps the dataset answer only weakly (F1 8%); retrieval is strongest in English.</li>
+        <li><strong>Short answers:</strong> answers are spans of a few words; dataset answers are often full sentences.</li>
+        <li><strong>First load:</strong> after 7 idle minutes the server stops, and the next visitor waits while 20 GB of vectors load.</li>
+      </ul>
+    </div>
 
-<span style="color: var(--text-dim);"># 2. Run the official benchmark suite (100 queries)</span>
-.\venv\Scripts\python.exe -m eval.runner `
-    --rag-root <span style="color: var(--emerald);">"."</span> `
-    --num-answerable <span style="color: var(--amber);">50</span> `
-    --num-unanswerable <span style="color: var(--amber);">50</span> `
-    --workers <span style="color: var(--amber);">1</span> `
-    --judge-workers <span style="color: var(--amber);">16</span></code></pre>
+    <!-- Section 9: Reproduce -->
+    <div class="diagram-card">
+      <div class="card-head">
+        <h2>⚖️ 9. Reproduce the Measurements</h2>
+        <span class="tag tag-cyan">eval/ in the repository</span>
+      </div>
+      <div style="background: #070B13; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 20px; overflow-x: auto;">
+        <pre style="color: var(--text-main); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.7; margin: 0;"><code><span style="color: var(--text-dim);"># Accuracy and latency on the three question sets</span>
+python eval/run_eval.py --url <span style="color: var(--emerald);">&lt;backend URL&gt;</span> --label <span style="color: var(--emerald);">&lt;name&gt;</span> --workers <span style="color: var(--amber);">8</span>
+
+<span style="color: var(--text-dim);"># Same answers as the original? (224 questions)</span>
+python eval/parity_check.py capture --url <span style="color: var(--emerald);">&lt;backend URL&gt;</span> --out eval/runs/<span style="color: var(--emerald);">&lt;name&gt;</span>.json --label <span style="color: var(--emerald);">&lt;name&gt;</span>
+python eval/parity_check.py compare eval/baseline_v1.json eval/runs/<span style="color: var(--emerald);">&lt;name&gt;</span>.json
+
+<span style="color: var(--text-dim);"># First-load wait after idle</span>
+python eval/coldstart.py --url <span style="color: var(--emerald);">&lt;backend URL&gt;</span> --runs <span style="color: var(--amber);">1</span> --idle <span style="color: var(--amber);">540</span> --out eval/runs/<span style="color: var(--emerald);">&lt;name&gt;</span>.jsonl</code></pre>
       </div>
     </div>
 
