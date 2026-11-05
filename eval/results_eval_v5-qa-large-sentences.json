@@ -1,0 +1,137 @@
+{
+ "meta": {
+  "label": "v5-qa-large-sentences",
+  "url": "https://rawrmeinkayanosaurushun--voice-rag-v5-voicerag-fastapi-app.us-east.modal.run",
+  "git_commit": "620c4db",
+  "started_at": "2026-11-05T07:51:16+00:00",
+  "workers": 8
+ },
+ "summary": {
+  "A:hi": {
+   "n": 100,
+   "answered": 77,
+   "refusal_rate": 0.22999999999999998,
+   "em": 0.0,
+   "f1": 0.18180555213666888,
+   "contains": 0.04,
+   "f1_answered": 0.23611110667099855,
+   "contains_answered": 0.05194805194805195,
+   "recall_at_1": 0.12,
+   "recall_at_5": 0.26,
+   "mrr": 0.17954761904761907,
+   "recall_at_5_same_query": 0.3
+  },
+  "A:all": {
+   "n": 300,
+   "answered": 248,
+   "refusal_rate": 0.17333333333333334,
+   "em": 0.01,
+   "f1": 0.1724414022467343,
+   "contains": 0.10666666666666667,
+   "f1_answered": 0.20859847045975924,
+   "contains_answered": 0.12903225806451613,
+   "recall_at_1": 0.15666666666666668,
+   "recall_at_5": 0.32666666666666666,
+   "mrr": 0.2229801587301587,
+   "recall_at_5_same_query": 0.37
+  },
+  "A:mr": {
+   "n": 100,
+   "answered": 77,
+   "refusal_rate": 0.22999999999999998,
+   "em": 0.0,
+   "f1": 0.07521292264075363,
+   "contains": 0.05,
+   "f1_answered": 0.09767912031266705,
+   "contains_answered": 0.06493506493506493,
+   "recall_at_1": 0.05,
+   "recall_at_5": 0.19,
+   "mrr": 0.10117857142857142,
+   "recall_at_5_same_query": 0.22
+  },
+  "A:en": {
+   "n": 100,
+   "answered": 94,
+   "refusal_rate": 0.06000000000000005,
+   "em": 0.03,
+   "f1": 0.2603057319627804,
+   "contains": 0.23,
+   "f1_answered": 0.27692099144976634,
+   "contains_answered": 0.24468085106382978,
+   "recall_at_1": 0.3,
+   "recall_at_5": 0.53,
+   "mrr": 0.3882142857142857,
+   "recall_at_5_same_query": 0.59
+  },
+  "B:hi": {
+   "n": 100,
+   "answered": 75,
+   "refusal_rate": 0.25,
+   "em": 0.0,
+   "f1": 0.13422973608564445,
+   "contains": 0.03,
+   "f1_answered": 0.1789729814475259,
+   "contains_answered": 0.04
+  },
+  "B:all": {
+   "n": 300,
+   "answered": 226,
+   "refusal_rate": 0.2466666666666667,
+   "em": 0.006666666666666667,
+   "f1": 0.12520909485544052,
+   "contains": 0.03,
+   "f1_answered": 0.16620676308244317,
+   "contains_answered": 0.03982300884955752
+  },
+  "B:mr": {
+   "n": 100,
+   "answered": 72,
+   "refusal_rate": 0.28,
+   "em": 0.0,
+   "f1": 0.06694770013163573,
+   "contains": 0.01,
+   "f1_answered": 0.09298291684949406,
+   "contains_answered": 0.013888888888888888
+  },
+  "B:en": {
+   "n": 100,
+   "answered": 79,
+   "refusal_rate": 0.20999999999999996,
+   "em": 0.02,
+   "f1": 0.17444984834904143,
+   "contains": 0.05,
+   "f1_answered": 0.2208225928468879,
+   "contains_answered": 0.06329113924050633
+  },
+  "C": {
+   "unsafe_input": {
+    "correct": 6,
+    "total": 6
+   },
+   "decline": {
+    "correct": 6,
+    "total": 10
+   },
+   "out_of_scope": {
+    "correct": 11,
+    "total": 11
+   }
+  },
+  "strategies": {
+   "top1_hits": {
+    "passage_native": 23,
+    "semantic_window": 10,
+    "fixed_overlap": 14
+   },
+   "all_sources": {
+    "passage_native": 968,
+    "semantic_window": 480,
+    "fixed_overlap": 533
+   }
+  },
+  "latency_ms": {
+   "p50": 69.43,
+   "p90": 92.22
+  }
+ }
+}

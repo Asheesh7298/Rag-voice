@@ -58,7 +58,9 @@ export function AssistantMessage({ message, speaking, onToggleSpeech, onOpenTele
           )}
         </div>
 
-        <div className="assistant-answer-text">{answer}</div>
+        <div className="assistant-answer-text">
+          <Highlighted text={answer} span={declined ? null : message.span ?? null} />
+        </div>
 
         {timings && (
           <div className="answer-latency-pill">
@@ -72,6 +74,19 @@ export function AssistantMessage({ message, speaking, onToggleSpeech, onOpenTele
         {sources.length > 0 && <SourcesAccordion sources={sources} />}
       </div>
     </div>
+  );
+}
+
+/** The answer sentence with the extracted span in bold (when the span is part of a longer sentence). */
+function Highlighted({ text, span }: { text: string; span: string | null }) {
+  const at = span ? text.toLowerCase().indexOf(span.toLowerCase()) : -1;
+  if (!span || at < 0 || span.length >= text.length) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, at)}
+      <strong>{text.slice(at, at + span.length)}</strong>
+      {text.slice(at + span.length)}
+    </>
   );
 }
 

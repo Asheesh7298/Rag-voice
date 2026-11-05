@@ -15,7 +15,8 @@ server has been idle takes about 30 s while it starts; after that answers come b
 
 - **Scale:** 13,020,220 vectors from MS MARCO training passages (Hindi 4.60M, Marathi 4.27M, English 4.16M), three chunking strategies.
 - **Stack:** React + TypeScript frontend; FastAPI on Modal; models on ONNX Runtime and vector search with CuPy (no PyTorch, no FAISS).
-- **Server latency:** P50 46.6 ms, P90 56.3 ms over 627 evaluation questions (2026-11-04).
+- **Answers:** the passage sentence that contains the extracted answer, with the answer itself in bold; when the reader isn't confident it says so instead of guessing.
+- **Server latency:** P50 69 ms, P90 92 ms over 627 evaluation questions (2026-11-05).
 - **Retrieval:** the exact gold passage is in the top 5 sources for 34% of in-index questions (English 55%); see [Evaluation](#-evaluation).
 - **First load after idle:** usually 26–44 s while the server starts and loads 20 GB of vectors (it scales to zero).
 
@@ -42,8 +43,8 @@ server has been idle takes about 30 s while it starts; after that answers come b
         ↓
   [Guardrail 3]  Retrieval-confidence gate
         ↓
-  [QA reader]    xlm-roberta-base-squad2 on ONNX Runtime over up to 6 passages;               ~19 ms
-                 answer = best span (≤ 35 tokens) inside a passage
+  [QA reader]    xlm-roberta-large-squad2 on ONNX Runtime over up to 6 passages;              ~43 ms
+                 best span (≤ 35 tokens) inside a passage; the answer is that span's whole sentence
                  "Tell me about…" questions return the best passage's first sentences instead
         ↓
   [Guardrails 4–7] QA confidence, answer relevance, script match, non-answer filter
@@ -59,7 +60,7 @@ server has been idle takes about 30 s while it starts; after that answers come b
 | :--- | :--- |
 | **Frontend** | React 19, TypeScript, Vite; MediaRecorder + Web Audio API (recording, waveform); Speech Synthesis (read-aloud) |
 | **Backend** | FastAPI on Modal, NumPy, rank-bm25, `tokenizers`, ffmpeg (voice recordings → WAV) |
-| **Models** | `intfloat/multilingual-e5-base` (official ONNX export) and `deepset/xlm-roberta-base-squad2` (converted to ONNX), run with ONNX Runtime GPU |
+| **Models** | `intfloat/multilingual-e5-base` (official ONNX export) and `deepset/xlm-roberta-large-squad2` (converted to ONNX), run with ONNX Runtime GPU |
 | **Vector search** | 13,020,220 FP16 vectors in GPU memory; exact search with a CuPy matrix-vector product and block-wise top-k |
 | **Speech-to-text** | Sarvam AI `saaras:v3` |
 | **Infrastructure** | Modal (NVIDIA A100, one container at most, scales to zero), Modal Volume for the index; Vercel for the web app |
@@ -83,7 +84,7 @@ eval/             Evaluation sets, scripts and the results of every phase of the
 - **Sources:** `ai4bharat/MSMARCO-XI` (Hindi, Marathi) and `microsoft/ms_marco` v2.1 (English), training splits.
   For each question: its selected passages plus its first passage; exact duplicates removed.
 - **Storage on the Modal Volume:** `vectors_fp16.bin` (20 GB, FP16, L2-normalized), `metadata.jsonl`, `metadata.offsets`
-  (byte offset of each metadata line), and `onnx/xlm-roberta-base-squad2/` (the converted QA model).
+  (byte offset of each metadata line), and `onnx/xlm-roberta-large-squad2/` (the converted QA model).
 - **Rebuild:** `modal run scripts/build_index.py` (GPU). A test build (`--limit 100`) reproduces the first rows of the live
   index exactly: same chunks in the same order, vectors at cosine 0.99999.
 
@@ -121,21 +122,25 @@ current-events and off-topic questions. Answers are compared automatically with 
 |---|---|---|---|---|
 | Set A Recall@5 (gold passage in the top 5 sources) | 27% | 20% | 55% | 34% |
 | Set A MRR | 0.19 | 0.11 | 0.40 | 0.23 |
-| Set A answer contained in the dataset answer | 13% | 5% | 29% | 16% |
-| Set B answered (not refused) | 94% | 91% | 96% | 94% |
+| Set A answer F1 (word overlap with the dataset answer) | 18% | 8% | 26% | 17% |
+| Set A refused ("couldn't extract a confident answer") | 23% | 23% | 6% | 17% |
+| Set B answered (not refused) | 75% | 72% | 79% | 75% |
 
-Set C: all 11 current-events questions and all 8 unsafe questions (6 English, 2 Hindi/Marathi) declined; 3 of 8
+Set C: all 11 current-events questions and all 8 unsafe questions (6 English, 2 Hindi/Marathi) declined; 4 of 8
 off-topic questions declined.
-Dataset answers are often full sentences while this system extracts short spans, so word-overlap scores are low by
-construction; the numbers are most useful for comparing versions.
+The large reader refuses more often than the earlier base model, but those refusals replace mostly wrong answers:
+of 97 questions it newly refuses, the base model had answered 5 correctly ([details](eval/results_qa_upgrade.md)).
+Dataset answers are often paraphrased sentences, so word-overlap scores are low by construction; the numbers are
+most useful for comparing versions.
 
-**Latency** (server-side, P50 / P90): total 46.6 / 56.3 ms — embedding 4.6 / 5.3, search 15.4 / 17.9,
-rerank 4.0 / 5.0, QA 19.3 / 26.6. The round trip from India adds about 1.2–1.3 s of network time.
+**Latency** (server-side, P50 / P90): total 69.4 / 92.2 ms — embedding 4.7 / 5.3, search 16.1 / 19.0,
+rerank 4.0 / 5.1, QA 43.0 / 62.0. The round trip from India adds about 1.2–1.3 s of network time.
 
 The migration from the original PyTorch version is documented phase by phase in [eval/](eval/): baseline
 ([phase 0](eval/results_phase0.md)), cleanup ([1](eval/results_phase1.md)), evaluation ([2](eval/results_phase2.md)),
 ONNX Runtime + CuPy with 224/224 identical answers ([3](eval/results_phase3.md)), startup ([4](eval/results_phase4.md)),
-React frontend ([5](eval/results_phase5.md)) and behavior fixes ([6](eval/results_phase6.md)).
+React frontend ([5](eval/results_phase5.md)), behavior fixes ([6](eval/results_phase6.md)) and the
+larger reader with full-sentence answers ([QA upgrade](eval/results_qa_upgrade.md)).
 
 ---
 
@@ -153,7 +158,7 @@ npm run dev
 ### Deploy the Backend on Modal
 Needs the Modal Volume `voice-rag-index` (files listed above) and a Modal Secret `voice-rag-secrets` with at least
 `SARVAM_API_KEY` (see [.env.example](.env.example)). The QA model folder on the Volume was converted once from
-`deepset/xlm-roberta-base-squad2` (revision `a5fab99`); its `export_info.json` records the versions used and the check
+`deepset/xlm-roberta-large-squad2` (revision `dafe599`); its `export_info.json` records the versions used and the check
 against the original model.
 ```bash
 pip install -r requirements.txt   # the Modal command-line tool

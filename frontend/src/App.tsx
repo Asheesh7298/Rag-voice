@@ -20,6 +20,7 @@ function toAssistant(id: string, data: QueryResponse): Message {
     id,
     role: "assistant",
     answer: data.answer,
+    span: data.answer_span ?? null,
     guardrail: data.guardrail_triggered,
     timings: data.timings_ms ?? null,
     sources: data.sources ?? [],

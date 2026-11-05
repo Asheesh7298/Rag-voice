@@ -386,8 +386,8 @@
         <div class="kpi-label">Passage vectors (hi · mr · en)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-num" style="color: var(--emerald);">46.6 ms</div>
-        <div class="kpi-label">Server latency P50 (P90 56.3 ms)</div>
+        <div class="kpi-num" style="color: var(--emerald);">69 ms</div>
+        <div class="kpi-label">Server latency P50 (P90 92 ms)</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-num" style="color: var(--cyan);">34%</div>
@@ -421,7 +421,7 @@ graph TD
     Search --> Rerank["Rerank: dense + BM25 + word overlap · duplicates removed · ~4 ms"]
     Rerank --> G3{"Retrieval confident?"}
     G3 -->|No| D1["🛡️ Decline"]
-    G3 -->|Yes| QA["XLM-RoBERTa SQuAD 2.0 reader · ONNX Runtime · ~19 ms"]
+    G3 -->|Yes| QA["XLM-RoBERTa-large SQuAD 2.0 reader · ONNX Runtime · ~43 ms · answer = its sentence"]
     QA --> G4{"QA confidence, relevance, script, non-answer checks"}
     G4 -->|Fail| D2["🛡️ Decline"]
     G4 -->|Pass| Out(["🔊 Answer + sources + timings"])
@@ -463,10 +463,10 @@ graph TD
             <td><span class="tag tag-green">Official ONNX export, pinned revision</span></td>
           </tr>
           <tr>
-            <td><strong>xlm-roberta-base-squad2 (ONNX, FP32)</strong></td>
-            <td>~1.1 GB</td>
+            <td><strong>xlm-roberta-large-squad2 (ONNX, FP32)</strong></td>
+            <td>~2.2 GB</td>
             <td>A100 via ONNX Runtime</td>
-            <td><span class="tag tag-green">Converted once; largest logit difference vs PyTorch 2.6e-5</span></td>
+            <td><span class="tag tag-green">Converted once; largest logit difference vs PyTorch 3.7e-5</span></td>
           </tr>
           <tr>
             <td><strong>Metadata + byte offsets</strong></td>
@@ -523,11 +523,12 @@ graph TD
         </thead>
         <tbody>
           <tr><td>Set A MRR (hi / mr / en)</td><td>0.19 / 0.11 / 0.40</td></tr>
-          <tr><td>Set B questions answered (not refused)</td><td>94%</td></tr>
+          <tr><td>Set A refused when not confident (hi / mr / en)</td><td>23% / 23% / 6%</td></tr>
+          <tr><td>Set B questions answered (not refused)</td><td>75%</td></tr>
           <tr><td>Unsafe questions declined (English + Hindi/Marathi)</td><td><span class="pass-check">8 / 8</span></td></tr>
           <tr><td>Current-events questions declined</td><td><span class="pass-check">11 / 11</span></td></tr>
-          <tr><td>Off-topic questions declined</td><td><span class="fail-check">3 / 8</span></td></tr>
-          <tr><td>Server latency P50 / P90</td><td>46.6 / 56.3 ms (embed 4.6, search 15.4, rerank 4.0, QA 19.3 at P50)</td></tr>
+          <tr><td>Off-topic questions declined</td><td><span class="fail-check">4 / 8</span></td></tr>
+          <tr><td>Server latency P50 / P90</td><td>69.4 / 92.2 ms (embed 4.7, search 16.1, rerank 4.0, QA 43.0 at P50)</td></tr>
         </tbody>
       </table>
     </div>
@@ -536,7 +537,7 @@ graph TD
     <div class="diagram-card">
       <div class="card-head">
         <h2>🔁 4. From PyTorch to ONNX Runtime, Measured Step by Step</h2>
-        <span class="tag tag-amber">7 phases</span>
+        <span class="tag tag-amber">7 phases + QA upgrade</span>
       </div>
       <table>
         <thead>
@@ -549,7 +550,8 @@ graph TD
           <tr><td>3 · No PyTorch</td><td>ONNX Runtime for both models, CuPy for search</td><td><span class="pass-check">224/224 identical</span>; P50 50 ms</td></tr>
           <tr><td>4 · Startup</td><td>Separate startup limit, parallel vector loading</td><td>Slow starts (up to 10 min) finish instead of restarting from zero</td></tr>
           <tr><td>5 · Frontend</td><td>React + TypeScript; API-only backend</td><td>Same look; six UI bugs fixed</td></tr>
-          <tr class="champion-row"><td>6 · Fixes</td><td>Language-block search, duplicate removal, question-token masking, Hindi/Marathi unsafe check</td><td>Recall@5 34%; P50 47 ms</td></tr>
+          <tr><td>6 · Fixes</td><td>Language-block search, duplicate removal, question-token masking, Hindi/Marathi unsafe check</td><td>Recall@5 34%; P50 47 ms</td></tr>
+          <tr class="champion-row"><td>QA upgrade</td><td>Large reader model; answers are the full sentence with the span in bold</td><td>~92 fewer wrong answers on 600 questions (5 correct ones lost); P50 69 ms</td></tr>
         </tbody>
       </table>
     </div>
@@ -561,7 +563,7 @@ graph TD
         <span class="tag tag-purple">Why it is built this way</span>
       </div>
       <ul style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; padding-left:20px;">
-        <li><strong>Extractive answers, no text generation:</strong> every answer is a span copied from a retrieved passage, and the QA step takes about 19 ms.</li>
+        <li><strong>Extractive answers, no text generation:</strong> every answer is a sentence copied from a retrieved passage, with the extracted span in bold; the large reader takes about 43 ms and refuses when it isn't confident.</li>
         <li><strong>One multilingual embedding model:</strong> multilingual-e5-base covers Hindi, Marathi and English in one 768-dimensional space.</li>
         <li><strong>ONNX Runtime instead of PyTorch:</strong> the system only runs trained models. The switch was verified against the original: stored-vector cosine 0.99999 over 1,000 passages, and 224/224 identical answers.</li>
         <li><strong>Exact search instead of an approximate index:</strong> all 13M vectors fit in GPU memory, and scanning one language block takes about 15 ms, so results are exact.</li>
@@ -626,7 +628,7 @@ graph LR
       <ul style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; padding-left:20px;">
         <li><strong>Off-topic questions:</strong> a similarity-based gate cannot separate them; off-topic questions score 0.86–0.92, as high as answerable ones (median 0.88). This needs another signal, such as a cross-encoder or a classifier.</li>
         <li><strong>Unseen questions:</strong> on validation questions the answer overlaps the dataset answer only weakly (F1 8%); retrieval is strongest in English.</li>
-        <li><strong>Short answers:</strong> answers are spans of a few words; dataset answers are often full sentences.</li>
+        <li><strong>Cautious in Hindi and Marathi:</strong> the large reader refuses 23% of answerable Hindi and Marathi questions (6% in English) rather than guess; most of those refusals replace wrong answers.</li>
         <li><strong>First load:</strong> after 7 idle minutes the server stops, and the next visitor waits while 20 GB of vectors load.</li>
       </ul>
     </div>

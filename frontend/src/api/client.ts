@@ -32,7 +32,10 @@ export interface Source {
 export interface QueryResponse {
   query: string;
   transcript: string | null;
+  /** The sentence containing the answer (or the answer itself). */
   answer: string;
+  /** The exact span the QA model extracted, inside `answer`. */
+  answer_span?: string | null;
   sources: Source[];
   confidence: number;
   grounded: boolean;

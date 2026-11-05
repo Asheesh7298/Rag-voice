@@ -10,11 +10,12 @@ import modal
 volume = modal.Volume.from_name("voice-rag-index", create_if_missing=True)
 
 # Models. e5 uses the official ONNX export published by its authors, pinned to a revision.
-# The QA model (deepset/xlm-roberta-base-squad2, revision a5fab99) was converted to ONNX once and
-# stored on the Volume; export_info.json next to it records how, and its check against the original.
+# The QA model (deepset/xlm-roberta-large-squad2, revision dafe599) was converted to ONNX once and stored on
+# the Volume; export_info.json next to it records how, and its check against the original. The earlier base
+# model (deepset/xlm-roberta-base-squad2, revision a5fab99) is still there at onnx/xlm-roberta-base-squad2.
 E5_REVISION = "d128750597153bb5987e10b1c3493a34e5a4502a"   # intfloat/multilingual-e5-base
 E5_URL = f"https://huggingface.co/intfloat/multilingual-e5-base/resolve/{E5_REVISION}"
-QA_ONNX_DIR = "/index/onnx/xlm-roberta-base-squad2"
+QA_ONNX_DIR = "/index/onnx/xlm-roberta-large-squad2"
 
 
 def fetch_models():
@@ -80,6 +81,23 @@ def _to_wav_16k(audio: bytes) -> bytes:
         raise ValueError(f"could not decode the recording ({len(audio)} bytes, starts {audio[:12].hex()}): "
                          f"{proc.stderr.decode(errors='replace')[:300]}")
     return proc.stdout
+
+
+def _sentence_around(text: str, span: tuple | None, max_chars: int = 300) -> str | None:
+    """The sentence of `text` that contains the character span (start, end). A sentence ends at . ? ! or the
+    Devanagari danda । followed by whitespace, or at a line break, so "4.6" or "U.S.A" in mid-word don't split.
+    Very long sentences are cut to a window around the span. None if the span is unknown."""
+    import re
+    if not span:
+        return None
+    start, end = span
+    ends = [m.end() for m in re.finditer(r"[.?!।]+(?=\s)|\n", text)]   # positions just after a sentence end
+    s = max((b for b in ends if b <= start), default=0)
+    e = min((b for b in ends if b >= end), default=len(text))
+    if e - s > max_chars:
+        a, b = max(s, start - 120), min(e, end + 120)
+        return ("…" if a > s else "") + text[a:b].strip() + ("…" if b < e else "")
+    return text[s:e].strip() or None
 
 
 def _is_unsafe_devanagari(query: str) -> bool:
@@ -164,6 +182,10 @@ class VoiceRAG:
     # .sequence_ids(), and the error was silently ignored, so many v1 answers repeat the question.
     # v3 kept it off to reproduce v1 exactly; v4 turns it on (Phase 6).
     MASK_QUESTION_TOKENS = True
+
+    # Return the whole passage sentence that contains the extracted span (e.g. "Columbus is the county seat of
+    # Franklin County." instead of "Franklin County"). Guardrails still check the span itself.
+    SENTENCE_ANSWERS = True
 
     @modal.enter()
     def load(self):
@@ -384,9 +406,14 @@ class VoiceRAG:
                     start_prob = float(s_probs[i][best_s])
                     end_prob = float(e_probs[i][best_e])
                     score = start_prob * end_prob
+                    # Character position of the span in the passage, used to return its whole sentence
+                    seq_ids, offsets = encodings[i].sequence_ids, encodings[i].offsets
+                    span_chars = ((offsets[best_s][0], offsets[best_e][1])
+                                  if seq_ids[best_s] == 1 and seq_ids[best_e] == 1 else None)
                 else:
                     answer = ""
                     score = 0.0
+                    span_chars = None
 
                 if answer:
                     ans_lower = answer.lower()
@@ -426,6 +453,7 @@ class VoiceRAG:
                             "chunk_idx": i,
                             "source_text": chunk["text"],
                             "lang": chunk.get("lang"),
+                            "span_chars": span_chars,
                         }
 
             return best_cand
@@ -984,8 +1012,11 @@ class VoiceRAG:
             timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
             return self._decline(query, "implausible_answer", timings, retrieval_score=top_dense)
 
-        # Final answer formulation
+        # Final answer formulation: the span's whole sentence when available (guardrails above used the span)
         final_answer = best["answer"]
+        sentence = _sentence_around(best.get("source_text", ""), best.get("span_chars"))
+        if self.SENTENCE_ANSWERS and sentence:
+            final_answer = self._postprocess(sentence, query, best["source_text"])
         timings["gen_ms"] = 0.0
         timings["total_ms"] = round((time.perf_counter() - t_start) * 1000, 2)
 
@@ -993,6 +1024,7 @@ class VoiceRAG:
             "query": query,
             "transcript": None,
             "answer": final_answer,
+            "answer_span": best["answer"],
             "sources": [
                 {"text": c["text"], "score": c["score"],
                  "lang": c.get("lang"),
@@ -1048,7 +1080,7 @@ class VoiceRAG:
                 "language_codes": list(supported),
                 "index_size": len(self.metadata),
                 "gpu": self.gpu,
-                "model": "xlm-roberta-base-squad2 (extractive QA)",
+                "model": "xlm-roberta-large-squad2 (extractive QA)",
                 "embed": "multilingual-e5-base",
             }
 
