@@ -22,7 +22,8 @@
 
 ```
 🎙️ Voice or text question (Hindi / Marathi / English)
-  ├── Voice: recorded in the browser (MediaRecorder) → POST /voice-query → Sarvam AI speech-to-text (saaras:v3)
+  ├── Voice: recorded in the browser (MediaRecorder) → POST /voice-query → converted to 16 kHz WAV (ffmpeg)
+  │          → Sarvam AI speech-to-text (saaras:v3)
   └── Text:  POST /query
         ↓
   [Guardrail 1]  Unsafe input: English patterns + a Hindi/Marathi word check
@@ -54,7 +55,7 @@
 | Layer | Technologies |
 | :--- | :--- |
 | **Frontend** | React 19, TypeScript, Vite; MediaRecorder + Web Audio API (recording, waveform); Speech Synthesis (read-aloud) |
-| **Backend** | FastAPI on Modal, NumPy, rank-bm25, `tokenizers` |
+| **Backend** | FastAPI on Modal, NumPy, rank-bm25, `tokenizers`, ffmpeg (voice recordings → WAV) |
 | **Models** | `intfloat/multilingual-e5-base` (official ONNX export) and `deepset/xlm-roberta-base-squad2` (converted to ONNX), run with ONNX Runtime GPU |
 | **Vector search** | 13,020,220 FP16 vectors in GPU memory; exact search with a CuPy matrix-vector product and block-wise top-k |
 | **Speech-to-text** | Sarvam AI `saaras:v3` |

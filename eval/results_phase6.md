@@ -43,12 +43,20 @@ Word precision held (Set A 0.24 → 0.26, Set B 0.19 → 0.18) while recall agai
 
 ## Voice regression found in the browser test, and fixed
 
-The first browser test of voice failed with "Couldn't transcribe audio": Sarvam answered HTTP 400 `Invalid file
-type: audio/webm;codecs=opus`. Browsers label recordings with codec parameters, and Sarvam only accepts bare types
-(`audio/webm`, `audio/ogg`, `audio/mp4`, ...). The backend now strips the parameter (unknown types are sent as
-`application/octet-stream`) and logs Sarvam's error text. Checked end to end on `voice-rag-v4` with a WebM/Opus
-recording labeled exactly as the browser does: transcript "What county is Columbus City in?", answered in 46 ms
-on the server (speech-to-text 2.3 s).
+The first browser test of voice failed with "Couldn't transcribe audio", in two steps:
+
+1. Sarvam answered HTTP 400 `Invalid file type: audio/webm;codecs=opus`: browsers label recordings with codec
+   parameters, and Sarvam only accepts bare types.
+2. With the parameter removed, Sarvam still answered `Failed to read the file, please check the audio format` for
+   the user's real browser recordings (a headless-Edge recording happened to be readable, so the exact cause in the
+   user's browser could not be reproduced).
+
+Fix: the server now converts every upload to 16 kHz mono WAV with ffmpeg before sending it to Sarvam, and logs the
+upload's size, type and first bytes, plus Sarvam's or ffmpeg's error text, when something fails. Checked end to end
+on `voice-rag-v4` with a Chrome WebM/Opus recording, a Safari-style MP4 and a Firefox-style Ogg, each labeled as that
+browser labels it: all three transcribed "What county is Columbus City in?" (speech-to-text about 1.5 s). The user
+then confirmed voice works in the deployed web app. v1 sent browser WebM mislabeled as `audio/wav`, so voice had
+likely been unreliable before the migration too.
 
 ## Off-topic gate: does not work with these scores
 

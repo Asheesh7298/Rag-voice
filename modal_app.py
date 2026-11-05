@@ -49,6 +49,7 @@ image = (
         "cupy-cuda13x[ctk]==14.2.0",
     )
     .run_function(fetch_models, volumes={"/index": volume})
+    .apt_install("ffmpeg")            # converts browser voice recordings to WAV for speech-to-text
     .add_local_python_source("backend")
 )
 
@@ -57,6 +58,28 @@ image = (
 secrets = [modal.Secret.from_name("voice-rag-secrets")]
 
 app = modal.App("voice-rag", image=image, secrets=secrets)
+
+
+def _to_wav_16k(audio: bytes) -> bytes:
+    """Decode any browser recording (WebM, Ogg, MP4, WAV) with ffmpeg into 16 kHz mono 16-bit WAV.
+    Goes through a temporary file because MP4 can't be decoded from a pipe (its index may sit at the end)."""
+    import os
+    import subprocess
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".upload", delete=False) as f:
+        f.write(audio)
+        path = f.name
+    try:
+        proc = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", path, "-ac", "1", "-ar", "16000", "-f", "wav", "pipe:1"],
+            capture_output=True, timeout=20)
+    finally:
+        os.remove(path)
+    if proc.returncode != 0 or len(proc.stdout) <= 44:   # 44 bytes = an empty WAV header
+        raise ValueError(f"could not decode the recording ({len(audio)} bytes, starts {audio[:12].hex()}): "
+                         f"{proc.stderr.decode(errors='replace')[:300]}")
+    return proc.stdout
 
 
 def _is_unsafe_devanagari(query: str) -> bool:
@@ -703,19 +726,17 @@ class VoiceRAG:
         }
         bcp47 = LANG_MAP.get(lang) if lang else None
         headers = {"api-subscription-key": self.SARVAM_KEY}
-        # Forward the recording with its real type (browsers record WebM/Ogg/MP4, not WAV; v1 labeled every
-        # upload "audio/wav"). Browsers add codec parameters ("audio/webm;codecs=opus"), which Sarvam rejects
-        # with HTTP 400; it accepts the bare type, and application/octet-stream for anything else.
-        mime = (content_type or "").split(";")[0].strip().lower()
-        if not mime.startswith(("audio/", "video/webm")):
-            mime = "application/octet-stream"
-        files = {"file": (filename or "audio.webm", audio_bytes, mime)}
+        print(f"[voice] upload: {len(audio_bytes)} bytes, type {content_type!r}, name {filename!r}")
+        t0 = time.perf_counter()
+        # Browsers record WebM, Ogg or MP4 with their own quirks (and label them e.g. "audio/webm;codecs=opus",
+        # which Sarvam rejects). Converting every upload to plain 16 kHz mono WAV gives Sarvam one format
+        # it always reads.
+        files = {"file": ("audio.wav", _to_wav_16k(audio_bytes), "audio/wav")}
         data = {"model": "saaras:v3", "mode": "transcribe"}
         if bcp47: data["language_code"] = bcp47
-        t0 = time.perf_counter()
         r = httpx.post(self.SARVAM_URL, headers=headers, files=files, data=data, timeout=10)
         if r.status_code >= 400:   # Sarvam explains rejections in the body; keep it in the server log
-            print(f"Sarvam STT HTTP {r.status_code} for {mime}: {r.text[:300]}")
+            print(f"Sarvam STT HTTP {r.status_code}: {r.text[:300]}")
         r.raise_for_status()
         stt_ms = round((time.perf_counter() - t0) * 1000, 2)
         result = r.json()
